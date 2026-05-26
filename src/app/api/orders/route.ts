@@ -10,11 +10,6 @@ import {
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
 
-const BACKEND_URL =
-  process.env.BACKEND_INTERNAL_URL ||
-  process.env.NEXT_PUBLIC_API_URL ||
-  'http://localhost:8000'
-
 export async function POST(request: Request) {
   let payload: CreateOrderPayload
 
@@ -29,7 +24,7 @@ export async function POST(request: Request) {
 
   try {
     const clientIp = getClientIpFromRequest(request)
-    const result = await forwardOrderToBackend(payload, BACKEND_URL, clientIp)
+    const result = await forwardOrderToBackend(payload, clientIp)
 
     if (result.ok) {
       return NextResponse.json(result.data, { status: 201 })
@@ -39,7 +34,9 @@ export async function POST(request: Request) {
       { detail: parseBackendError(result.body) },
       { status: result.status },
     )
-  } catch {
+  } catch (error) {
+    console.error('[api/orders] Connection failed:', error)
+
     if (process.env.NODE_ENV === 'development') {
       return NextResponse.json(createDevFallbackOrder(payload), { status: 201 })
     }

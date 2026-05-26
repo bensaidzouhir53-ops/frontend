@@ -94,11 +94,31 @@ export function getClientIpFromRequest(request: Request): string | undefined {
   return undefined
 }
 
+/** Server-side backend URLs to try (in order) */
+export function getBackendCandidates(): string[] {
+  const urls = [
+    process.env.BACKEND_URL,
+    process.env.NEXT_PUBLIC_API_URL,
+    process.env.BACKEND_INTERNAL_URL,
+    process.env.NODE_ENV === 'development' ? 'http://localhost:8000' : null,
+  ]
+    .filter((value): value is string => Boolean(value && value.trim()))
+    .map((value) => value.trim().replace(/\/$/, ''))
+
+  return [...new Set(urls)]
+}
+
 export async function forwardOrderToBackend(
   payload: CreateOrderPayload,
-  backendUrl: string,
   clientIp?: string,
+  backendUrl?: string,
 ): Promise<{ ok: true; data: CreateOrderResult } | { ok: false; status: number; body: unknown }> {
+  const candidates = backendUrl ? [backendUrl.replace(/\/$/, '')] : getBackendCandidates()
+
+  if (candidates.length === 0) {
+    throw new Error('No backend URL configured')
+  }
+
   const resolvedIp = clientIp ?? payload.client_ip
   const requestBody: CreateOrderPayload = resolvedIp
     ? { ...payload, client_ip: resolvedIp }
@@ -110,18 +130,31 @@ export async function forwardOrderToBackend(
     headers['X-Real-IP'] = resolvedIp
   }
 
-  const res = await fetch(`${backendUrl}/api/orders`, {
-    method: 'POST',
-    headers,
-    body: JSON.stringify(requestBody),
-    cache: 'no-store',
-  })
+  let lastError: unknown
 
-  const responseBody = await res.json().catch(() => ({}))
+  for (const baseUrl of candidates) {
+    try {
+      const res = await fetch(`${baseUrl}/api/orders`, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify(requestBody),
+        cache: 'no-store',
+        signal: AbortSignal.timeout(20_000),
+      })
 
-  if (res.ok) {
-    return { ok: true, data: responseBody as CreateOrderResult }
+      const responseBody = await res.json().catch(() => ({}))
+
+      if (res.ok) {
+        return { ok: true, data: responseBody as CreateOrderResult }
+      }
+
+      // Backend responded — return API error (DB, validation, geoip, etc.)
+      return { ok: false, status: res.status, body: responseBody }
+    } catch (error) {
+      lastError = error
+      console.error(`[orders] Backend unreachable at ${baseUrl}:`, error)
+    }
   }
 
-  return { ok: false, status: res.status, body: responseBody }
+  throw lastError ?? new Error('All backend URLs failed')
 }
