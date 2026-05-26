@@ -41,7 +41,12 @@ function calculateOrderTotal(items: { quantity: number }[]): number {
 }
 
 function generateLocalOrderNumber(): string {
-  return `NSM-${Date.now().toString().slice(-8)}`
+  const now = new Date()
+  const y = now.getFullYear()
+  const m = String(now.getMonth() + 1).padStart(2, '0')
+  const d = String(now.getDate()).padStart(2, '0')
+  const seq = String(now.getTime()).slice(-4)
+  return `nasama${y}${m}${d}${seq}`
 }
 
 export function parseBackendError(body: unknown): string {

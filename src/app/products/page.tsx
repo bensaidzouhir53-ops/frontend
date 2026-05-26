@@ -29,7 +29,7 @@ export default function ProductsPage() {
               <p className="text-teal font-semibold text-sm tracking-widest uppercase mb-2">تشكيلتنا</p>
               <h1 className="text-4xl md:text-5xl font-bold text-charcoal mb-3">جميع منتجاتنا</h1>
               <p className="text-charcoal/60 text-lg max-w-xl">
-                روتين عناية شامل بجهازك التنفسي — خمسة منتجات عشبية مختارة بعناية
+                روتين عناية شامل بجهازك التنفسي — منتجان عشبيان مختاران بعناية
               </p>
             </div>
             <div className="flex items-center gap-3">
@@ -52,7 +52,7 @@ export default function ProductsPage() {
               تصفية وترتيب
             </div>
             <div className="flex gap-2">
-              {['الكل', 'بخاخات', 'قطرات', 'كبسولات'].map((filter) => (
+              {['الكل', 'بخاخات'].map((filter) => (
                 <button
                   key={filter}
                   className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${

@@ -5,6 +5,7 @@ export interface FAQItem {
 
 export interface Product {
   slug: string
+  sku: string
   nameAr: string
   nameEn: string
   shortDescAr: string
