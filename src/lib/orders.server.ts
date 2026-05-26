@@ -46,7 +46,7 @@ function generateLocalOrderNumber(): string {
   const m = String(now.getMonth() + 1).padStart(2, '0')
   const d = String(now.getDate()).padStart(2, '0')
   const seq = String(now.getTime()).slice(-4)
-  return `nasama${y}${m}${d}${seq}`
+  return `nam${y}${m}${d}${seq}`
 }
 
 export function parseBackendError(body: unknown): string {
