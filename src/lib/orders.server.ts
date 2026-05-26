@@ -94,18 +94,58 @@ export function getClientIpFromRequest(request: Request): string | undefined {
   return undefined
 }
 
-/** Server-side backend URLs to try (in order) */
+/** Derive production API URL when env vars were not set at build/deploy time */
+function getDefaultProductionApiUrl(): string | null {
+  if (process.env.NODE_ENV !== 'production') return null
+
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL?.trim()
+  if (siteUrl) {
+    try {
+      const site = new URL(siteUrl)
+      const host = site.hostname.replace(/^www\./, '')
+      if (host === 'nasama.shop') return 'https://api.nasama.shop'
+      return `${site.protocol}//api.${host}`
+    } catch {
+      // ignore invalid site URL
+    }
+  }
+
+  return 'https://api.nasama.shop'
+}
+
+function isInternalBackendUrl(url: string): boolean {
+  try {
+    const { hostname, protocol } = new URL(url)
+    if (protocol === 'http:' && (hostname === 'localhost' || hostname === '127.0.0.1')) {
+      return true
+    }
+    // Docker / private network hostnames (no dot, or service name with underscore)
+    return !hostname.includes('.') || hostname.includes('_')
+  } catch {
+    return false
+  }
+}
+
+/** Server-side backend URLs to try (public URLs first, then internal fallbacks) */
 export function getBackendCandidates(): string[] {
   const urls = [
     process.env.BACKEND_URL,
     process.env.NEXT_PUBLIC_API_URL,
     process.env.BACKEND_INTERNAL_URL,
     process.env.NODE_ENV === 'development' ? 'http://localhost:8000' : null,
+    getDefaultProductionApiUrl(),
   ]
     .filter((value): value is string => Boolean(value && value.trim()))
     .map((value) => value.trim().replace(/\/$/, ''))
 
-  return [...new Set(urls)]
+  const unique = [...new Set(urls)]
+
+  return unique.sort((a, b) => {
+    const aInternal = isInternalBackendUrl(a)
+    const bInternal = isInternalBackendUrl(b)
+    if (aInternal === bInternal) return 0
+    return aInternal ? 1 : -1
+  })
 }
 
 export async function forwardOrderToBackend(
