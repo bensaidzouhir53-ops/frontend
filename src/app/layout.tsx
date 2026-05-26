@@ -37,6 +37,7 @@ export const metadata: Metadata = {
     title: 'نسمة | متجر عناية بالتنفس',
     description:
       'منتجات عشبية طبيعية لدعم إحساس التنفس المريح. الدفع عند الاستلام. توصيل لجميع مناطق المملكة.',
+    images: [{ url: '/images/nasama-logo.png', width: 512, height: 512, alt: 'شعار نسمة' }],
   },
   twitter: {
     card: 'summary_large_image',
@@ -46,6 +47,10 @@ export const metadata: Metadata = {
   robots: {
     index: true,
     follow: true,
+  },
+  icons: {
+    icon: '/images/nasama-logo.png',
+    apple: '/images/nasama-logo.png',
   },
 }
 

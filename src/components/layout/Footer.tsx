@@ -25,9 +25,8 @@ export default function Footer() {
             {/* Brand */}
             <div className="max-w-sm">
               <div className="mb-8 flex items-center gap-4 text-gold group cursor-default">
-                <div className="relative w-16 h-16 bg-gradient-to-br from-teal-dark to-teal border-2 border-gold/30 rounded-2xl flex items-center justify-center group-hover:border-gold transition-all duration-500 shadow-[0_0_30px_rgba(215,168,92,0.15)] group-hover:shadow-[0_0_40px_rgba(215,168,92,0.3)]">
-                  <div className="absolute inset-0 bg-white/10 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity" />
-                  <LungLogo className="h-10 w-10" variant="light" />
+                <div className="relative h-16 w-16 overflow-hidden rounded-full ring-2 ring-gold/40 shadow-[0_0_30px_rgba(215,168,92,0.2)] transition-all duration-500 group-hover:ring-gold group-hover:shadow-[0_0_40px_rgba(215,168,92,0.35)]">
+                  <LungLogo className="h-full w-full scale-110" />
                 </div>
                 <div className="flex flex-col leading-none">
                   <span className="text-4xl font-extrabold text-white tracking-tight drop-shadow-sm">نسمة</span>
