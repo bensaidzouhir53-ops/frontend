@@ -73,10 +73,17 @@ export default function HomePage() {
 
           {/* Hero Image (Left) */}
           <div className="w-full md:w-1/2 relative z-10">
-            <div className="relative mx-auto w-full aspect-square md:aspect-[4/5] lg:aspect-[4/3] max-w-[500px]">
+            <div className="relative mx-auto w-full aspect-[3/4] md:aspect-[4/5] max-w-[520px]">
               <div className="absolute inset-0 bg-gradient-to-tr from-teal to-gold rounded-[2.5rem] blur-[60px] opacity-20 transform rotate-3" />
               <div className="relative h-full w-full rounded-[2.5rem] overflow-hidden shadow-2xl bg-mist border-4 border-white">
-                <img src="https://placehold.co/800x1000/0f766e/ffffff?text=Hero+Image" alt="متجر نسمة" className="w-full h-full object-cover" />
+                <Image
+                  src="/images/hero-main.png"
+                  alt="منتجات نسمة العشبية لدعم التنفس المريح"
+                  fill
+                  priority
+                  className="object-cover object-center"
+                  sizes="(max-width: 768px) 100vw, 520px"
+                />
               </div>
             </div>
           </div>
