@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="600" viewBox="0 0 600 600">
+  <defs>
+    <linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#EEF7F4"/>
+      <stop offset="100%" style="stop-color:#FAF7F0"/>
+    </linearGradient>
+  </defs>
+  <rect width="600" height="600" fill="url(#g)"/>
+  <circle cx="300" cy="220" r="100" fill="#0F766E" opacity="0.1"/>
+  <ellipse cx="272" cy="200" rx="22" ry="38" fill="#0F766E" opacity="0.4" transform="rotate(-20 272 200)"/>
+  <ellipse cx="272" cy="200" rx="22" ry="38" fill="#A7C4B5" opacity="0.4" transform="rotate(-20 272 200) translate(0 38)"/>
+  <ellipse cx="310" cy="195" rx="22" ry="38" fill="#0F766E" opacity="0.4" transform="rotate(10 310 195)"/>
+  <ellipse cx="310" cy="195" rx="22" ry="38" fill="#A7C4B5" opacity="0.4" transform="rotate(10 310 195) translate(0 38)"/>
+  <ellipse cx="335" cy="210" rx="22" ry="38" fill="#0F766E" opacity="0.4" transform="rotate(30 335 210)"/>
+  <ellipse cx="335" cy="210" rx="22" ry="38" fill="#A7C4B5" opacity="0.4" transform="rotate(30 335 210) translate(0 38)"/>
+  <rect x="140" y="350" width="320" height="90" rx="16" fill="#0F766E" opacity="0.1"/>
+  <text x="300" y="390" font-family="Arial,sans-serif" font-size="18" font-weight="bold" fill="#0B4F4A" text-anchor="middle">كبسولات تنظيف الرئتين</text>
+  <text x="300" y="418" font-family="Arial,sans-serif" font-size="14" fill="#0F766E" text-anchor="middle">نسمة | Nasama</text>
+  <text x="300" y="500" font-family="Arial,sans-serif" font-size="13" fill="#0B4F4A" text-anchor="middle" opacity="0.5">صورة المنتج — سيتم إضافتها قريباً</text>
+</svg>

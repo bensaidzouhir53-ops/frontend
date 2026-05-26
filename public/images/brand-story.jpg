@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="700" height="500" viewBox="0 0 700 500">
+  <defs>
+    <linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#A7C4B5"/>
+      <stop offset="100%" style="stop-color:#EEF7F4"/>
+    </linearGradient>
+  </defs>
+  <rect width="700" height="500" fill="url(#g)"/>
+  <circle cx="350" cy="220" r="120" fill="#0F766E" opacity="0.1"/>
+  <path d="M350 130 L350 250 M318 162 C290 162 265 188 265 225 C265 262 284 282 305 282 C320 282 334 268 350 250 M382 162 C410 162 435 188 435 225 C435 262 416 282 395 282 C380 282 366 268 350 250" stroke="#0B4F4A" stroke-width="10" fill="none" stroke-linecap="round"/>
+  <text x="350" y="370" font-family="Arial,sans-serif" font-size="22" font-weight="bold" fill="#0B4F4A" text-anchor="middle">قصتنا مع نسمة</text>
+  <text x="350" y="420" font-family="Arial,sans-serif" font-size="14" fill="#0F766E" text-anchor="middle" opacity="0.7">صورة القصة — سيتم إضافتها قريباً</text>
+</svg>

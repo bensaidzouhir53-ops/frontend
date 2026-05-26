@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="700" viewBox="0 0 800 700">
+  <defs>
+    <linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#EEF7F4"/>
+      <stop offset="60%" style="stop-color:#FAF7F0"/>
+      <stop offset="100%" style="stop-color:#A7C4B5"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="700" fill="url(#g)"/>
+  <circle cx="400" cy="300" r="200" fill="#0F766E" opacity="0.08"/>
+  <circle cx="400" cy="300" r="140" fill="#0F766E" opacity="0.08"/>
+  <path d="M400 160 L400 310 M365 200 C330 200 295 230 295 275 C295 320 318 345 342 345 C360 345 375 330 400 308 M435 200 C470 200 505 230 505 275 C505 320 482 345 458 345 C440 345 425 330 400 308" stroke="#0F766E" stroke-width="12" fill="none" stroke-linecap="round"/>
+  <circle cx="320" cy="282" r="10" fill="#0F766E" opacity="0.4"/>
+  <circle cx="304" cy="316" r="10" fill="#0F766E" opacity="0.4"/>
+  <circle cx="480" cy="282" r="10" fill="#0F766E" opacity="0.4"/>
+  <circle cx="496" cy="316" r="10" fill="#0F766E" opacity="0.4"/>
+  <text x="400" y="450" font-family="Arial,sans-serif" font-size="42" font-weight="bold" fill="#0B4F4A" text-anchor="middle">نسمة</text>
+  <text x="400" y="490" font-family="Arial,sans-serif" font-size="16" fill="#0F766E" text-anchor="middle" letter-spacing="4">NASAMA SHOP</text>
+  <text x="400" y="545" font-family="Arial,sans-serif" font-size="15" fill="#0B4F4A" text-anchor="middle" opacity="0.5">صورة الغلاف — سيتم إضافتها قريباً</text>
+</svg>
