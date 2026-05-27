@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { 
   ShieldCheck, Star, CheckCircle2, ChevronLeft, ArrowLeft, 
   Leaf, Zap, Play, AlertTriangle, Wind, HeartPulse, XCircle, Wallet,
-  Flame, BellRing
+  Flame, BellRing, Users, Clock
 } from 'lucide-react'
 import type { Product } from '@/types'
 import { getDefaultOffer } from '@/lib/products'
