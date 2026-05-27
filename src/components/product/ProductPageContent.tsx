@@ -78,7 +78,7 @@ export default function ProductPageContent({
                   ))}
                 </div>
                 <span className="text-base font-extrabold text-charcoal">4.9/5</span>
-                <span className="text-sm font-bold text-teal-dark">(أكثر من 2,600 تقييم)</span>
+                <span className="text-sm font-bold text-teal-dark">(أكثر من 2,700 تقييم)</span>
               </div>
 
               <p className="text-charcoal/80 text-lg leading-relaxed mb-8 font-medium">
