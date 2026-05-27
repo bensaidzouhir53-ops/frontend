@@ -99,27 +99,6 @@ function getRiyadhParts(): { hour: number; minute: number; iso: string } {
 const CALL_START_HOUR = 9
 const CALL_END_HOUR = 21
 
-function pluralAr(count: number, singular: string, dual: string, plural: string): string {
-  if (count === 1) return singular
-  if (count === 2) return dual
-  if (count >= 3 && count <= 10) return `${count} ${plural}`
-  return `${count} ${singular}`
-}
-
-function formatDurationAr(totalMinutes: number): string {
-  if (totalMinutes <= 0) return 'الآن'
-  const hours = Math.floor(totalMinutes / 60)
-  const minutes = totalMinutes % 60
-  if (hours === 0) return pluralAr(minutes, 'دقيقة', 'دقيقتين', 'دقائق')
-  if (minutes === 0) return pluralAr(hours, 'ساعة', 'ساعتين', 'ساعات')
-  return `${pluralAr(hours, 'ساعة', 'ساعتين', 'ساعات')} و${pluralAr(
-    minutes,
-    'دقيقة',
-    'دقيقتين',
-    'دقائق',
-  )}`
-}
-
 export default function ThankYouView({
   fallbackOrderNumber,
   fallbackTotal,
@@ -162,33 +141,27 @@ export default function ThankYouView({
     const minutesNow = hour * 60 + minute
     const startMinutes = CALL_START_HOUR * 60
     const endMinutes = CALL_END_HOUR * 60
+    const inside = minutesNow >= startMinutes && minutesNow < endMinutes
 
-    if (minutesNow >= startMinutes && minutesNow < endMinutes) {
-      const closesIn = endMinutes - minutesNow
+    if (inside) {
       return {
         mode: 'inside' as const,
-        message:
-          'فريقنا بيتصل فيك خلال أقل من 10 دقائق من رقم سعودي 🇸🇦 — يرجى الرد ولو ما تعرف الرقم.',
-        subMessage: `نافذة الاتصال مفتوحة الحين، تقفل بعد ${formatDurationAr(closesIn)} (الساعة 9 مساءً).`,
-        Icon: Phone,
-        accent: 'teal' as const,
+        pill: 'دوامنا مفتوح الحين',
+        headline: 'بنتصل فيك خلال أقل من 10 دقائق ⏱️',
+        sub:
+          'من رقم سعودي 🇸🇦 — يرجى الرد ولو ما تعرف الرقم. المكالمة أقل من دقيقتين، نتأكد من العنوان وعدد القطع، وبعدها يدخل طلبك مباشرة في الشحن.',
       }
     }
 
-    let minutesUntilStart: number
-    if (minutesNow < startMinutes) {
-      minutesUntilStart = startMinutes - minutesNow
-    } else {
-      minutesUntilStart = 24 * 60 - minutesNow + startMinutes
-    }
+    const earlyMorning = minutesNow < startMinutes
 
     return {
       mode: 'outside' as const,
-      message:
-        'الطلب وصلنا. بنتواصل معك صباحاً من 9 صباحاً بتوقيت السعودية لتأكيد التوصيل.',
-      subMessage: `الاتصال بعد ${formatDurationAr(minutesUntilStart)} تقريباً — جوالك قريب منك صباحاً يا بطل.`,
-      Icon: Moon,
-      accent: 'gold' as const,
+      pill: earlyMorning ? 'صباح الخير 🌅' : 'دوامنا قفل الحين',
+      headline: earlyMorning
+        ? 'أول ما يبدأ دوامنا الساعة 9 ص بنتصل فيك على طول'
+        : 'بنتصل فيك صباحاً بعون الله الساعة 9 ص',
+      sub: 'نشتغل من 9 صباحاً إلى 9 مساءً بتوقيت الرياض، ونرد على كل طلب خلال 10 دقائق داخل هذا الوقت. طلبك محفوظ ومُجهَّز، ما عليك إلا تخلي جوالك قريب صباحاً.',
     }
   }, [tick])
 
@@ -276,29 +249,10 @@ export default function ThankYouView({
       {/* MAIN CONTENT */}
       <div className="relative -mt-20 mx-auto max-w-3xl px-4">
         {/* CALL BANNER — the star */}
-        <div
-          className={cn(
-            'relative overflow-hidden rounded-[2rem] border p-6 shadow-2xl md:p-8',
-            callStatus.accent === 'teal'
-              ? 'border-teal/30 bg-white'
-              : 'border-gold/30 bg-white',
-          )}
-        >
-          <div
-            className={cn(
-              'absolute -right-10 -top-10 h-40 w-40 rounded-full blur-3xl',
-              callStatus.accent === 'teal' ? 'bg-teal/15' : 'bg-gold/25',
-            )}
-          />
+        <div className="relative overflow-hidden rounded-[2rem] border border-teal/30 bg-white p-6 shadow-2xl md:p-8">
+          <div className="absolute -right-10 -top-10 h-40 w-40 rounded-full bg-teal/15 blur-3xl" />
           <div className="relative flex flex-col gap-4 md:flex-row md:items-center">
-            <div
-              className={cn(
-                'flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl text-white shadow-lg',
-                callStatus.accent === 'teal'
-                  ? 'bg-teal shadow-teal/30'
-                  : 'bg-gold shadow-gold/30',
-              )}
-            >
+            <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-teal text-white shadow-lg shadow-teal/30">
               {callStatus.mode === 'inside' ? (
                 <Phone className="h-7 w-7 animate-pulse" />
               ) : (
@@ -307,29 +261,23 @@ export default function ThankYouView({
             </div>
             <div className="flex-1">
               <div className="mb-2 flex flex-wrap items-center gap-2">
-                <span
-                  className={cn(
-                    'inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-extrabold',
-                    callStatus.accent === 'teal'
-                      ? 'bg-teal/10 text-teal-dark'
-                      : 'bg-gold/15 text-gold-dark',
-                  )}
-                >
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-teal/10 px-3 py-1 text-xs font-extrabold text-teal-dark">
                   <Clock className="h-3 w-3" />
-                  {callStatus.mode === 'inside'
-                    ? 'الآن — مكالمة خلال أقل من 10 دقائق'
-                    : 'خارج وقت العمل الآن'}
+                  {callStatus.pill}
                 </span>
                 <span className="inline-flex items-center gap-1 rounded-full bg-charcoal/5 px-3 py-1 text-xs font-bold text-charcoal/70">
                   <Volume2 className="h-3 w-3" />
                   رقم سعودي 🇸🇦
                 </span>
+                <span className="inline-flex items-center gap-1 rounded-full bg-charcoal/5 px-3 py-1 text-xs font-bold text-charcoal/70">
+                  دوامنا 9 ص – 9 م (الرياض)
+                </span>
               </div>
               <h2 className="text-xl font-extrabold text-charcoal md:text-2xl">
-                {callStatus.message}
+                {callStatus.headline}
               </h2>
-              <p className="mt-2 text-sm font-bold text-charcoal/60">
-                {callStatus.subMessage}
+              <p className="mt-2 text-sm font-bold leading-relaxed text-charcoal/60">
+                {callStatus.sub}
               </p>
             </div>
           </div>
@@ -382,8 +330,12 @@ export default function ThankYouView({
               icon={Phone}
               title="مكالمة التأكيد"
               tone="active"
-              time={callStatus.mode === 'inside' ? 'خلال 10 دقائق' : 'صباحاً عند 9 ص'}
-              body="نتأكد من الاسم والعنوان وعدد القطع. المكالمة قصيرة وبتاخذ أقل من دقيقتين."
+              time={
+                callStatus.mode === 'inside'
+                  ? 'خلال 10 دقائق'
+                  : 'صباحاً 9 ص خلال 10 دقائق'
+              }
+              body="نتأكد من الاسم والعنوان وعدد القطع. المكالمة قصيرة وبتاخذ أقل من دقيقتين، ومن رقم سعودي 🇸🇦 (يرجى الرد ولو ما تعرف الرقم)."
             />
             <TimelineStep
               icon={Package}
