@@ -3,6 +3,12 @@ export interface FAQItem {
   a: string
 }
 
+export interface Ingredient {
+  name: string
+  desc: string
+  image: string
+}
+
 export interface Product {
   slug: string
   sku: string
@@ -14,6 +20,7 @@ export interface Product {
   crossSells: string[]
   benefits: string[]
   ingredients: string[]
+  detailedIngredients?: Ingredient[]
   faqs: FAQItem[]
 }
 

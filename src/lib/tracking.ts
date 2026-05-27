@@ -289,11 +289,84 @@ function safeSnaptr(
   }
 }
 
+function randomId(): string {
+  if (typeof crypto !== 'undefined' && 'randomUUID' in crypto) {
+    return crypto.randomUUID()
+  }
+  return `${Date.now()}-${Math.random().toString(16).slice(2)}`
+}
+
+function getStoredId(storage: Storage, key: string): string {
+  const existing = storage.getItem(key)
+  if (existing) return existing
+  const value = randomId()
+  storage.setItem(key, value)
+  return value
+}
+
+function trackFirstParty(eventName: string, props: TrackingProps = {}): void {
+  if (typeof window === 'undefined') return
+  if (window.location.pathname.startsWith('/admin')) return
+
+  try {
+    const attribution = captureAttribution()
+    const payload = {
+      event_name: eventName,
+      event_id: props.event_id,
+      visitor_id: getStoredId(window.localStorage, 'nasama_visitor_id'),
+      session_id: getStoredId(window.sessionStorage, 'nasama_session_id'),
+      page_url: window.location.href,
+      referrer: document.referrer,
+      user_agent: navigator.userAgent,
+      value: props.value,
+      currency: props.currency ?? 'SAR',
+      content_ids: props.content_ids ?? [],
+      metadata: {
+        content_type: props.content_type ?? 'product',
+        order_id: props.order_id,
+      },
+      utm: attribution.utm ?? {},
+      click_ids: {
+        fbclid: attribution.fbclid ?? '',
+        ttclid: attribution.ttclid ?? '',
+        sc_click_id: attribution.sc_click_id ?? '',
+      },
+      cookies: {
+        _fbp: attribution._fbp ?? '',
+        _fbc: attribution._fbc ?? '',
+        _ttp: attribution._ttp ?? '',
+        _scid: attribution._scid ?? '',
+      },
+    }
+    const body = JSON.stringify(payload)
+
+    if (navigator.sendBeacon) {
+      const blob = new Blob([body], { type: 'application/json' })
+      navigator.sendBeacon('/api/tracking/events', blob)
+      return
+    }
+
+    void fetch('/api/tracking/events', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body,
+      keepalive: true,
+    })
+  } catch (error) {
+    console.warn('[tracking] First-party event failed:', error)
+  }
+}
+
 // ---------------------------------------------------------------------------
 // Public track events
 // ---------------------------------------------------------------------------
 
+export function trackFirstPartyPageView(): void {
+  trackFirstParty('PageView')
+}
+
 export function trackPageView(): void {
+  trackFirstParty('PageView')
   safeFbq('track', 'PageView')
   safeTtq('ViewContent')
   safeSnaptr('track', 'PAGE_VIEW')
@@ -322,6 +395,7 @@ export function trackViewContent(props: TrackingProps): void {
     content_type,
   })
   safeSnaptr('track', 'VIEW_CONTENT', { price: value, currency })
+  trackFirstParty('ViewContent', props)
 }
 
 export function trackAddToCart(props: TrackingProps): void {
@@ -347,6 +421,7 @@ export function trackAddToCart(props: TrackingProps): void {
     content_type,
   })
   safeSnaptr('track', 'ADD_CART', { price: value, currency })
+  trackFirstParty('AddToCart', props)
 }
 
 export function trackInitiateCheckout(props: TrackingProps): void {
@@ -360,6 +435,7 @@ export function trackInitiateCheckout(props: TrackingProps): void {
   })
   safeTtq('InitiateCheckout', { value, currency, content_id: content_ids[0] })
   safeSnaptr('track', 'START_CHECKOUT', { price: value, currency })
+  trackFirstParty('InitiateCheckout', props)
 }
 
 export function trackPurchase(props: TrackingProps): void {
@@ -392,4 +468,5 @@ export function trackPurchase(props: TrackingProps): void {
     currency,
     transaction_id: order_id,
   })
+  trackFirstParty('Purchase', props)
 }

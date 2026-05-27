@@ -279,7 +279,7 @@ export default function ProductPageContent({
                   : 'كيف يشتغل المنتج ويريح صدرك؟'}
               </h2>
               
-              <div className="relative space-y-8 before:absolute before:inset-y-0 before:right-6 before:w-0.5 before:bg-gradient-to-b before:from-teal before:via-teal/50 before:to-transparent">
+              <div className="relative space-y-8">
                 {(product.slug === 'herbal-lung-spray'
                   ? [
                       { step: 1, title: 'تفكيك ترسبات السنين فوراً', desc: 'بمجرد بخات بسيطة بالفم، تتغلغل المستخلصات العشبية القوية لتفكيك طبقات النيكوتين والقطران المتصلبة في ممراتك التنفسية.' },
@@ -292,17 +292,17 @@ export default function ProductPageContent({
                       { step: 3, title: 'انتعاش وراحة تدوم', desc: 'تترك طبقة منعشة تحمي وتهدئ جهازك التنفسي، لترجع تتنفس براحة تامة طوال اليوم.' }
                     ]
                 ).map((item, idx) => (
-                  <div key={item.step} className="relative flex gap-6 justify-end group">
-                    <div className="text-right pt-2">
-                      <h4 className="font-extrabold text-xl text-charcoal mb-2 group-hover:text-teal transition-colors">{item.title}</h4>
-                      <p className="text-charcoal/70 leading-relaxed font-medium">{item.desc}</p>
-                    </div>
+                  <div key={item.step} className="relative flex gap-6 justify-start group">
                     {/* Glowing Step Number */}
                     <div className="relative flex-shrink-0 z-10">
                       <div className="absolute inset-0 bg-teal rounded-full blur-md opacity-0 group-hover:opacity-60 transition-opacity duration-500" />
                       <div className="relative w-12 h-12 rounded-full bg-gradient-to-br from-teal-dark to-teal text-white font-extrabold flex items-center justify-center text-xl shadow-lg border-2 border-white group-hover:scale-110 transition-transform duration-300">
                         {item.step}
                       </div>
+                    </div>
+                    <div className="text-right pt-2">
+                      <h4 className="font-extrabold text-xl text-charcoal mb-2 group-hover:text-teal transition-colors">{item.title}</h4>
+                      <p className="text-charcoal/70 leading-relaxed font-medium">{item.desc}</p>
                     </div>
                   </div>
                 ))}
@@ -323,6 +323,46 @@ export default function ProductPageContent({
           </div>
         </div>
       </section>
+
+      {/* ── 4.5 Ingredients Section ── */}
+      {product.detailedIngredients && product.detailedIngredients.length > 0 && (
+        <section className="py-16 md:py-24 bg-mist/10 relative overflow-hidden">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div className="text-center mb-12 md:mb-16">
+              <div className="inline-flex items-center gap-2 text-teal mb-4 bg-teal/10 px-5 py-2 rounded-full font-bold text-sm border border-teal/20 shadow-sm">
+                <Leaf className="w-4 h-4" />
+                مكونات طبيعية 100%
+              </div>
+              <h2 className="text-3xl md:text-4xl font-extrabold text-charcoal mb-4 tracking-tight">
+                سر التركيبة العشبية الفعالة
+              </h2>
+              <p className="text-lg text-charcoal/70 max-w-2xl mx-auto font-medium">
+                جمعنا لك أقوى الأعشاب الطبيعية اللي تشتغل مع بعض عشان تنظف صدرك وترجع لك تنفسك الطبيعي والمريح.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+              {product.detailedIngredients.map((ingredient, idx) => (
+                <div key={idx} className="bg-white rounded-[2rem] p-6 shadow-sm border border-sage/20 hover:shadow-xl hover:border-teal/30 transition-all group flex flex-col items-center text-center">
+                  <div className="w-24 h-24 rounded-full overflow-hidden mb-6 border-4 border-mist shadow-inner group-hover:scale-110 transition-transform duration-500">
+                    <img 
+                      src={ingredient.image} 
+                      alt={ingredient.name} 
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <h3 className="text-xl font-extrabold text-charcoal mb-3 group-hover:text-teal transition-colors">
+                    {ingredient.name}
+                  </h3>
+                  <p className="text-charcoal/70 leading-relaxed font-medium">
+                    {ingredient.desc}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* ── 5. Comparison Table (Us vs. Them) ── */}
       <section className="py-16 md:py-24 bg-mist/30">
