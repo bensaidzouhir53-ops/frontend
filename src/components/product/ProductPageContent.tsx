@@ -184,8 +184,8 @@ export default function ProductPageContent({
               <div className="absolute inset-0 bg-red-500/10 blur-[60px] rounded-full" />
               <div className="relative aspect-[4/5] rounded-[2.5rem] overflow-hidden bg-gray-100 border border-sage/20 shadow-2xl">
                 <img 
-                  src="https://placehold.co/800x1000/f87171/ffffff?text=Pain+Point+Image+(Man+Coughing/Tired)" 
-                  alt="Pain placeholder" 
+                  src={product.slug === 'herbal-lung-spray' ? '/images/pain-point-lung.png' : 'https://placehold.co/800x1000/f87171/ffffff?text=Pain+Point+Image'} 
+                  alt={product.slug === 'herbal-lung-spray' ? 'شخص يعاني من كتمة في الصدر' : 'Pain placeholder'} 
                   className="w-full h-full object-cover grayscale-[30%] contrast-125"
                 />
                 {/* Overlay gradient for dramatic effect */}
@@ -328,37 +328,56 @@ export default function ProductPageContent({
       {product.detailedIngredients && product.detailedIngredients.length > 0 && (
         <section className="py-16 md:py-24 bg-mist/10 relative overflow-hidden">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <div className="text-center mb-12 md:mb-16">
-              <div className="inline-flex items-center gap-2 text-teal mb-4 bg-teal/10 px-5 py-2 rounded-full font-bold text-sm border border-teal/20 shadow-sm">
-                <Leaf className="w-4 h-4" />
-                مكونات طبيعية 100%
-              </div>
-              <h2 className="text-3xl md:text-4xl font-extrabold text-charcoal mb-4 tracking-tight">
-                سر التركيبة العشبية الفعالة
-              </h2>
-              <p className="text-lg text-charcoal/70 max-w-2xl mx-auto font-medium">
-                جمعنا لك أقوى الأعشاب الطبيعية اللي تشتغل مع بعض عشان تنظف صدرك وترجع لك تنفسك الطبيعي والمريح.
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
-              {product.detailedIngredients.map((ingredient, idx) => (
-                <div key={idx} className="bg-white rounded-[2rem] p-6 shadow-sm border border-sage/20 hover:shadow-xl hover:border-teal/30 transition-all group flex flex-col items-center text-center">
-                  <div className="w-24 h-24 rounded-full overflow-hidden mb-6 border-4 border-mist shadow-inner group-hover:scale-110 transition-transform duration-500">
-                    <img 
-                      src={ingredient.image} 
-                      alt={ingredient.name} 
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <h3 className="text-xl font-extrabold text-charcoal mb-3 group-hover:text-teal transition-colors">
-                    {ingredient.name}
-                  </h3>
-                  <p className="text-charcoal/70 leading-relaxed font-medium">
-                    {ingredient.desc}
-                  </p>
+            <div className="flex flex-col lg:flex-row gap-12 lg:gap-16 items-center">
+              
+              {/* Image Side (Left visually, Right in DOM for RTL) */}
+              <div className="w-full lg:w-5/12 order-1 lg:order-2">
+                <div className="relative aspect-[3/4] rounded-[2.5rem] overflow-hidden bg-white border border-sage/20 shadow-2xl group">
+                  <img 
+                    src="https://placehold.co/800x1000/0f766e/ffffff?text=Main+Ingredients+Image" 
+                    alt="مكونات طبيعية" 
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-charcoal/50 to-transparent opacity-60" />
                 </div>
-              ))}
+              </div>
+
+              {/* Content Side (Right visually, Left in DOM for RTL) */}
+              <div className="w-full lg:w-7/12 order-2 lg:order-1 text-right">
+                <div className="inline-flex items-center gap-2 text-teal mb-4 bg-teal/10 px-5 py-2 rounded-full font-bold text-sm border border-teal/20 shadow-sm">
+                  <Leaf className="w-4 h-4" />
+                  مكونات طبيعية 100%
+                </div>
+                <h2 className="text-3xl md:text-4xl font-extrabold text-charcoal mb-4 tracking-tight">
+                  سر التركيبة العشبية الفعالة
+                </h2>
+                <p className="text-lg text-charcoal/70 mb-10 font-medium leading-relaxed">
+                  جمعنا لك أقوى الأعشاب الطبيعية اللي تشتغل مع بعض عشان تنظف صدرك وترجع لك تنفسك الطبيعي والمريح.
+                </p>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-8">
+                  {product.detailedIngredients.map((ingredient, idx) => (
+                    <div key={idx} className="flex gap-4 items-start group">
+                      <div className="w-16 h-16 rounded-2xl overflow-hidden flex-shrink-0 border-2 border-white shadow-md group-hover:shadow-lg group-hover:scale-105 transition-all duration-300 bg-mist">
+                        <img 
+                          src={ingredient.image} 
+                          alt={ingredient.name} 
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                      <div>
+                        <h3 className="text-lg font-extrabold text-charcoal mb-1.5 group-hover:text-teal transition-colors">
+                          {ingredient.name}
+                        </h3>
+                        <p className="text-sm text-charcoal/70 leading-relaxed font-medium">
+                          {ingredient.desc}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
             </div>
           </div>
         </section>
