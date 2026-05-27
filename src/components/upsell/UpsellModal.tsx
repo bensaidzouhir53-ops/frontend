@@ -49,22 +49,41 @@ export default function UpsellModal() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isUpsellOpen])
 
-  const getOrderFromSession = () => {
+  type StoredOrder = {
+    order_id: string
+    order_number: string
+    subtotal?: number
+    upsell_total?: number
+    total: number
+    customer_name?: string
+    phone?: string
+    items?: Array<{
+      slug: string
+      name_ar: string
+      qty: number
+      price: number
+      image: string
+    }>
+    upsell_item?: {
+      slug: string
+      name_ar: string
+      price: number
+      image?: string
+    } | null
+    created_at?: string
+  }
+
+  const getOrderFromSession = (): StoredOrder | null => {
     try {
       const raw = sessionStorage.getItem('nasama_order')
       if (!raw) return null
-      return JSON.parse(raw) as {
-        order_id: string
-        order_number: string
-        total: number
-      }
+      return JSON.parse(raw) as StoredOrder
     } catch {
       return null
     }
   }
 
   const navigateToThankYou = (orderNumber: string, orderTotal: number) => {
-    sessionStorage.removeItem('nasama_order')
     router.push(`/thank-you?order=${orderNumber}&total=${orderTotal}`)
   }
 
@@ -91,11 +110,25 @@ export default function UpsellModal() {
           order_id: order.order_id,
         })
 
-        closeUpsell()
-        navigateToThankYou(
-          order.order_number,
-          order.total + UPSELL_PRICE,
+        const upsellProductData = getProductBySlug(upsellProduct.product_slug)
+        const newTotal = order.total + UPSELL_PRICE
+        sessionStorage.setItem(
+          'nasama_order',
+          JSON.stringify({
+            ...order,
+            upsell_total: (order.upsell_total ?? 0) + UPSELL_PRICE,
+            total: newTotal,
+            upsell_item: {
+              slug: upsellProduct.product_slug,
+              name_ar: upsellProduct.name_ar,
+              price: UPSELL_PRICE,
+              image: upsellProductData?.image,
+            },
+          }),
         )
+
+        closeUpsell()
+        navigateToThankYou(order.order_number, newTotal)
       } else {
         // Fallback: decline gracefully if order data is missing
         closeUpsell()

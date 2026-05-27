@@ -121,7 +121,20 @@ export default function CheckoutModal() {
         JSON.stringify({
           order_id: response.order_id,
           order_number: response.order_number,
+          subtotal: response.subtotal ?? cartTotal,
+          upsell_total: 0,
           total: response.total,
+          customer_name: data.name,
+          phone: normalizedPhone,
+          items: items.map((i) => ({
+            slug: i.product.slug,
+            name_ar: i.product.nameAr,
+            qty: i.qty,
+            price: i.price,
+            image: i.product.image,
+          })),
+          upsell_item: null,
+          created_at: new Date().toISOString(),
         }),
       )
 
