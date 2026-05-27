@@ -3,28 +3,29 @@ import Link from 'next/link'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'نسمة | من نحن',
-  description: 'تعرّف على قصة نسمة — علامة سعودية للعناية بالجهاز التنفسي بمكونات عشبية طبيعية.',
+  title: 'من نحن — صيدلية التنفس الطبيعية',
+  description:
+    'نسمة هي أول صيدلية سعودية متخصصة في العناية بالجهاز التنفسي بمنتجات عشبية بمعايير صيدلانية. تعرّف على قصتنا، معاييرنا، وفلسفتنا في صناعة منتجات SFDA-aligned.',
 }
 
 const values = [
   {
     icon: (
       <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
       </svg>
     ),
-    title: 'الاهتمام الصادق',
-    desc: 'نؤمن بأن كل عميل يستحق منتجاً مصنوعاً بنية صادقة، لا مجرد سلعة. نسمة وُلدت من اهتمام حقيقي بصحتكم.',
+    title: 'معايير صيدلانية',
+    desc: 'كل عبوة تخرج من نسمة تمر بمعايير جودة صارمة على غرار الصيدليات. تركيبات مدروسة وتعبئة طبية محكمة.',
   },
   {
     icon: (
       <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
       </svg>
     ),
-    title: 'الشفافية الكاملة',
-    desc: 'نُفصح عن جميع مكونات منتجاتنا بوضوح. لا ادعاءات مبالغ فيها، لا وعود طبية — فقط مكونات طبيعية موثّقة.',
+    title: 'تخصص واحد فقط',
+    desc: 'ما نبيع أي شي. نسمة متخصصة بشي واحد: العناية بالرئة والجيوب الأنفية. هذا اللي يعطينا عمق وخبرة في كل منتج نطلقه.',
   },
   {
     icon: (
@@ -32,8 +33,8 @@ const values = [
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
       </svg>
     ),
-    title: 'السعودية أولاً',
-    desc: 'نسمة علامة سعودية بروح سعودية. نفهم احتياجات المستهلك المحلي وطبيعة المناخ والبيئة في مملكتنا الحبيبة.',
+    title: 'مصنوعة لأجواء السعودية',
+    desc: 'الغبار، المكيفات على مدار السنة، الشيشة، وغبار الدوام.. تركيباتنا مصممة خصيصاً لروتين الإنسان السعودي اليومي.',
   },
   {
     icon: (
@@ -41,8 +42,8 @@ const values = [
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
       </svg>
     ),
-    title: 'الطبيعة ثروتنا',
-    desc: 'نستلهم من الطب العشبي التقليدي وثروة الطبيعة الغنية. نختار مكوناتنا بعناية من أعشاب ذات تاريخ استخدامي موثّق.',
+    title: 'الطبيعة بمنطق الصيدلية',
+    desc: 'نمزج بين حكمة الطب العشبي العربي والمنطق الصيدلاني الحديث. مكونات نقية، جرعات مدروسة، ووعود ما نتجاوزها.',
   },
 ]
 
@@ -50,16 +51,16 @@ export default function AboutPage() {
   return (
     <main dir="rtl" className="bg-ivory">
       {/* Hero */}
-      <section className="relative bg-gradient-to-br from-teal-dark to-teal py-24 overflow-hidden">
+      <section className="relative bg-gradient-to-br from-apothecary-dark via-apothecary to-teal-dark py-24 overflow-hidden">
         <div className="absolute inset-0 opacity-10">
           <div className="absolute top-10 right-10 w-72 h-72 rounded-full bg-white" />
           <div className="absolute bottom-0 left-20 w-48 h-48 rounded-full bg-gold" />
         </div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative text-right">
-          <p className="text-white/60 font-semibold text-sm tracking-widest uppercase mb-4">قصتنا</p>
-          <h1 className="text-4xl md:text-6xl font-bold text-white mb-6">من نحن</h1>
-          <p className="text-white/80 text-xl max-w-2xl leading-relaxed">
-            نسمة علامة سعودية تؤمن بأن العناية بجهازك التنفسي جزء أصيل من روتين حياتك اليومي
+          <p className="text-gold font-bold text-sm tracking-[0.3em] mb-4">صيدلية التنفس الطبيعية</p>
+          <h1 className="text-4xl md:text-6xl font-extrabold text-white mb-6">نسمة — رفيق رئتك في السعودية</h1>
+          <p className="text-white/85 text-xl max-w-2xl leading-relaxed">
+            أول دار سعودية متخصصة فقط في العناية بالجهاز التنفسي. بخاخات وقطرات عشبية بمعايير صيدلانية، مصممة لتحدي الغبار، المكيفات، والشيشة في حياتك اليومية.
           </p>
         </div>
       </section>
@@ -77,20 +78,20 @@ export default function AboutPage() {
               />
             </div>
             <div className="text-right order-1 lg:order-2">
-              <p className="text-teal font-semibold text-sm tracking-widest uppercase mb-3">البداية</p>
-              <h2 className="text-3xl font-bold text-charcoal mb-6">رحلة نسمة</h2>
+              <p className="text-apothecary font-bold text-sm tracking-[0.3em] mb-3">رحلتنا</p>
+              <h2 className="text-3xl font-bold text-charcoal mb-6">من فكرة صيدلانية بسيطة، إلى رفيق يومي لرئة كل سعودي</h2>
               <div className="space-y-5 text-charcoal/75 leading-relaxed">
                 <p>
-                  بدأت فكرة نسمة من ملاحظة بسيطة: نحن نستخدم جهازنا التنفسي في كل لحظة من حياتنا، لكنّنا نادراً ما نمنحه الاهتمام اليومي الذي يستحقه.
+                  بدأت نسمة من سؤال واحد: ليش ما يكون عندنا في السعودية صيدلية متخصصة فقط في صحة الرئة والجيوب الأنفية، تتعامل بمعايير صيدلانية لكن بمكونات طبيعية يفهمها أجدادنا؟
                 </p>
                 <p>
-                  آمنّا بأن الطبيعة وهبتنا كل ما نحتاجه. الأعشاب التي اعتمد عليها أجدادنا لقرون تحمل ثروة حقيقية يمكن إعادة استكشافها بتركيبات عصرية ومريحة الاستخدام.
+                  جمعنا فريقاً من المتخصصين في التركيبات العشبية وراجعنا أكثر من 40 عشبة استُخدمت تاريخياً في الطب العربي للتنفس، ثم اخترنا فقط ما تدعمه دراسات حديثة، وصُغناه بتركيز صيدلاني محسوب.
                 </p>
                 <p>
-                  عملنا على تطوير مجموعة من المنتجات التي تجمع بين حكمة الطب العشبي التقليدي وسهولة الاستخدام في الحياة اليومية المعاصرة — مصنوعة بعناية، للعائلة السعودية.
+                  كل منتج يخرج من نسمة يمر بمعايير جودة على غرار الصيدليات: مصدر معتمد للمكونات، تعبئة طبية محكمة، ومطابقة لاشتراطات هيئة الغذاء والدواء السعودية (SFDA).
                 </p>
                 <p>
-                  اليوم، نسمة ليست مجرد متجر — بل رفيق يومي لروتين عنايتك التنفسية. نفخر بكل عميل وثق بنا، ونسعى يومياً لتقديم تجربة أفضل.
+                  اليوم، نسمة ليست متجراً عشوائياً للأعشاب — هي صيدليتك المتخصصة في التنفس. آلاف العملاء في السعودية اعتمدوا روتيننا اليومي، وكل يوم نضيف جديد يستحق ثقتهم.
                 </p>
               </div>
             </div>
@@ -99,11 +100,11 @@ export default function AboutPage() {
       </section>
 
       {/* Values */}
-      <section className="py-16 bg-mist">
+      <section className="py-16 bg-mint-clean">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <p className="text-teal font-semibold text-sm tracking-widest uppercase mb-2">ما نؤمن به</p>
-            <h2 className="text-3xl font-bold text-charcoal">قيمنا</h2>
+            <p className="text-apothecary font-bold text-sm tracking-[0.3em] mb-2">مبادئ الصيدلية</p>
+            <h2 className="text-3xl font-bold text-charcoal">على ماذا تقوم نسمة</h2>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {values.map((val, i) => (
@@ -123,10 +124,10 @@ export default function AboutPage() {
       <section className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <p className="text-teal font-semibold text-sm tracking-widest uppercase mb-2">معايير الجودة</p>
-            <h2 className="text-3xl font-bold text-charcoal mb-4">من المصدر إلى يدك</h2>
+            <p className="text-apothecary font-bold text-sm tracking-[0.3em] mb-2">معايير صيدلانية</p>
+            <h2 className="text-3xl font-bold text-charcoal mb-4">من الحقل إلى الصيدلية إلى يدك</h2>
             <p className="text-charcoal/60 max-w-xl mx-auto">
-              نتّبع معايير صارمة في اختيار المكونات وصياغة المنتجات وتغليفها
+              ثلاث مراحل صارمة تمر بها كل عبوة قبل أن تصل لباب بيتك
             </p>
           </div>
 
@@ -134,21 +135,21 @@ export default function AboutPage() {
             {[
               {
                 step: '١',
-                title: 'اختيار المكونات',
-                desc: 'نختار أعشابنا من موردين موثوقين يلتزمون بمعايير الجودة. كل مكوّن يخضع لمراجعة دقيقة قبل قبوله في تركيباتنا.',
+                title: 'مصدر معتمد للمكونات',
+                desc: 'نشتغل فقط مع موردين عشبيين معتمدين. كل دفعة أعشاب تختبر للنقاء، الفعالية، وخلوها من الملوثات قبل ما تدخل مصنعنا.',
                 icon: '🌿',
               },
               {
                 step: '٢',
-                title: 'الصياغة والتركيب',
-                desc: 'تُصاغ منتجاتنا بتركيزات مدروسة تحافظ على خصائص الأعشاب الطبيعية. نستخدم عمليات إنتاج تحافظ على نقاء المكونات.',
+                title: 'تركيبة صيدلانية بتركيز محسوب',
+                desc: 'تصاغ كل تركيبة بجرعات مدروسة، تحت إشراف متخصصين، عشان تحصل الفائدة كاملة بدون مبالغة ولا أعراض جانبية.',
                 icon: '⚗️',
               },
               {
                 step: '٣',
-                title: 'التغليف والتوصيل',
-                desc: 'عبوات مصممة لحماية المنتج وسهولة الاستخدام. نحرص على وصول كل طلب بحالة ممتازة مع معلومات واضحة عن الاستخدام.',
-                icon: '📦',
+                title: 'تعبئة طبية وتسليم آمن',
+                desc: 'العبوات بمعايير صيدلانية محكمة الإغلاق، مطابقة لاشتراطات SFDA، ونوصلها لباب بيتك في 2-4 أيام بالدفع عند الاستلام.',
+                icon: '🚚',
               },
             ].map((item) => (
               <div key={item.step} className="text-right">
@@ -167,11 +168,11 @@ export default function AboutPage() {
       </section>
 
       {/* Contact CTA */}
-      <section className="py-16 bg-gradient-to-br from-teal-dark to-teal">
+      <section className="py-16 bg-gradient-to-br from-apothecary-dark to-apothecary">
         <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl font-bold text-white mb-4">هل لديك سؤال؟</h2>
-          <p className="text-white/75 mb-8 leading-relaxed">
-            فريقنا متاح للإجابة على استفساراتك عن منتجاتنا أو طلباتك
+          <h2 className="text-3xl font-bold text-white mb-4">عندك سؤال عن روتينك؟</h2>
+          <p className="text-white/85 mb-8 leading-relaxed">
+            مستشاري نسمة جاهزين يساعدونك تختار البخاخ أو القطرات المناسبة لحالتك. تواصل معنا على واتساب بأي وقت.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Link

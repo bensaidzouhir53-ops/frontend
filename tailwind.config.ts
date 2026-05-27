@@ -5,11 +5,14 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        teal: { DEFAULT: '#0F766E', dark: '#0B4F4A' },
+        teal: { DEFAULT: '#0F766E', dark: '#0B4F4A', light: '#3FA39A' },
+        apothecary: { DEFAULT: '#0C5A4E', dark: '#083F37' },
         sage: '#A7C4B5',
-        gold: '#D7A85C',
+        gold: { DEFAULT: '#D7A85C', dark: '#B88838' },
         ivory: '#FAF7F0',
         mist: '#EEF7F4',
+        'mint-clean': '#E8F3EE',
+        'signal-red': '#B0282B',
         charcoal: '#1F2933',
       },
       fontFamily: {

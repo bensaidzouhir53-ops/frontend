@@ -30,11 +30,11 @@ export default function Header() {
             <LungLogo className="h-full w-full scale-110" priority />
           </div>
           <div className="flex flex-col leading-none">
-            <span className="text-xl font-bold tracking-tight text-teal-dark">
+            <span className="text-xl font-bold tracking-tight text-apothecary">
               نسمة
             </span>
-            <span className="text-[10px] font-medium tracking-widest text-teal/70 uppercase ltr">
-              nasama shop
+            <span className="text-[10px] font-bold tracking-widest text-teal/80 mt-0.5">
+              صيدلية التنفس الطبيعية
             </span>
           </div>
         </Link>

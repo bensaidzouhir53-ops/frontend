@@ -30,13 +30,13 @@ export default function Footer() {
                 </div>
                 <div className="flex flex-col leading-none">
                   <span className="text-4xl font-extrabold text-white tracking-tight drop-shadow-sm">نسمة</span>
-                  <span className="text-xs font-bold tracking-[0.35em] text-gold uppercase ltr mt-2 opacity-90 drop-shadow-sm">
-                    nasama shop
+                  <span className="text-xs font-bold tracking-[0.25em] text-gold mt-2 opacity-90 drop-shadow-sm">
+                    صيدلية التنفس الطبيعية
                   </span>
                 </div>
               </div>
               <p className="text-base md:text-lg leading-relaxed text-mist/70 font-medium">
-                متجر متخصص في منتجات العناية بالجهاز التنفسي. تركيبات عشبية طبيعية 100% صُممت خصيصاً لدعم إحساس التنفس المريح في يومك واستعادة نشاطك.
+                نسمة هي أول صيدلية سعودية متخصصة في العناية بالجهاز التنفسي. بخاخات وقطرات عشبية بمعايير صيدلانية، مطابقة لمواصفات هيئة الغذاء والدواء (SFDA)، تعتني برئتيك وجيوبك الأنفية في ظروف السعودية: غبار، مكيفات، شيشة، وغبار الدوام.
               </p>
             </div>
 

@@ -12,8 +12,8 @@ export default function HomePage() {
     <div dir="rtl" className="bg-ivory selection:bg-teal/20">
       
       {/* ── Top Announcement Bar ── */}
-      <div className="bg-teal-dark text-white text-center py-2 px-4 text-xs font-bold tracking-wide">
-        <span className="text-gold">✨</span> شحن مجاني للطلبات فوق 299 ريال + الدفع عند الاستلام متاح في جميع مناطق المملكة
+      <div className="bg-apothecary text-white text-center py-2 px-4 text-xs font-bold tracking-wide">
+        <span className="text-gold">⊕</span> صيدلية التنفس الطبيعية في السعودية — مطابق لمعايير SFDA · الدفع عند الاستلام · توصيل لكل المناطق
       </div>
 
       {/* ── 1. Hero Section (Emotion & Conversion) ── */}
@@ -26,24 +26,24 @@ export default function HomePage() {
           
           {/* Hero Copy (Right) */}
           <div className="w-full md:w-1/2 text-center md:text-right z-10">
-            <div className="mb-6 inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 border border-teal/10 shadow-sm">
-              <span className="flex h-2 w-2 rounded-full bg-green-500 animate-pulse" />
-              <span className="text-xs font-bold text-charcoal">أكثر من 50,000 عميل في السعودية يثق بنا</span>
+            <div className="mb-6 inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 border border-apothecary/15 shadow-sm">
+              <span className="flex h-2 w-2 rounded-full bg-apothecary animate-pulse" />
+              <span className="text-xs font-extrabold text-apothecary tracking-[0.18em]">صيدلية التنفس الطبيعية · مطابق SFDA</span>
             </div>
 
             <h1 className="mb-6 text-4xl md:text-5xl lg:text-6xl font-extrabold leading-[1.2] text-charcoal tracking-tight">
-              تنفّس براحة،<br />
-              <span className="text-teal">وخل الباقي على الطبيعة.</span>
+              صيدليتك المتخصصة<br />
+              <span className="text-apothecary">في صحة الرئة والتنفس.</span>
             </h1>
 
-            <p className="mb-8 text-lg md:text-xl leading-relaxed text-charcoal/70 font-medium max-w-lg mx-auto md:mx-0">
-              روتين يومي بسيط بمكونات عشبية يريحك من كتمة الغبار والدخان، ويمنحك إحساساً بالنظافة والانتعاش اللي تستحقه.
+            <p className="mb-8 text-lg md:text-xl leading-relaxed text-charcoal/75 font-medium max-w-lg mx-auto md:mx-0">
+              بخاخات وقطرات عشبية بمعايير صيدلانية، مصممة للجو السعودي. نظّف رئتك من تراكمات الدخان والغبار، وافتح جيوبك الأنفية، بروتين يومي بسيط وآمن.
             </p>
 
             <div className="flex flex-col sm:flex-row items-center gap-4 justify-center md:justify-start mb-8">
               <Link
                 href="#products"
-                className="w-full sm:w-auto bg-teal text-white font-extrabold text-lg px-8 py-4 rounded-2xl shadow-xl shadow-teal/20 hover:bg-teal-dark hover:scale-[1.02] transition-all flex items-center justify-center gap-2"
+                className="w-full sm:w-auto bg-apothecary text-white font-extrabold text-lg px-8 py-4 rounded-2xl shadow-xl shadow-apothecary/25 hover:bg-apothecary-dark hover:scale-[1.02] transition-all flex items-center justify-center gap-2"
               >
                 تصفح منتجاتنا
                 <ArrowLeft className="w-5 h-5" />
@@ -65,9 +65,10 @@ export default function HomePage() {
               </div>
             </div>
 
-            <div className="flex items-center justify-center md:justify-start gap-6 text-sm font-semibold text-charcoal/60">
-              <div className="flex items-center gap-1.5"><ShieldCheck className="w-4 h-4 text-teal" /> ضمان 30 يوم</div>
-              <div className="flex items-center gap-1.5"><PackageCheck className="w-4 h-4 text-teal" /> الدفع عند الاستلام</div>
+            <div className="flex items-center flex-wrap justify-center md:justify-start gap-5 text-sm font-semibold text-charcoal/65">
+              <div className="flex items-center gap-1.5"><ShieldCheck className="w-4 h-4 text-apothecary" /> مطابق SFDA</div>
+              <div className="flex items-center gap-1.5"><ShieldCheck className="w-4 h-4 text-apothecary" /> ضمان 30 يوم</div>
+              <div className="flex items-center gap-1.5"><PackageCheck className="w-4 h-4 text-apothecary" /> الدفع عند الاستلام</div>
             </div>
           </div>
 
@@ -93,11 +94,12 @@ export default function HomePage() {
       {/* ── 2. The Pain & Relatability Section ── */}
       <section className="py-16 md:py-24 bg-white border-y border-sage/20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <p className="text-apothecary font-bold tracking-[0.3em] text-sm mb-3">تشخيص الصيدلية</p>
           <h2 className="text-3xl md:text-4xl font-extrabold text-charcoal mb-4">
-            لأننا عايشين نفس الأجواء، فهمنا مشكلتك.
+            ليش رئة السعودي تحتاج عناية يومية متخصصة؟
           </h2>
-          <p className="text-lg text-charcoal/60 max-w-2xl mx-auto mb-16 leading-relaxed">
-            الجو عندنا في السعودية ما يرحم الجهاز التنفسي. غبار، مكيفات جافة 24 ساعة، روائح بخور قوية، أو حتى دخان في البيت. النتيجة؟ ثقل، كتمة، وعدم راحة في التنفس.
+          <p className="text-lg text-charcoal/65 max-w-2xl mx-auto mb-16 leading-relaxed">
+            الجو في السعودية يضع جهازك التنفسي تحت ضغط يومي: غبار، مكيفات جافة على مدار السنة، شيشة، وغبار الدوام. كلها تتراكم وتسبب ثقل، بلغم، وكتمة. الحل ما يكون من صيدلية كيماوية، بل من صيدلية طبيعية متخصصة.
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -122,12 +124,12 @@ export default function HomePage() {
       <section id="products" className="py-16 md:py-24 bg-ivory">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <span className="text-teal font-bold tracking-widest text-sm uppercase mb-3 block">الحل عندنا</span>
+            <span className="text-apothecary font-bold tracking-[0.3em] text-sm mb-3 block">روتين الصيدلية</span>
             <h2 className="text-3xl md:text-4xl font-extrabold text-charcoal mb-4">
-              اختر الروتين اللي يناسبك
+              تركيباتنا الصيدلانية الطبيعية
             </h2>
-            <p className="text-lg text-charcoal/60 max-w-2xl mx-auto">
-              منتجاتنا ليست أدوية معقدة، بل هي روتين عشبي يومي بسيط يساعدك تسترجع راحتك وإحساسك بالانتعاش.
+            <p className="text-lg text-charcoal/65 max-w-2xl mx-auto">
+              كل منتج من نسمة مصاغ بتركيز صيدلاني محسوب من أعشاب نقية، عشان يكون فعّال لحالتك بدون أعراض كيماوية. اختر روتينك:
             </p>
           </div>
 
@@ -141,23 +143,24 @@ export default function HomePage() {
 
       {/* ── 4. Science, Quality & SFDA Authority Section ── */}
       <section className="py-16 md:py-24 bg-charcoal text-white relative overflow-hidden">
-        <div className="absolute inset-0 bg-teal mix-blend-overlay opacity-20" />
+        <div className="absolute inset-0 bg-apothecary mix-blend-overlay opacity-25" />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="flex flex-col lg:flex-row gap-16 items-center">
             
             <div className="w-full lg:w-1/2 text-right">
+              <p className="text-gold font-bold tracking-[0.3em] text-sm mb-3">معايير الصيدلية</p>
               <h2 className="text-3xl md:text-4xl font-extrabold mb-6 leading-tight">
-                جودة عالية، مكونات نظيفة، وأمان تام.
+                نشتغل بنفس انضباط الصيدليات الكبرى — لكن بمكونات الطبيعة.
               </h2>
-              <p className="text-white/70 text-lg leading-relaxed mb-8">
-                في نسمة، راحتك وصحتك خط أحمر. حرصنا على انتقاء أفضل المكونات العشبية من مصادر موثوقة، وتم تعبئتها وفق أعلى معايير الجودة العالمية لنضمن لك منتجاً نقيّاً وفعّالاً.
+              <p className="text-white/75 text-lg leading-relaxed mb-8">
+                كل تركيبة في نسمة تمر بثلاث مراحل صيدلانية: اختبار المصدر، صياغة بتركيز محسوب، وتعبئة طبية مطابقة لاشتراطات هيئة الغذاء والدواء السعودية (SFDA). صحتك ما تستحق أقل من ذلك.
               </p>
               
               <ul className="space-y-6">
                 {[
-                  { title: 'خالية من المواد الكيميائية القاسية', desc: 'نعتمد على الطبيعة فقط.' },
-                  { title: 'معايير جودة صارمة', desc: 'كل عبوة تمر باختبارات جودة قبل وصولها إليك.' },
-                  { title: 'موثوقة ومجربة', desc: 'تركيبات مبنية على استخدامات عشبية متوارثة ومعروفة بفعاليتها.' }
+                  { title: 'مطابق لمعايير هيئة الغذاء والدواء (SFDA)', desc: 'كل عبوة تنطلق بعد مطابقة كاملة لاشتراطات السلامة السعودية.' },
+                  { title: 'مصدر عشبي معتمد ومختبر', desc: 'موردين معتمدين فقط، واختبارات نقاء وفعالية لكل دفعة قبل التصنيع.' },
+                  { title: 'تركيز صيدلاني محسوب', desc: 'جرعات مدروسة تحت إشراف متخصصين، بدون مبالغة ولا أعراض كيماوية.' }
                 ].map((item, i) => (
                   <li key={i} className="flex items-start gap-4 justify-end">
                     <div className="text-right">
@@ -177,7 +180,7 @@ export default function HomePage() {
                 <div className="space-y-4 pt-8">
                   <div className="bg-white/5 border border-white/10 p-6 rounded-3xl backdrop-blur-sm text-center">
                     <HeartPulse className="w-10 h-10 text-teal-light mx-auto mb-3" />
-                    <p className="font-bold">عناية يومية</p>
+                    <p className="font-bold">روتين تنفسي يومي</p>
                   </div>
                   <div className="bg-white/5 border border-white/10 p-6 rounded-3xl backdrop-blur-sm text-center">
                     <ShieldCheck className="w-10 h-10 text-gold mx-auto mb-3" />
@@ -190,8 +193,8 @@ export default function HomePage() {
                     <p className="font-bold">استخلاص نقي</p>
                   </div>
                   <div className="bg-gradient-to-br from-gold to-gold-dark p-6 rounded-3xl text-charcoal text-center flex flex-col justify-center h-[160px]">
-                    <p className="font-extrabold text-2xl mb-1">100%</p>
-                    <p className="font-bold text-sm">مكونات طبيعية عشبية</p>
+                    <p className="font-extrabold text-2xl mb-1">SFDA</p>
+                    <p className="font-bold text-sm">مطابق للهيئة العامة للغذاء والدواء</p>
                   </div>
                 </div>
               </div>
@@ -234,19 +237,20 @@ export default function HomePage() {
       </section>
 
       {/* ── 6. 30-Day Guarantee Banner ── */}
-      <section className="py-20 bg-gradient-teal relative overflow-hidden">
+      <section className="py-20 bg-gradient-to-br from-apothecary-dark via-apothecary to-teal-dark relative overflow-hidden">
         <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10" />
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
           <ShieldCheck className="w-20 h-20 text-gold mx-auto mb-6" />
-          <h2 className="text-4xl font-extrabold text-white mb-6">الضمان الذهبي 30 يوماً</h2>
+          <p className="text-gold/90 font-bold tracking-[0.3em] text-sm mb-3">ضمان الصيدلية</p>
+          <h2 className="text-4xl font-extrabold text-white mb-6">30 يوماً — أو نرجع لك فلوسك كاملة</h2>
           <p className="text-white/90 text-xl mb-10 max-w-2xl mx-auto leading-relaxed font-medium">
-            تسوّق بكل اطمئنان. إذا لم تكن راضياً تماماً خلال 30 يوماً من الاستخدام، نرجع لك فلوسك كاملة. الدفع عند الاستلام متاح لنكسب ثقتك قبل مالك.
+            نسمة ما تطلب منك تثق فينا قبل ما تجرّب. الدفع عند الاستلام، وإذا ما حسّيت بفرق خلال 30 يوماً، نرجع لك فلوسك بدون أسئلة. هذي طريقة الصيدلية الحقيقية.
           </p>
           <Link
             href="#products"
-            className="inline-flex items-center justify-center gap-3 bg-white text-teal-dark font-extrabold text-xl px-12 py-5 rounded-2xl shadow-2xl hover:bg-mist transition-transform hover:scale-105"
+            className="inline-flex items-center justify-center gap-3 bg-white text-apothecary-dark font-extrabold text-xl px-12 py-5 rounded-2xl shadow-2xl hover:bg-mint-clean transition-transform hover:scale-105"
           >
-            تسوّق الآن بدون مخاطرة
+            ابدأ روتينك من الصيدلية
           </Link>
         </div>
       </section>
@@ -259,10 +263,11 @@ export default function HomePage() {
             <p className="text-charcoal/60">كل ما تحتاج معرفته عن طلبك من نسمة</p>
           </div>
           <FAQAccordion items={[
-            { q: 'هل المنتجات مرخصة وآمنة؟', a: 'جميع منتجاتنا تعتمد على مكونات عشبية طبيعية 100% مستخدمة عالمياً، ويتم فحصها وتعبئتها وفق أعلى معايير الجودة لضمان أمانك التام.' },
-            { q: 'متى يوصلني الطلب؟', a: 'نحن نشحن لجميع مناطق المملكة العربية السعودية. التوصيل يستغرق عادة بين 2 إلى 5 أيام عمل كحد أقصى.' },
-            { q: 'كيف طريقة الدفع؟ هل أقدر أدفع عند الاستلام؟', a: 'نعم بكل تأكيد! لتكون مطمئناً تماماً، وفرنا خدمة الدفع عند الاستلام. لا تدفع أي مبلغ حتى يوصلك المندوب لباب بيتك.' },
-            { q: 'هل أقدر أسترجع المنتج إذا ما ناسبني؟', a: 'نعم، نوفّر لك "الضمان الذهبي" لمدة 30 يوماً. إذا لم تكن راضياً عن النتيجة، تواصل مع خدمة العملاء وسنقوم بترتيب الإرجاع واسترداد أموالك.' },
+            { q: 'هل منتجات نسمة آمنة ومرخصة؟', a: 'نعم. كل منتجات نسمة عشبية طبيعية 100% ومطابقة لاشتراطات هيئة الغذاء والدواء السعودية (SFDA). تمر كل دفعة بمراقبة جودة على غرار الصيدليات قبل ما تطلع للسوق.' },
+            { q: 'هل أقدر أستخدمها يومياً بدون أعراض جانبية؟', a: 'إيه. تركيباتنا مصممة بتركيز صيدلاني مدروس عشان تكون آمنة للاستخدام اليومي، بدون التعود أو الجفاف اللي تسببه البخاخات الكيماوية.' },
+            { q: 'متى يوصلني الطلب؟', a: 'نشحن لكل مناطق المملكة العربية السعودية. التوصيل عادة 2-4 أيام عمل لباب بيتك بالدفع عند الاستلام.' },
+            { q: 'كيف أعرف المنتج المناسب لحالتي؟', a: 'مستشاري نسمة على واتساب جاهزين يسمعون حالتك (مدخن، شيشة، حساسية غبار، كتمة مكيفات) ويوصون لك بالبخاخ أو القطرات المناسبة. الاستشارة مجانية.' },
+            { q: 'ماذا لو ما حسّيت بفرق؟', a: 'عندك ضمان نسمة الذهبي 30 يوماً. إذا ما حسّيت بنتيجة واضحة، تواصل معنا ونرجع لك فلوسك كاملة، بدون أسئلة معقدة. هذي طريقتنا في الصيدلية.' },
           ]} />
         </div>
       </section>
