@@ -11,6 +11,7 @@ import { getDefaultOffer } from '@/lib/products'
 import OfferSelector from '@/components/product/OfferSelector'
 import TrustBadges from '@/components/shared/TrustBadges'
 import FAQAccordion from '@/components/shared/FAQAccordion'
+import { DEFAULT_PRODUCT_REVIEWS, HERBAL_LUNG_SPRAY_REVIEWS } from '@/lib/productReviews'
 
 interface ProductPageContentProps {
   product: Product
@@ -77,7 +78,7 @@ export default function ProductPageContent({
                   ))}
                 </div>
                 <span className="text-base font-extrabold text-charcoal">4.9/5</span>
-                <span className="text-sm font-bold text-teal-dark">(أكثر من 2,400 تقييم)</span>
+                <span className="text-sm font-bold text-teal-dark">(أكثر من 2,600 تقييم)</span>
               </div>
 
               <p className="text-charcoal/80 text-lg leading-relaxed mb-8 font-medium">
@@ -547,22 +548,8 @@ export default function ProductPageContent({
             {/* Reviews Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 text-right">
               {(product.slug === 'herbal-lung-spray'
-                ? [
-                    { name: 'محمد الدوسري', text: 'أنا مدخن من 10 سنين والكحة الصباحية كانت ذابحتني. من أول أسبوع استخدام خف البلغم بشكل عجيب وصرت أتنفس براحة. أنصح فيه بقوة!', city: 'الرياض', image: '/images/reviews/1.png' },
-                    { name: 'فيصل العتيبي', text: 'مع الشيشة يومياً صدري صار ثقيل وكتمة، بس هالبخاخ سحر! يعطيك إحساس بالنظافة والانتعاش الفوري وكأنك غسلت رئتك.', city: 'جدة', image: '/images/reviews/2.png' },
-                    { name: 'سلطان م.', text: 'كنت خايف إنه مجرد إعلانات، بس للأمانة ريحني من كتمة الدخان بشكل خيالي. ميزته إنه طبيعي 100% وما منه خوف.', city: 'الدمام', image: '/images/reviews/3.png' },
-                    { name: 'عبدالله السالم', text: 'منتج بطل بمعنى الكلمة.. صرت أصحى من النوم نفسي طويل ومرتاح بدون الكحة اللي كانت تصحيني. يستاهل كل ريال!', city: 'مكة', image: '/images/reviews/4.png' },
-                    { name: 'طارق الشمري', text: 'صدري كان دايماً مقفول بسبب التدخين، الحين صار الروتين حقي قبل النوم وأول ما أصحى. فرق معي في النادي وفي المجهود العادي.', city: 'القصيم', image: '/images/reviews/5.png' },
-                    { name: 'خالد الرويلي', text: 'وصلني في 3 أيام لـ حائل. بعد أسبوعين استخدام حسيت بفرق واضح في خفة الصدر. الدفع عند الاستلام ريحني ومصداقيتهم عالية.', city: 'حائل', image: '/images/reviews/6.png' },
-                  ]
-                : [
-                    { name: 'محمد الدوسري', text: 'بصراحة المنتج فرق معي كثير، خصوصاً وقت الغبار أقدر أتنفس براحة. أنصح فيه بقوة!', city: 'الرياض', image: '/images/reviews/1.png' },
-                    { name: 'فيصل العتيبي', text: 'التوصيل سريع والمنتج جودته عالية، يعطيك إحساس بالانتعاش والنظافة من أول استخدام.', city: 'جدة', image: '/images/reviews/2.png' },
-                    { name: 'سلطان م.', text: 'كنت أعاني من كتمة المكيفات في المكتب، بعد ما جربته صرت ما أستغني عنه يومياً.', city: 'الدمام', image: '/images/reviews/3.png' },
-                    { name: 'عبدالله السالم', text: 'منتج بطل بمعنى الكلمة، طبيعي وما فيه أي ريحة مزعجة. يستاهل كل ريال.', city: 'مكة', image: '/images/reviews/4.png' },
-                    { name: 'طارق الشمري', text: 'استخدمه قبل النوم ويريحني كثير من الكتمة وجفاف الحلق. منتج يستحق التجربة.', city: 'القصيم', image: '/images/reviews/5.png' },
-                    { name: 'خالد الرويلي', text: 'طلبت المجموعة للبيت، التغليف ممتاز ووصل في وقت قياسي. شكراً لكم.', city: 'حائل', image: '/images/reviews/6.png' },
-                  ]
+                ? HERBAL_LUNG_SPRAY_REVIEWS
+                : DEFAULT_PRODUCT_REVIEWS
               ).map((review, i) => (
                 <div key={i} className="bg-gray-800 rounded-2xl overflow-hidden border border-white/10 group shadow-lg">
                   {/* Image Placeholder */}
@@ -585,7 +572,7 @@ export default function ProductPageContent({
                         <Star key={s} className="w-4 h-4 fill-gold text-gold" />
                       ))}
                     </div>
-                    <p className="text-white/90 text-sm leading-relaxed mb-4 font-medium h-[60px] line-clamp-3">
+                    <p className="text-white/90 text-sm leading-relaxed mb-4 font-medium min-h-[72px] line-clamp-4">
                       "{review.text}"
                     </p>
                     <div className="flex items-center gap-3 border-t border-white/10 pt-4">
