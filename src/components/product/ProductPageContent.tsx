@@ -23,13 +23,6 @@ export default function ProductPageContent({
 }: ProductPageContentProps) {
   return (
     <main dir="rtl" className="bg-ivory min-h-screen pb-24 lg:pb-0 scroll-smooth">
-      {/* ── Top Urgency Banner ── */}
-      <div className="bg-red-600 text-white text-center py-2 px-4 text-xs md:text-sm font-extrabold flex items-center justify-center gap-2">
-        <Flame className="w-4 h-4 animate-pulse" />
-        <span>عروض محدودة: وفر حتى 40% + شحن مجاني للطلبات فوق 200 ريال!</span>
-        <Flame className="w-4 h-4 animate-pulse" />
-      </div>
-
       {/* ── Breadcrumb ── */}
       <div className="bg-white/80 backdrop-blur-md border-b border-sage/20 py-3 sticky top-[60px] lg:top-[72px] z-40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

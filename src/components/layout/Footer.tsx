@@ -82,16 +82,6 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Health disclaimer */}
-          <div className="rounded-[2.5rem] border-2 border-gold/20 bg-gradient-to-r from-charcoal via-teal-dark/20 to-charcoal p-8 md:p-10 backdrop-blur-xl relative overflow-hidden group hover:border-gold/40 transition-colors duration-500 shadow-2xl">
-            <div className="absolute top-0 right-0 w-64 h-64 bg-gold/10 rounded-full blur-[80px] opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
-            <div className="absolute bottom-0 left-0 w-64 h-64 bg-teal/20 rounded-full blur-[80px] opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
-            <p className="text-base md:text-lg leading-relaxed text-mist/80 text-center relative z-10 font-medium max-w-4xl mx-auto">
-              <span className="font-extrabold text-gold drop-shadow-md text-xl ml-2">تنبيه صحي: </span>
-              هذه المنتجات مكملات غذائية عشبية طبيعية صُممت خصيصاً لدعم روتينك اليومي، ولا تُعد علاجاً طبياً بديلاً. يُنصح دائماً باستشارة طبيبك المختص عند الحاجة. المنتجات غير مخصصة لتشخيص أو علاج أو منع أي مرض.
-            </p>
-          </div>
-
           {/* Bottom bar */}
           <div className="mt-12 flex flex-col items-center justify-between gap-6 border-t border-mist/10 pt-8 text-sm md:text-base text-mist/50 md:flex-row font-medium">
             <p className="flex items-center gap-2">
