@@ -106,12 +106,17 @@ export default function OfferSelector({ product, className }: OfferSelectorProps
               </div>
 
               {/* Price */}
-              <div className="text-left">
-                <p className="font-extrabold text-teal">{offer.price} ريال</p>
+              <div className="text-left flex flex-col items-end justify-center">
+                <p className="font-extrabold text-teal text-lg md:text-xl">{offer.price} ريال</p>
                 {offer.qty > 1 && (
                   <p className="text-xs text-charcoal/40 line-through">
                     {basePrice * offer.qty} ريال
                   </p>
+                )}
+                {offer.qty > 1 && (
+                   <span className="mt-1 text-[10px] font-bold text-teal bg-teal/10 px-2 py-0.5 rounded flex items-center gap-1">
+                     🚚 شحن مجاني
+                   </span>
                 )}
               </div>
             </button>
@@ -131,16 +136,18 @@ export default function OfferSelector({ product, className }: OfferSelectorProps
       {/* CTA */}
       <button
         onClick={handleAddToCart}
-        className="flex w-full items-center justify-center gap-3 rounded-2xl bg-teal py-4 text-base font-extrabold text-white shadow-lg shadow-teal/30 transition-all hover:bg-teal-dark active:scale-[0.98]"
+        className="flex w-full items-center justify-center gap-3 rounded-2xl bg-teal py-4 md:py-5 text-lg font-extrabold text-white shadow-lg shadow-teal/30 transition-all hover:bg-teal-dark active:scale-[0.98] mt-2 animate-bounce hover:animate-none"
       >
-        <ShoppingCart className="h-5 w-5" />
-        أضف للسلة — {selected.price} ريال
+        <ShoppingCart className="h-6 w-6" />
+        أكمل الطلب الآن — الدفع عند الاستلام
       </button>
 
       {/* Micro-trust */}
-      <p className="text-center text-xs text-charcoal/50">
-        الدفع عند الاستلام · شحن سريع · إرجاع مجاني 7 أيام
-      </p>
+      <div className="flex flex-wrap items-center justify-center gap-2 md:gap-4 text-xs md:text-sm text-charcoal/60 font-bold bg-mist/50 py-3 px-2 rounded-xl mt-1">
+        <span className="flex items-center gap-1"><Check className="w-3 h-3 text-teal" /> الدفع عند الاستلام</span>
+        <span className="flex items-center gap-1"><Check className="w-3 h-3 text-teal" /> شحن سريع 2-4 أيام</span>
+        <span className="flex items-center gap-1"><Check className="w-3 h-3 text-teal" /> إرجاع مجاني</span>
+      </div>
     </div>
   )
 }

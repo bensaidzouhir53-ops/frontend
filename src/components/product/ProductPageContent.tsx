@@ -23,6 +23,13 @@ export default function ProductPageContent({
 }: ProductPageContentProps) {
   return (
     <main dir="rtl" className="bg-ivory min-h-screen pb-24 lg:pb-0 scroll-smooth">
+      {/* ── Top Urgency Banner ── */}
+      <div className="bg-red-600 text-white text-center py-2 px-4 text-xs md:text-sm font-extrabold flex items-center justify-center gap-2">
+        <Flame className="w-4 h-4 animate-pulse" />
+        <span>عروض محدودة: وفر حتى 40% + شحن مجاني للطلبات فوق 200 ريال!</span>
+        <Flame className="w-4 h-4 animate-pulse" />
+      </div>
+
       {/* ── Breadcrumb ── */}
       <div className="bg-white/80 backdrop-blur-md border-b border-sage/20 py-3 sticky top-[60px] lg:top-[72px] z-40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -60,9 +67,15 @@ export default function ProductPageContent({
 
             {/* Content (Right visually, Left in DOM for RTL) */}
             <div className="w-full lg:w-1/2 order-2 lg:order-1 text-right">
-              <div className="inline-flex items-center gap-2 bg-red-50 border border-red-100 px-4 py-2 rounded-full mb-5 shadow-sm">
-                <span className="flex h-2.5 w-2.5 rounded-full bg-red-500 animate-pulse" />
-                <span className="text-xs font-bold text-red-700 tracking-wide">المنتج الأكثر طلباً في السعودية اليوم 🔥</span>
+              <div className="flex items-center flex-wrap gap-2 mb-4">
+                <div className="inline-flex items-center gap-2 bg-red-50 border border-red-100 px-4 py-2 rounded-full shadow-sm">
+                  <span className="flex h-2.5 w-2.5 rounded-full bg-red-500 animate-pulse" />
+                  <span className="text-xs font-bold text-red-700 tracking-wide">المنتج الأكثر طلباً في السعودية اليوم 🔥</span>
+                </div>
+                <div className="inline-flex items-center gap-2 bg-teal/10 border border-teal/20 px-4 py-2 rounded-full shadow-sm">
+                  <Users className="w-4 h-4 text-teal" />
+                  <span className="text-xs font-bold text-teal-dark tracking-wide">تم شراء هذا المنتج أكثر من 145 مرة اليوم</span>
+                </div>
               </div>
               
               <h1 className="text-3xl md:text-5xl font-extrabold text-charcoal mb-4 leading-[1.3] tracking-tight">
@@ -92,7 +105,7 @@ export default function ProductPageContent({
               </div>
 
               {/* Delivery & Guarantee Trust Block */}
-              <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div className="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <div className="flex flex-col gap-2 bg-gradient-to-b from-white to-mist/30 rounded-2xl p-4 border border-sage/30 shadow-sm hover:border-gold/50 transition-colors group">
                   <div className="flex items-center gap-2">
                     <div className="w-8 h-8 bg-gold/10 rounded-full flex items-center justify-center flex-shrink-0 text-gold group-hover:bg-gold group-hover:text-white transition-colors">
@@ -110,7 +123,17 @@ export default function ProductPageContent({
                     </div>
                     <p className="font-extrabold text-charcoal text-sm">الدفع عند الاستلام</p>
                   </div>
-                  <p className="text-[11px] text-charcoal/60 leading-relaxed font-medium">لا تدفع ولا ريال لين يوصلك الطلب لباب بيتك وتتأكد منه.</p>
+                  <p className="text-[11px] text-charcoal/60 leading-relaxed font-medium">تطلب الآن، ولا تدفع ولا ريال لين يوصلك المندوب وتستلم طلبك بيدك.</p>
+                </div>
+
+                <div className="flex flex-col gap-2 bg-gradient-to-b from-white to-mist/30 rounded-2xl p-4 border border-sage/30 shadow-sm hover:border-blue-500/50 transition-colors group">
+                  <div className="flex items-center gap-2">
+                    <div className="w-8 h-8 bg-blue-500/10 rounded-full flex items-center justify-center flex-shrink-0 text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                      <Clock className="w-4 h-4" />
+                    </div>
+                    <p className="font-extrabold text-charcoal text-sm">تأكيد سريع للطلب</p>
+                  </div>
+                  <p className="text-[11px] text-charcoal/60 leading-relaxed font-medium">بمجرد تسجيل طلبك، راح نتواصل معك لتأكيد الشحن فوراً عشان ما تتأخر عليك النتيجة.</p>
                 </div>
               </div>
             </div>
@@ -130,21 +153,21 @@ export default function ProductPageContent({
               </div>
               <h2 className="text-3xl md:text-4xl font-extrabold text-charcoal mb-6 leading-tight tracking-tight">
                 {product.slug === 'herbal-lung-spray'
-                  ? 'الدخان والشيشة جالسة تراكم ترسبات تكتم أنفاسك.. وتسرق منك راحتك!'
+                  ? 'الكتمة ذابحتك؟ الشيشة والدخان جالسة تراكم ترسبات تقطع أنفاسك وتسرق راحتك اليومية! ⚠️'
                   : 'غبار، مكيفات 24 ساعة، أو حتى دخان.. كلها تراكمات تتعب صدرك!'}
                 </h2>
               <p className="text-lg text-charcoal/70 mb-8 leading-relaxed font-medium">
                 {product.slug === 'herbal-lung-spray'
-                  ? 'البلغم الصباحي المزعج، الكحة اللي ما تفارقك، والنفس القصير اللي يخليك تتعب من أقل مجهود.. هذي كلها علامات من جسمك يقولك: "صدري مليان، أحتاج أنظفه!" لا تتجاهل هالأعراض.'
+                  ? 'البلغم الصباحي الغثيث اللي تحاول تطلعه، الكحة اللي تفضحك بكل مكان، وصوت الصدر وقت النوم أو مع أقل مجهود في النادي أو الدوام.. هذي مو مجرد أرقام، هذي صرخة من رئتك تقولك: "أنا مكتومة، أحتاج أتنظف!" لا تستمر تتجاهل هالإنذارات لين يطيح الفاس بالراس.'
                   : 'الجو عندنا في السعودية متعب جداً للجهاز التنفسي. تخيل كمية الغبار اللي نتعرض لها يومياً، أو جفاف هواء المكيفات اللي يخليك تصحى من النوم وحلقك ناشف وصدرك مكتوم.'}
               </p>
               
               <div className="space-y-5 mb-8">
                 {(product.slug === 'herbal-lung-spray'
                   ? [
-                      { text: 'تصحى الصبح وتكح كحة مزعجة تحسها من قلب صدرك؟', icon: Wind },
-                      { text: 'تحس بـ "كتمة" وثقل يمنعك تأخذ نفس عميق ومريح؟', icon: HeartPulse },
-                      { text: 'تبغى تنظف رئتيك وترجع خفتك بدون أدوية أو كيماويات؟', icon: Zap }
+                      { text: 'تصحى الصبح وتكح كحة ناشفة ومزعجة تحسها تطلع من قلب صدرك؟', icon: Wind },
+                      { text: 'تحس بـ "كتمة" وثقل يمنعك تأخذ نفس عميق ومريح، خصوصاً قبل النوم؟', icon: HeartPulse },
+                      { text: 'البلغم ناشب بحلقك ومسوي لك إحراج دايم وتبي تتخلص منه للأبد؟', icon: AlertTriangle }
                     ]
                   : [
                       { text: 'تحس بصعوبة في التنفس أو ثقل في الصدر؟', icon: Wind },
@@ -259,16 +282,16 @@ export default function ProductPageContent({
               </div>
               <h2 className="text-3xl md:text-4xl font-extrabold text-charcoal mb-10 leading-tight">
                 {product.slug === 'herbal-lung-spray' 
-                  ? 'كيف يطرد الدخان وينظف صدرك؟' 
+                  ? 'كيف يطرد الدخان والترسبات وينظف صدرك حرفياً؟ 🍃' 
                   : 'كيف يشتغل المنتج ويريح صدرك؟'}
               </h2>
               
               <div className="relative space-y-8 before:absolute before:inset-y-0 before:right-6 before:w-0.5 before:bg-gradient-to-b before:from-teal before:via-teal/50 before:to-transparent">
                 {(product.slug === 'herbal-lung-spray'
                   ? [
-                      { step: 1, title: 'تفكيك ترسبات السنين', desc: 'بمجرد الاستخدام، تتغلغل المستخلصات العشبية لتفكيك طبقات النيكوتين والدخان المتراكمة في الممرات التنفسية.' },
-                      { step: 2, title: 'طرد البلغم المزعج', desc: 'تعمل المكونات الطبيعية على تذويب البلغم الكثيف وطرده بسهولة، لتتخلص من الكحة الصباحية المزعجة.' },
-                      { step: 3, title: 'صدر خفيف ونفس عميق', desc: 'تترك طبقة حماية منعشة تهدئ التهابات الصدر، وترجع لك إحساس الخفة وكأنك تتنفس لأول مرة!' }
+                      { step: 1, title: 'تفكيك ترسبات السنين فوراً', desc: 'بمجرد بخات بسيطة بالفم، تتغلغل المستخلصات العشبية القوية لتفكيك طبقات النيكوتين والقطران المتصلبة في ممراتك التنفسية.' },
+                      { step: 2, title: 'طرد البلغم المزعج وإذابته', desc: 'تشتغل الزيوت الطيارة على تذويب البلغم الكثيف وتوسيع الشعب، عشان تتخلص من الكحة الصباحية وتطرد الوصخ بسهولة.' },
+                      { step: 3, title: 'صدر خفيف ونفس عميق كأنك انولدت من جديد', desc: 'يبني لك طبقة حماية تبرد الصدر الملتهب وتمنع جفافه، وترجع لك إحساس الخفة، صدقني بتحس بفرق من أول أسبوع!' }
                     ]
                   : [
                       { step: 1, title: 'الاستخلاص النقي', desc: 'تتغلغل المكونات العشبية بلطف في الممرات التنفسية لتبدأ عملية التنظيف الفوري.' },
@@ -488,9 +511,9 @@ export default function ProductPageContent({
           <div className="mt-12">
             <Link
               href="#offer"
-              className="inline-flex items-center justify-center gap-3 bg-teal text-white font-extrabold text-xl px-12 py-5 rounded-2xl shadow-xl shadow-teal/20 hover:scale-105 transition-transform"
+              className="inline-flex items-center justify-center gap-3 bg-teal hover:bg-teal-dark text-white font-extrabold text-xl px-12 py-5 rounded-2xl shadow-xl shadow-teal/20 hover:scale-105 transition-all w-full md:w-auto animate-bounce"
             >
-              اطلب الآن وابدأ روتينك
+              🚀 اطلب الآن والدفع عند الاستلام
             </Link>
           </div>
         </div>
@@ -569,11 +592,12 @@ export default function ProductPageContent({
         <div className="max-w-md mx-auto">
           <Link
             href="#offer"
-            className="w-full bg-gradient-to-r from-teal-dark to-teal text-white font-extrabold py-3.5 px-4 rounded-xl text-center shadow-lg shadow-teal/30 flex items-center justify-center gap-2 active:scale-95 transition-transform"
+            className="w-full bg-gradient-to-r from-teal-dark to-teal text-white font-extrabold py-3.5 px-4 rounded-xl text-center shadow-lg shadow-teal/30 flex items-center justify-center gap-2 active:scale-95 transition-transform animate-bounce"
           >
-            اطلب الآن - الدفع عند الاستلام
+            اطلب الآن والدفع عند الاستلام 📦
             <ChevronLeft className="w-4 h-4" />
           </Link>
+          <p className="text-center text-[10px] text-charcoal/60 mt-2 font-bold tracking-wide">🔥 العرض الذهبي: الشحن مجاني لطلب أكثر من عبوة 🔥</p>
         </div>
       </div>
     </main>
