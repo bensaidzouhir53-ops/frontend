@@ -383,6 +383,52 @@ export default function ProductPageContent({
         </section>
       )}
 
+      {/* ── 4.75 How to Use Section ── */}
+      {product.slug === 'herbal-lung-spray' && (
+        <section className="py-16 md:py-24 bg-white relative overflow-hidden">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div className="text-center mb-12">
+              <div className="inline-flex items-center gap-2 text-teal mb-4 bg-teal/10 px-5 py-2 rounded-full font-bold text-sm border border-teal/20 shadow-sm">
+                <CheckCircle2 className="w-4 h-4" />
+                طريقة الاستخدام
+              </div>
+              <h2 className="text-3xl md:text-4xl font-extrabold text-charcoal mb-4 tracking-tight">
+                3 خطوات بسيطة لراحة تدوم
+              </h2>
+              <p className="text-lg text-charcoal/70 font-medium max-w-2xl mx-auto">
+                روتين يومي سهل وسريع يضمن لك أفضل نتيجة لتنظيف الصدر وتوسيع الشعب الهوائية.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {[
+                { step: 1, title: 'رج العبوة جيداً', desc: 'قبل كل استخدام، رج العبوة عشان تتجانس المستخلصات العشبية الطبيعية.', icon: Wind },
+                { step: 2, title: 'بخ داخل الفم', desc: 'وجه البخاخ داخل الفم واضغط من 2 إلى 3 بخات لتغطية الممرات التنفسية.', icon: Zap },
+                { step: 3, title: 'مرتين يومياً', desc: 'استخدمه في الصباح لطرد البلغم، وقبل النوم لتنفس عميق ونوم مريح.', icon: Clock }
+              ].map((item, idx) => (
+                <div key={idx} className="bg-mist/30 rounded-[2rem] p-8 text-center border border-sage/20 hover:border-teal/30 hover:shadow-lg transition-all group relative overflow-hidden">
+                  <div className="absolute top-0 right-0 w-32 h-32 bg-teal/5 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2 group-hover:bg-teal/10 transition-colors" />
+                  
+                  <div className="w-20 h-20 mx-auto bg-white rounded-2xl shadow-sm flex items-center justify-center mb-6 border border-sage/20 group-hover:scale-110 transition-transform relative z-10">
+                    <item.icon className="w-10 h-10 text-teal" />
+                    <div className="absolute -top-3 -right-3 w-8 h-8 bg-gold text-white font-extrabold rounded-full flex items-center justify-center shadow-md">
+                      {item.step}
+                    </div>
+                  </div>
+                  
+                  <h3 className="text-xl font-extrabold text-charcoal mb-3 relative z-10 group-hover:text-teal transition-colors">
+                    {item.title}
+                  </h3>
+                  <p className="text-charcoal/70 font-medium leading-relaxed relative z-10">
+                    {item.desc}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* ── 5. Comparison Table (Us vs. Them) ── */}
       <section className="py-16 md:py-24 bg-mist/30">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -484,92 +530,94 @@ export default function ProductPageContent({
       </section>
 
       {/* ── 7. Image Reviews / Proof Section ── */}
-      <section id="reviews" className="py-16 md:py-24 bg-charcoal text-white relative overflow-hidden">
-        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10" />
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
-          <div className="flex flex-col md:flex-row justify-between items-center mb-12 gap-6">
-            <div className="text-right">
-              <h2 className="text-3xl md:text-4xl font-extrabold mb-4">شف تجارب عملائنا بنفسك</h2>
-              <p className="text-white/70 max-w-2xl">آلاف الشباب في السعودية ارتاحوا من الكتمة بعد استخدام منتجاتنا. لا تأخذ كلامنا، اسمع منهم!</p>
-            </div>
-            {/* Add Review Button */}
-            <Link 
-              href="#reviews"
-              className="bg-white/10 hover:bg-white/20 border border-white/20 text-white font-bold py-3 px-6 rounded-xl transition-colors flex items-center gap-2"
-            >
-              <Star className="w-4 h-4 fill-gold text-gold" />
-              أضف تقييمك
-            </Link>
-          </div>
-          
-          {/* Reviews Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 text-right">
-            {(product.slug === 'herbal-lung-spray'
-              ? [
-                  { name: 'محمد الدوسري', text: 'أنا مدخن من 10 سنين والكحة الصباحية كانت ذابحتني. من أول أسبوع استخدام خف البلغم بشكل عجيب وصرت أتنفس براحة. أنصح فيه بقوة!', city: 'الرياض', image: '/images/reviews/1.png' },
-                  { name: 'فيصل العتيبي', text: 'مع الشيشة يومياً صدري صار ثقيل وكتمة، بس هالبخاخ سحر! يعطيك إحساس بالنظافة والانتعاش الفوري وكأنك غسلت رئتك.', city: 'جدة', image: '/images/reviews/2.png' },
-                  { name: 'سلطان م.', text: 'كنت خايف إنه مجرد إعلانات، بس للأمانة ريحني من كتمة الدخان بشكل خيالي. ميزته إنه طبيعي 100% وما منه خوف.', city: 'الدمام', image: '/images/reviews/3.png' },
-                  { name: 'عبدالله السالم', text: 'منتج بطل بمعنى الكلمة.. صرت أصحى من النوم نفسي طويل ومرتاح بدون الكحة اللي كانت تصحيني. يستاهل كل ريال!', city: 'مكة', image: '/images/reviews/4.png' },
-                  { name: 'طارق الشمري', text: 'صدري كان دايماً مقفول بسبب التدخين، الحين صار الروتين حقي قبل النوم وأول ما أصحى. فرق معي في النادي وفي المجهود العادي.', city: 'القصيم', image: '/images/reviews/5.png' },
-                  { name: 'خالد الرويلي', text: 'وصلني في 3 أيام لـ حائل. بعد أسبوعين استخدام حسيت بفرق واضح في خفة الصدر. الدفع عند الاستلام ريحني ومصداقيتهم عالية.', city: 'حائل', image: '/images/reviews/6.png' },
-                ]
-              : [
-                  { name: 'محمد الدوسري', text: 'بصراحة المنتج فرق معي كثير، خصوصاً وقت الغبار أقدر أتنفس براحة. أنصح فيه بقوة!', city: 'الرياض', image: '/images/reviews/1.png' },
-                  { name: 'فيصل العتيبي', text: 'التوصيل سريع والمنتج جودته عالية، يعطيك إحساس بالانتعاش والنظافة من أول استخدام.', city: 'جدة', image: '/images/reviews/2.png' },
-                  { name: 'سلطان م.', text: 'كنت أعاني من كتمة المكيفات في المكتب، بعد ما جربته صرت ما أستغني عنه يومياً.', city: 'الدمام', image: '/images/reviews/3.png' },
-                  { name: 'عبدالله السالم', text: 'منتج بطل بمعنى الكلمة، طبيعي وما فيه أي ريحة مزعجة. يستاهل كل ريال.', city: 'مكة', image: '/images/reviews/4.png' },
-                  { name: 'طارق الشمري', text: 'استخدمه قبل النوم ويريحني كثير من الكتمة وجفاف الحلق. منتج يستحق التجربة.', city: 'القصيم', image: '/images/reviews/5.png' },
-                  { name: 'خالد الرويلي', text: 'طلبت المجموعة للبيت، التغليف ممتاز ووصل في وقت قياسي. شكراً لكم.', city: 'حائل', image: '/images/reviews/6.png' },
-                ]
-            ).map((review, i) => (
-              <div key={i} className="bg-gray-800 rounded-2xl overflow-hidden border border-white/10 group shadow-lg">
-                {/* Image Placeholder */}
-                <div className="relative aspect-[4/5] bg-gray-900 overflow-hidden">
-                  <img 
-                    src={review.image} 
-                    alt={`صورة تقييم من ${review.name}`} 
-                    className="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity group-hover:scale-105 duration-500"
-                  />
-                  {/* Verified Buyer Badge */}
-                  <div className="absolute top-3 right-3 bg-teal/90 backdrop-blur-sm text-white text-xs font-bold px-3 py-1 rounded-full flex items-center gap-1 shadow-sm">
-                    <CheckCircle2 className="w-3 h-3" />
-                    مشتري مؤكد
-                  </div>
-                </div>
-                {/* Review Content */}
-                <div className="p-5">
-                  <div className="flex gap-1 mb-3">
-                    {[1, 2, 3, 4, 5].map((s) => (
-                      <Star key={s} className="w-4 h-4 fill-gold text-gold" />
-                    ))}
-                  </div>
-                  <p className="text-white/90 text-sm leading-relaxed mb-4 font-medium h-[60px] line-clamp-3">
-                    "{review.text}"
-                  </p>
-                  <div className="flex items-center gap-3 border-t border-white/10 pt-4">
-                    <div className="w-8 h-8 rounded-full bg-teal-dark flex items-center justify-center font-bold text-white text-xs flex-shrink-0">
-                      {review.name.charAt(0)}
-                    </div>
-                    <div>
-                      <p className="font-bold text-sm text-white">{review.name}</p>
-                      <p className="text-xs text-white/50">{review.city}</p>
-                    </div>
-                  </div>
-                </div>
+      {product.slug !== 'sinus-cleansing-spray' && (
+        <section id="reviews" className="py-16 md:py-24 bg-charcoal text-white relative overflow-hidden">
+          <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10" />
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+            <div className="flex flex-col md:flex-row justify-between items-center mb-12 gap-6">
+              <div className="text-right">
+                <h2 className="text-3xl md:text-4xl font-extrabold mb-4">شف تجارب عملائنا بنفسك</h2>
+                <p className="text-white/70 max-w-2xl">آلاف الشباب في السعودية ارتاحوا من الكتمة بعد استخدام منتجاتنا. لا تأخذ كلامنا، اسمع منهم!</p>
               </div>
-            ))}
+              {/* Add Review Button */}
+              <Link 
+                href="#reviews"
+                className="bg-white/10 hover:bg-white/20 border border-white/20 text-white font-bold py-3 px-6 rounded-xl transition-colors flex items-center gap-2"
+              >
+                <Star className="w-4 h-4 fill-gold text-gold" />
+                أضف تقييمك
+              </Link>
+            </div>
+            
+            {/* Reviews Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 text-right">
+              {(product.slug === 'herbal-lung-spray'
+                ? [
+                    { name: 'محمد الدوسري', text: 'أنا مدخن من 10 سنين والكحة الصباحية كانت ذابحتني. من أول أسبوع استخدام خف البلغم بشكل عجيب وصرت أتنفس براحة. أنصح فيه بقوة!', city: 'الرياض', image: '/images/reviews/1.png' },
+                    { name: 'فيصل العتيبي', text: 'مع الشيشة يومياً صدري صار ثقيل وكتمة، بس هالبخاخ سحر! يعطيك إحساس بالنظافة والانتعاش الفوري وكأنك غسلت رئتك.', city: 'جدة', image: '/images/reviews/2.png' },
+                    { name: 'سلطان م.', text: 'كنت خايف إنه مجرد إعلانات، بس للأمانة ريحني من كتمة الدخان بشكل خيالي. ميزته إنه طبيعي 100% وما منه خوف.', city: 'الدمام', image: '/images/reviews/3.png' },
+                    { name: 'عبدالله السالم', text: 'منتج بطل بمعنى الكلمة.. صرت أصحى من النوم نفسي طويل ومرتاح بدون الكحة اللي كانت تصحيني. يستاهل كل ريال!', city: 'مكة', image: '/images/reviews/4.png' },
+                    { name: 'طارق الشمري', text: 'صدري كان دايماً مقفول بسبب التدخين، الحين صار الروتين حقي قبل النوم وأول ما أصحى. فرق معي في النادي وفي المجهود العادي.', city: 'القصيم', image: '/images/reviews/5.png' },
+                    { name: 'خالد الرويلي', text: 'وصلني في 3 أيام لـ حائل. بعد أسبوعين استخدام حسيت بفرق واضح في خفة الصدر. الدفع عند الاستلام ريحني ومصداقيتهم عالية.', city: 'حائل', image: '/images/reviews/6.png' },
+                  ]
+                : [
+                    { name: 'محمد الدوسري', text: 'بصراحة المنتج فرق معي كثير، خصوصاً وقت الغبار أقدر أتنفس براحة. أنصح فيه بقوة!', city: 'الرياض', image: '/images/reviews/1.png' },
+                    { name: 'فيصل العتيبي', text: 'التوصيل سريع والمنتج جودته عالية، يعطيك إحساس بالانتعاش والنظافة من أول استخدام.', city: 'جدة', image: '/images/reviews/2.png' },
+                    { name: 'سلطان م.', text: 'كنت أعاني من كتمة المكيفات في المكتب، بعد ما جربته صرت ما أستغني عنه يومياً.', city: 'الدمام', image: '/images/reviews/3.png' },
+                    { name: 'عبدالله السالم', text: 'منتج بطل بمعنى الكلمة، طبيعي وما فيه أي ريحة مزعجة. يستاهل كل ريال.', city: 'مكة', image: '/images/reviews/4.png' },
+                    { name: 'طارق الشمري', text: 'استخدمه قبل النوم ويريحني كثير من الكتمة وجفاف الحلق. منتج يستحق التجربة.', city: 'القصيم', image: '/images/reviews/5.png' },
+                    { name: 'خالد الرويلي', text: 'طلبت المجموعة للبيت، التغليف ممتاز ووصل في وقت قياسي. شكراً لكم.', city: 'حائل', image: '/images/reviews/6.png' },
+                  ]
+              ).map((review, i) => (
+                <div key={i} className="bg-gray-800 rounded-2xl overflow-hidden border border-white/10 group shadow-lg">
+                  {/* Image Placeholder */}
+                  <div className="relative aspect-[4/5] bg-gray-900 overflow-hidden">
+                    <img 
+                      src={review.image} 
+                      alt={`صورة تقييم من ${review.name}`} 
+                      className="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity group-hover:scale-105 duration-500"
+                    />
+                    {/* Verified Buyer Badge */}
+                    <div className="absolute top-3 right-3 bg-teal/90 backdrop-blur-sm text-white text-xs font-bold px-3 py-1 rounded-full flex items-center gap-1 shadow-sm">
+                      <CheckCircle2 className="w-3 h-3" />
+                      مشتري مؤكد
+                    </div>
+                  </div>
+                  {/* Review Content */}
+                  <div className="p-5">
+                    <div className="flex gap-1 mb-3">
+                      {[1, 2, 3, 4, 5].map((s) => (
+                        <Star key={s} className="w-4 h-4 fill-gold text-gold" />
+                      ))}
+                    </div>
+                    <p className="text-white/90 text-sm leading-relaxed mb-4 font-medium h-[60px] line-clamp-3">
+                      "{review.text}"
+                    </p>
+                    <div className="flex items-center gap-3 border-t border-white/10 pt-4">
+                      <div className="w-8 h-8 rounded-full bg-teal-dark flex items-center justify-center font-bold text-white text-xs flex-shrink-0">
+                        {review.name.charAt(0)}
+                      </div>
+                      <div>
+                        <p className="font-bold text-sm text-white">{review.name}</p>
+                        <p className="text-xs text-white/50">{review.city}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+            
+            <div className="mt-12">
+              <Link
+                href="#offer"
+                className="inline-flex items-center justify-center gap-3 bg-teal hover:bg-teal-dark text-white font-extrabold text-xl px-12 py-5 rounded-2xl shadow-xl shadow-teal/20 hover:scale-105 transition-all w-full md:w-auto animate-bounce"
+              >
+                🚀 اطلب الآن والدفع عند الاستلام
+              </Link>
+            </div>
           </div>
-          
-          <div className="mt-12">
-            <Link
-              href="#offer"
-              className="inline-flex items-center justify-center gap-3 bg-teal hover:bg-teal-dark text-white font-extrabold text-xl px-12 py-5 rounded-2xl shadow-xl shadow-teal/20 hover:scale-105 transition-all w-full md:w-auto animate-bounce"
-            >
-              🚀 اطلب الآن والدفع عند الاستلام
-            </Link>
-          </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* ── 6. FAQ ── */}
       <section className="py-16 bg-white border-y border-sage/20">
