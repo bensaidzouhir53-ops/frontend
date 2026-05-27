@@ -30,6 +30,7 @@ export default function CheckoutModal() {
     items,
     total,
     clearCart,
+    openUpsell,
   } = useCartStore()
 
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -125,11 +126,11 @@ export default function CheckoutModal() {
       )
 
       if (response.upsell) {
-        sessionStorage.setItem('nasama_upsell', JSON.stringify(response.upsell))
-      } else {
-        sessionStorage.removeItem('nasama_upsell')
+        openUpsell(response.upsell)
+        return
       }
 
+      sessionStorage.removeItem('nasama_upsell')
       router.push(
         `/thank-you?order=${encodeURIComponent(response.order_number)}&total=${response.total}`,
       )

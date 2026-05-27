@@ -2,10 +2,12 @@
 
 import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
+import Image from 'next/image'
 import * as Dialog from '@radix-ui/react-dialog'
-import { Clock, Package, X, Loader2 } from 'lucide-react'
+import { Clock, X, Loader2 } from 'lucide-react'
 import { useCartStore } from '@/store/cartStore'
 import { acceptUpsell } from '@/lib/api'
+import { getProductBySlug } from '@/lib/products'
 import { trackPurchase, generateEventId } from '@/lib/tracking'
 import { cn } from '@/lib/utils'
 
@@ -131,6 +133,9 @@ export default function UpsellModal() {
   }
 
   const progressPct = (secondsLeft / COUNTDOWN_SECONDS) * 100
+  const upsellImage = upsellProduct
+    ? getProductBySlug(upsellProduct.product_slug)?.image
+    : undefined
 
   return (
     <Dialog.Root
@@ -178,16 +183,23 @@ export default function UpsellModal() {
           <div className="px-5 py-5">
             <div className="mb-4 rounded-2xl bg-white p-4 shadow-sm">
               <div className="mb-3 flex items-start gap-3">
-                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-mist">
-                  <Package className="h-7 w-7 text-teal" />
+                <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-xl bg-mist">
+                  {upsellImage ? (
+                    <Image
+                      src={upsellImage}
+                      alt={upsellProduct?.name_ar ?? 'منتج إضافي'}
+                      fill
+                      className="object-cover"
+                    />
+                  ) : null}
                 </div>
                 <div className="flex-1">
                   <p className="text-sm font-bold leading-snug text-charcoal">
-                    {upsellProduct?.name_ar ?? 'منتج إضافي'}
+                    {upsellProduct?.name_ar ?? 'بخاخ تنظيف الجيوب الأنفية'}
                   </p>
                   <p className="mt-1 text-xs leading-relaxed text-charcoal/60">
                     {upsellProduct?.offer_text ??
-                      'أضفه الآن بسعر حصري لعملاء نسمة فقط'}
+                      'أكمل روتينك التنفسي — عرض حصري لعملاء نسمة فقط'}
                   </p>
                 </div>
               </div>
