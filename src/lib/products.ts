@@ -3,7 +3,7 @@ import type { Product, Offer } from '@/types'
 export const PRODUCTS: Product[] = [
   {
     slug: 'herbal-lung-spray',
-    sku: 'NSM-HLS-4827',
+    sku: 'NA847291',
     nameAr: 'بخاخ تنظيف الرئتين العشبي لتنفس مريح',
     nameEn: 'Herbal Lung Cleansing Spray',
     shortDescAr: 'تركيبة عشبية طبيعية لدعم إحساس التنفس المريح في يومك',
@@ -33,7 +33,7 @@ export const PRODUCTS: Product[] = [
   },
   {
     slug: 'sinus-cleansing-spray',
-    sku: 'NSM-SNS-7193',
+    sku: 'NA356184',
     nameAr: 'بخاخ تنظيف الجيوب الأنفية',
     nameEn: 'Sinus Cleansing Spray',
     shortDescAr: 'لإحساس انتعاش وخفة في الجيوب الأنفية',

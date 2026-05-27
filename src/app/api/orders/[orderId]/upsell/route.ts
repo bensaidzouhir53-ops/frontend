@@ -41,7 +41,7 @@ export async function POST(request: Request, context: RouteContext) {
   if (process.env.NODE_ENV === 'development') {
     return NextResponse.json({
       order_id: orderId,
-      order_number: 'NSM-DEV',
+      order_number: 'NA-DEV',
       upsell_total: UPSELL_PRICE,
       total: UPSELL_PRICE,
       currency: 'SAR',
