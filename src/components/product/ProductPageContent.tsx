@@ -3,7 +3,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { 
   ShieldCheck, Star, CheckCircle2, ChevronLeft, ArrowLeft, 
-  Leaf, Zap, Play, AlertTriangle, Wind, HeartPulse, XCircle, Wallet,
+  Leaf, Zap, AlertTriangle, Wind, HeartPulse, XCircle, Wallet,
   Flame, BellRing, Users, Clock
 } from 'lucide-react'
 import type { Product } from '@/types'
@@ -44,17 +44,12 @@ export default function ProductPageContent({
             
             {/* Image (Left visually, Right in DOM for RTL) */}
             <div className="w-full lg:w-1/2 lg:sticky lg:top-32 order-1 lg:order-2">
-              <div className="relative aspect-[4/5] rounded-[2.5rem] overflow-hidden bg-gray-100 flex items-center justify-center border-4 border-white shadow-2xl shadow-teal/10 group">
-                <img 
-                  src="https://placehold.co/800x1000/e2e8f0/475569?text=Product+Image/Video" 
-                    alt={product.nameAr}
+              <div className="relative aspect-[4/5] rounded-[2.5rem] overflow-hidden bg-gray-100 flex items-center justify-center border-4 border-white shadow-2xl shadow-teal/10">
+                <img
+                  src={product.image}
+                  alt={product.nameAr}
                   className="w-full h-full object-cover"
                 />
-                <div className="absolute inset-0 bg-black/10 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                   <div className="w-16 h-16 bg-white/80 rounded-full flex items-center justify-center backdrop-blur-sm shadow-lg">
-                     <Play className="w-6 h-6 text-charcoal ml-1" />
-                    </div>
-                </div>
               </div>
             </div>
 
@@ -530,7 +525,7 @@ export default function ProductPageContent({
       </section>
 
       {/* ── 7. Image Reviews / Proof Section ── */}
-      {product.slug !== 'sinus-cleansing-spray' && (
+      {true && (
         <section id="reviews" className="py-16 md:py-24 bg-charcoal text-white relative overflow-hidden">
           <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10" />
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
