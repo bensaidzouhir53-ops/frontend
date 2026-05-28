@@ -53,7 +53,7 @@ export const PRODUCTS: Product[] = [
       {
         name: 'هيدروتيس',
         desc: 'مضاد حيوي طبيعي، ينظف الرئة من البكتيريا والميكروبات اللي تتراكم مع الوقت وتتعب صدرك.',
-        image: 'https://placehold.co/400x400/0f766e/ffffff?text=Goldenseal'
+        image: '/images/ingredient-hydrastis.png'
       },
       {
         name: 'جونجينج جراس',
