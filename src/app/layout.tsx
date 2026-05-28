@@ -5,6 +5,8 @@ import Footer from '@/components/layout/Footer'
 import CartDrawer from '@/components/cart/CartDrawer'
 import UpsellModal from '@/components/upsell/UpsellModal'
 import PixelInit from '@/components/shared/PixelInit'
+import PixelScripts from '@/components/shared/PixelScripts'
+import { fetchTrackingConfigFromBackend } from '@/lib/pixel-config.server'
 import './globals.css'
 
 const tajawal = Tajawal({
@@ -54,14 +56,17 @@ export const metadata: Metadata = {
   },
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
+  const pixelConfig = await fetchTrackingConfigFromBackend()
+
   return (
     <html lang="ar" dir="rtl" className={tajawal.variable}>
       <body className="font-arabic bg-ivory text-charcoal antialiased">
+        <PixelScripts config={pixelConfig} />
         <Header />
         <main>{children}</main>
         <Footer />
@@ -69,8 +74,7 @@ export default function RootLayout({
         <CartDrawer />
         {/* Upsell modal — always mounted, controlled by store */}
         <UpsellModal />
-        {/* Deferred pixel initialisation */}
-        <PixelInit />
+        <PixelInit config={pixelConfig} />
       </body>
     </html>
   )

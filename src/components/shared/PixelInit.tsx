@@ -1,13 +1,18 @@
 'use client'
 
 import { useEffect } from 'react'
-import { initPixels, trackFirstPartyPageView } from '@/lib/tracking'
+import type { ServerPixelConfig } from '@/lib/pixel-config.server'
+import { initPixelsFromServerConfig, trackFirstPartyPageView } from '@/lib/tracking'
 
-export default function PixelInit() {
+interface PixelInitProps {
+  config: ServerPixelConfig
+}
+
+export default function PixelInit({ config }: PixelInitProps) {
   useEffect(() => {
-    void initPixels()
+    initPixelsFromServerConfig(config)
     trackFirstPartyPageView()
-  }, [])
+  }, [config])
 
   return null
 }

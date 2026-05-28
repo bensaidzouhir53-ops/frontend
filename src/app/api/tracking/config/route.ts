@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { getBackendCandidates } from '@/lib/orders.server'
+import { normalizePixelConfig } from '@/lib/pixel-config.server'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
@@ -20,7 +21,9 @@ export async function GET() {
       })
 
       if (response.ok) {
-        const body = (await response.json()) as PublicTrackingConfig
+        const body = normalizePixelConfig(
+          (await response.json()) as PublicTrackingConfig,
+        )
         return NextResponse.json(body, {
           headers: { 'Cache-Control': 'no-store' },
         })

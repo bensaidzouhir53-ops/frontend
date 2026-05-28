@@ -118,7 +118,13 @@ export function captureAttribution(): AttributionData {
 // ---------------------------------------------------------------------------
 
 function loadMetaPixel(pixelId: string): void {
-  if (_metaReady || !pixelId || typeof window === 'undefined') return
+  if (!pixelId || typeof window === 'undefined') return
+  if (_metaReady || window.fbq) {
+    _metaReady = true
+    _metaQueue.forEach(([action, event, params]) => window.fbq?.(action, event, params))
+    _metaQueue.length = 0
+    return
+  }
   _metaReady = true
 
   if (!window.fbq) {
@@ -258,6 +264,17 @@ function configFromEnv(): PixelConfig | null {
   }
 }
 
+function isValidPixelId(value: string | null | undefined): string | null {
+  if (!value) return null
+  const id = value.trim()
+  if (!id) return null
+  const lower = id.toLowerCase()
+  if (lower === 'your_id' || lower === 'your_token' || lower.startsWith('your_')) {
+    return null
+  }
+  return /^[A-Za-z0-9_-]+$/.test(id) ? id : null
+}
+
 function parsePixelConfigResponse(data: {
   enabled?: boolean
   meta_pixel_id?: string | null
@@ -266,9 +283,9 @@ function parsePixelConfigResponse(data: {
 }): PixelConfig | null {
   if (!data.enabled) return null
 
-  const meta = data.meta_pixel_id?.trim() ?? ''
-  const tiktok = data.tiktok_pixel_id?.trim() ?? ''
-  const snap = data.snap_pixel_id?.trim() ?? ''
+  const meta = isValidPixelId(data.meta_pixel_id) ?? ''
+  const tiktok = isValidPixelId(data.tiktok_pixel_id) ?? ''
+  const snap = isValidPixelId(data.snap_pixel_id) ?? ''
   if (!meta && !tiktok && !snap) return null
 
   return {
@@ -309,6 +326,45 @@ function applyPixelConfig(config: PixelConfig): void {
   if (config.meta_pixel_id) loadMetaPixel(config.meta_pixel_id)
   if (config.tiktok_pixel_id) loadTikTokPixel(config.tiktok_pixel_id)
   if (config.snap_pixel_id) loadSnapPixel(config.snap_pixel_id)
+}
+
+export interface ServerPixelConfigInput {
+  enabled: boolean
+  meta_pixel_id: string | null
+  tiktok_pixel_id: string | null
+  snap_pixel_id: string | null
+}
+
+/** Called from layout — pixels may already be injected via PixelScripts. */
+export function initPixelsFromServerConfig(config: ServerPixelConfigInput): void {
+  if (typeof window === 'undefined' || !config.enabled) return
+
+  const meta = isValidPixelId(config.meta_pixel_id)
+  const tiktok = isValidPixelId(config.tiktok_pixel_id)
+  const snap = isValidPixelId(config.snap_pixel_id)
+
+  if (meta && window.fbq) {
+    _metaReady = true
+    _metaQueue.forEach(([action, event, params]) => window.fbq?.(action, event, params))
+    _metaQueue.length = 0
+  }
+  if (tiktok && window.ttq?.track) {
+    _ttqReady = true
+    _ttqQueue.forEach(([event, params]) => window.ttq?.track?.(event, params))
+    _ttqQueue.length = 0
+  }
+  if (snap && window.snaptr) {
+    _snapReady = true
+    _snapQueue.forEach(([action, event, params]) => window.snaptr?.(action, event, params))
+    _snapQueue.length = 0
+  }
+
+  applyPixelConfig({
+    enabled: true,
+    meta_pixel_id: meta ?? '',
+    tiktok_pixel_id: tiktok ?? '',
+    snap_pixel_id: snap ?? '',
+  })
 }
 
 // ---------------------------------------------------------------------------
