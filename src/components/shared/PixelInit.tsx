@@ -5,7 +5,7 @@ import { initPixels, trackFirstPartyPageView } from '@/lib/tracking'
 
 export default function PixelInit() {
   useEffect(() => {
-    initPixels()
+    void initPixels()
     trackFirstPartyPageView()
   }, [])
 

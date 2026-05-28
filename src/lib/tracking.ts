@@ -232,29 +232,106 @@ function loadSnapPixel(pixelId: string): void {
 }
 
 // ---------------------------------------------------------------------------
+// Pixel config — backend env (Easypanel) with optional NEXT_PUBLIC fallback
+// ---------------------------------------------------------------------------
+
+interface PixelConfig {
+  enabled: boolean
+  meta_pixel_id: string
+  tiktok_pixel_id: string
+  snap_pixel_id: string
+}
+
+function configFromEnv(): PixelConfig | null {
+  if (process.env.NEXT_PUBLIC_ENABLE_PIXELS !== 'true') return null
+
+  const meta = process.env.NEXT_PUBLIC_META_PIXEL_ID?.trim() ?? ''
+  const tiktok = process.env.NEXT_PUBLIC_TIKTOK_PIXEL_ID?.trim() ?? ''
+  const snap = process.env.NEXT_PUBLIC_SNAP_PIXEL_ID?.trim() ?? ''
+  if (!meta && !tiktok && !snap) return null
+
+  return {
+    enabled: true,
+    meta_pixel_id: meta,
+    tiktok_pixel_id: tiktok,
+    snap_pixel_id: snap,
+  }
+}
+
+function parsePixelConfigResponse(data: {
+  enabled?: boolean
+  meta_pixel_id?: string | null
+  tiktok_pixel_id?: string | null
+  snap_pixel_id?: string | null
+}): PixelConfig | null {
+  if (!data.enabled) return null
+
+  const meta = data.meta_pixel_id?.trim() ?? ''
+  const tiktok = data.tiktok_pixel_id?.trim() ?? ''
+  const snap = data.snap_pixel_id?.trim() ?? ''
+  if (!meta && !tiktok && !snap) return null
+
+  return {
+    enabled: true,
+    meta_pixel_id: meta,
+    tiktok_pixel_id: tiktok,
+    snap_pixel_id: snap,
+  }
+}
+
+async function fetchFromUrl(url: string): Promise<PixelConfig | null> {
+  const res = await fetch(url, { cache: 'no-store' })
+  if (!res.ok) return null
+  return parsePixelConfigResponse(
+    (await res.json()) as Parameters<typeof parsePixelConfigResponse>[0],
+  )
+}
+
+async function fetchPixelConfig(): Promise<PixelConfig | null> {
+  const urls = ['/api/tracking/config']
+  const apiBase = process.env.NEXT_PUBLIC_API_URL?.trim().replace(/\/$/, '')
+  if (apiBase) {
+    urls.push(`${apiBase}/api/tracking/config`)
+  }
+
+  for (const url of urls) {
+    try {
+      const config = await fetchFromUrl(url)
+      if (config) return config
+    } catch {
+      // try next source
+    }
+  }
+  return null
+}
+
+function applyPixelConfig(config: PixelConfig): void {
+  if (config.meta_pixel_id) loadMetaPixel(config.meta_pixel_id)
+  if (config.tiktok_pixel_id) loadTikTokPixel(config.tiktok_pixel_id)
+  if (config.snap_pixel_id) loadSnapPixel(config.snap_pixel_id)
+}
+
+// ---------------------------------------------------------------------------
 // Public API: initialise all enabled pixels (deferred)
 // ---------------------------------------------------------------------------
 
-export function initPixels(): void {
+export async function initPixels(): Promise<void> {
   if (typeof window === 'undefined') return
 
-  const load = () => {
-    if (process.env.NEXT_PUBLIC_ENABLE_PIXELS !== 'true') return
-
-    const metaId = process.env.NEXT_PUBLIC_META_PIXEL_ID ?? ''
-    const tiktokId = process.env.NEXT_PUBLIC_TIKTOK_PIXEL_ID ?? ''
-    const snapId = process.env.NEXT_PUBLIC_SNAP_PIXEL_ID ?? ''
-
-    if (metaId) loadMetaPixel(metaId)
-    if (tiktokId) loadTikTokPixel(tiktokId)
-    if (snapId) loadSnapPixel(snapId)
+  const load = async () => {
+    const config = (await fetchPixelConfig()) ?? configFromEnv()
+    if (!config?.enabled) return
+    applyPixelConfig(config)
   }
 
-  if ('requestIdleCallback' in window) {
-    window.requestIdleCallback(load, { timeout: 3000 })
-  } else {
-    setTimeout(load, 1000)
-  }
+  const schedule =
+    typeof window !== 'undefined' && 'requestIdleCallback' in window
+      ? (fn: () => void) => window.requestIdleCallback(fn, { timeout: 3000 })
+      : (fn: () => void) => setTimeout(fn, 1000)
+
+  schedule(() => {
+    void load()
+  })
 }
 
 // ---------------------------------------------------------------------------
