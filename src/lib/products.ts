@@ -33,7 +33,7 @@ export const PRODUCTS: Product[] = [
       {
         name: 'ببتيدات الكولاجين',
         desc: 'ترمم أنسجة الرئة اللي تعبت من الدخان والغبار، وترجع لها مرونتها عشان ترجع تتنفس طبيعي وصدرك ينشرح.',
-        image: 'https://placehold.co/400x400/0f766e/ffffff?text=Collagen'
+        image: '/images/ingredient-collagen.png'
       },
       {
         name: 'زهرة البيلسان',
