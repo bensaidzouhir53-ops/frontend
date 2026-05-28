@@ -1,4 +1,4 @@
-/* eslint-disable @next/next/no-img-element */
+﻿/* eslint-disable @next/next/no-img-element */
 import Image from 'next/image'
 import Link from 'next/link'
 import { 
@@ -9,6 +9,7 @@ import {
 import type { Product } from '@/types'
 import { getDefaultOffer } from '@/lib/products'
 import OfferSelector from '@/components/product/OfferSelector'
+import HowToUseStep from '@/components/product/HowToUseStep'
 import TrustBadges from '@/components/shared/TrustBadges'
 import FAQAccordion from '@/components/shared/FAQAccordion'
 import { DEFAULT_PRODUCT_REVIEWS, HERBAL_LUNG_SPRAY_REVIEWS } from '@/lib/productReviews'
@@ -397,29 +398,13 @@ export default function ProductPageContent({
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-3 md:gap-8">
               {[
-                { step: 1, title: 'رج العبوة جيداً', desc: 'قبل كل استخدام، رج العبوة عشان تتجانس المستخلصات العشبية الطبيعية.', icon: Wind },
-                { step: 2, title: 'بخ داخل الفم', desc: 'وجه البخاخ داخل الفم واضغط من 2 إلى 3 بخات لتغطية الممرات التنفسية.', icon: Zap },
-                { step: 3, title: 'مرتين يومياً', desc: 'استخدمه في الصباح لطرد البلغم، وقبل النوم لتنفس عميق ونوم مريح.', icon: Clock }
-              ].map((item, idx) => (
-                <div key={idx} className="bg-mist/30 rounded-[2rem] p-8 text-center border border-sage/20 hover:border-teal/30 hover:shadow-lg transition-all group relative overflow-hidden">
-                  <div className="absolute top-0 right-0 w-32 h-32 bg-teal/5 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2 group-hover:bg-teal/10 transition-colors" />
-                  
-                  <div className="w-20 h-20 mx-auto bg-white rounded-2xl shadow-sm flex items-center justify-center mb-6 border border-sage/20 group-hover:scale-110 transition-transform relative z-10">
-                    <item.icon className="w-10 h-10 text-teal" />
-                    <div className="absolute -top-3 -right-3 w-8 h-8 bg-gold text-white font-extrabold rounded-full flex items-center justify-center shadow-md">
-                      {item.step}
-                    </div>
-                  </div>
-                  
-                  <h3 className="text-xl font-extrabold text-charcoal mb-3 relative z-10 group-hover:text-teal transition-colors">
-                    {item.title}
-                  </h3>
-                  <p className="text-charcoal/70 font-medium leading-relaxed relative z-10">
-                    {item.desc}
-                  </p>
-                </div>
+                { step: 1, title: 'رج العبوة جيداً', desc: 'قبل كل استخدام، رج العبوة عشان تتجانس المستخلصات العشبية الطبيعية.', image: '/images/howto-step-1-shake.jpg' },
+                { step: 2, title: 'بخ داخل الفم', desc: 'وجه البخاخ داخل الفم واضغط من 2 إلى 3 بخات لتغطية الممرات التنفسية.', image: '/images/howto-step-2-spray.jpg' },
+                { step: 3, title: 'مرتين يومياً', desc: 'استخدمه في الصباح لطرد البلغم، وقبل النوم لتنفس عميق ونوم مريح.', image: '/images/howto-step-3-routine.jpg' }
+              ].map((item) => (
+                <HowToUseStep key={item.step} {...item} />
               ))}
             </div>
           </div>
