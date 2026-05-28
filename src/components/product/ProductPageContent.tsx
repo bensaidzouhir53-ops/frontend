@@ -331,8 +331,8 @@ export default function ProductPageContent({
               <div className="w-full lg:w-5/12 order-1 lg:order-2">
                 <div className="relative aspect-[3/4] rounded-[2.5rem] overflow-hidden bg-white border border-sage/20 shadow-2xl group">
                   <img 
-                    src="https://placehold.co/800x1000/0f766e/ffffff?text=Main+Ingredients+Image" 
-                    alt="مكونات طبيعية" 
+                    src={product.slug === 'herbal-lung-spray' ? '/images/main-ingredients-lung-spray.png' : 'https://placehold.co/800x1000/0f766e/ffffff?text=Main+Ingredients+Image'} 
+                    alt={product.slug === 'herbal-lung-spray' ? 'مكونات بخاخ تنظيف الرئة العشبي الطبيعية' : 'مكونات طبيعية'} 
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-charcoal/50 to-transparent opacity-60" />
