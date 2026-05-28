@@ -9,6 +9,9 @@ import PixelScripts from '@/components/shared/PixelScripts'
 import { fetchTrackingConfigFromBackend } from '@/lib/pixel-config.server'
 import './globals.css'
 
+// Always load pixel config at request time (never bake empty config at Docker build)
+export const dynamic = 'force-dynamic'
+
 const tajawal = Tajawal({
   subsets: ['arabic', 'latin'],
   weight: ['300', '400', '500', '700', '800', '900'],

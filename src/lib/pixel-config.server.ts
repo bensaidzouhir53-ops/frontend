@@ -44,6 +44,22 @@ export function normalizePixelConfig(raw: {
   }
 }
 
+/** Runtime env fallback when backend fetch fails during Docker build or network blip. */
+export function getEnvPixelFallback(): ServerPixelConfig {
+  return normalizePixelConfig({
+    enabled: process.env.ENABLE_WEB_PIXELS !== 'false',
+    meta_pixel_id:
+      process.env.NEXT_PUBLIC_META_PIXEL_ID ?? process.env.META_PIXEL_ID ?? null,
+    tiktok_pixel_id:
+      process.env.NEXT_PUBLIC_TIKTOK_PIXEL_ID ??
+      process.env.TIKTOK_PIXEL_CODE ??
+      process.env.TIKTOK_PIXEL_ID ??
+      null,
+    snap_pixel_id:
+      process.env.NEXT_PUBLIC_SNAP_PIXEL_ID ?? process.env.SNAP_PIXEL_ID ?? null,
+  })
+}
+
 /** Fetch pixel IDs from backend at request time (Easypanel env). */
 export async function fetchTrackingConfigFromBackend(): Promise<ServerPixelConfig> {
   for (const baseUrl of getBackendCandidates()) {
@@ -53,13 +69,16 @@ export async function fetchTrackingConfigFromBackend(): Promise<ServerPixelConfi
         signal: AbortSignal.timeout(5_000),
       })
       if (response.ok) {
-        return normalizePixelConfig(
+        const config = normalizePixelConfig(
           (await response.json()) as Parameters<typeof normalizePixelConfig>[0],
         )
+        if (config.enabled) return config
       }
     } catch {
       // try next backend URL
     }
   }
-  return EMPTY
+
+  const fallback = getEnvPixelFallback()
+  return fallback.enabled ? fallback : EMPTY
 }

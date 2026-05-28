@@ -108,7 +108,7 @@ export default function CheckoutModal() {
       trackPurchase({
         value: response.total,
         content_ids: items.map((i) => i.product.slug),
-        event_id: generateEventId(),
+        event_id: eventId,
         order_id: response.order_id,
       })
 
