@@ -43,7 +43,7 @@ export const PRODUCTS: Product[] = [
       {
         name: 'هاماميليس',
         desc: 'يخفف الاحتقان في الممرات التنفسية، ويقلل من إفراز البلغم الغثيث اللي ناشب بحلقك كل صباح.',
-        image: 'https://placehold.co/400x400/0f766e/ffffff?text=Witch+Hazel'
+        image: '/images/ingredient-hamamelis.png'
       },
       {
         name: 'العبهر',
