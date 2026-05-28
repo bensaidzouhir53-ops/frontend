@@ -84,32 +84,102 @@ export function generateEventId(): string {
   return crypto.randomUUID()
 }
 
+const FIRST_LANDING_KEY = 'nasama_first_landing_url'
+
+/** Persist the first page URL (with query params) for the visitor's lifetime. */
+export function saveFirstLandingUrl(): void {
+  if (typeof window === 'undefined') return
+  if (window.location.pathname.startsWith('/admin')) return
+
+  try {
+    if (!localStorage.getItem(FIRST_LANDING_KEY)) {
+      localStorage.setItem(FIRST_LANDING_KEY, window.location.href)
+    }
+  } catch {
+    // localStorage unavailable (private browsing, etc.)
+  }
+}
+
+function getFirstLandingUrl(): string | undefined {
+  if (typeof window === 'undefined') return undefined
+
+  try {
+    return localStorage.getItem(FIRST_LANDING_KEY) ?? undefined
+  } catch {
+    return undefined
+  }
+}
+
+function utmFromUrl(url: string): NonNullable<AttributionData['utm']> {
+  const empty = { source: '', medium: '', campaign: '', content: '', term: '' }
+  try {
+    const params = new URL(url).searchParams
+    return {
+      source: params.get('utm_source') ?? '',
+      medium: params.get('utm_medium') ?? '',
+      campaign: params.get('utm_campaign') ?? '',
+      content: params.get('utm_content') ?? '',
+      term: params.get('utm_term') ?? '',
+    }
+  } catch {
+    return empty
+  }
+}
+
+function clickIdsFromUrl(url: string): Pick<
+  AttributionData,
+  'fbclid' | 'ttclid' | 'sc_click_id'
+> {
+  try {
+    const params = new URL(url).searchParams
+    return {
+      fbclid: params.get('fbclid') ?? undefined,
+      ttclid: params.get('ttclid') ?? undefined,
+      sc_click_id: params.get('sc_click_id') ?? undefined,
+    }
+  } catch {
+    return {}
+  }
+}
+
 export function captureAttribution(): AttributionData {
   if (typeof window === 'undefined') return {}
 
-  const params = new URLSearchParams(window.location.search)
+  saveFirstLandingUrl()
+
+  const firstLanding = getFirstLandingUrl()
+  const attributionUrl = firstLanding ?? window.location.href
+  const params = new URL(firstLanding ?? window.location.href).searchParams
 
   const getCookie = (name: string): string | undefined => {
     const match = document.cookie.match(new RegExp(`(^| )${name}=([^;]+)`))
     return match ? decodeURIComponent(match[2]) : undefined
   }
 
+  const clickIds = firstLanding
+    ? clickIdsFromUrl(firstLanding)
+    : {
+        fbclid: params.get('fbclid') ?? undefined,
+        ttclid: params.get('ttclid') ?? undefined,
+        sc_click_id: params.get('sc_click_id') ?? undefined,
+      }
+
   return {
-    fbclid: params.get('fbclid') ?? undefined,
-    ttclid: params.get('ttclid') ?? undefined,
-    sc_click_id: params.get('sc_click_id') ?? undefined,
+    ...clickIds,
     _fbp: getCookie('_fbp'),
     _fbc: getCookie('_fbc'),
     _ttp: getCookie('_ttp'),
     _scid: getCookie('_scid'),
-    landing_page: window.location.href,
-    utm: {
-      source: params.get('utm_source') ?? '',
-      medium: params.get('utm_medium') ?? '',
-      campaign: params.get('utm_campaign') ?? '',
-      content: params.get('utm_content') ?? '',
-      term: params.get('utm_term') ?? '',
-    },
+    landing_page: attributionUrl,
+    utm: firstLanding
+      ? utmFromUrl(firstLanding)
+      : {
+          source: params.get('utm_source') ?? '',
+          medium: params.get('utm_medium') ?? '',
+          campaign: params.get('utm_campaign') ?? '',
+          content: params.get('utm_content') ?? '',
+          term: params.get('utm_term') ?? '',
+        },
   }
 }
 
