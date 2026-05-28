@@ -19,10 +19,15 @@ const BADGE_STYLES: Record<string, string> = {
   teal: 'bg-teal text-white',
 }
 
+const QTY_LABELS: Record<number, string> = {
+  1: 'قطعة واحدة',
+  2: 'قطعتان',
+  3: '3 قطع',
+}
+
 const basePrice = OFFERS[0].price
 
 export default function OfferSelector({ product, className }: OfferSelectorProps) {
-  const defaultOffer = OFFERS.find((o) => o.isDefault) ?? OFFERS[1]
   const [selectedIdx, setSelectedIdx] = useState(
     OFFERS.findIndex((o) => o.isDefault),
   )
@@ -41,112 +46,122 @@ export default function OfferSelector({ product, className }: OfferSelectorProps
   }
 
   return (
-    <div className={cn('flex flex-col gap-4', className)} dir="rtl">
+    <div className={cn('flex flex-col gap-3 sm:gap-4', className)} dir="rtl">
       <p className="text-sm font-semibold text-charcoal/70">اختر كميتك:</p>
 
-      {/* Offer cards */}
-      <div className="flex flex-col gap-2.5">
+      <div className="flex flex-col gap-2.5 sm:gap-3">
         {OFFERS.map((offer, idx) => {
           const isSelected = idx === selectedIdx
           const perUnit = Math.round(offer.price / offer.qty)
+
           return (
             <button
               key={offer.qty}
               onClick={() => setSelectedIdx(idx)}
               className={cn(
-                'relative flex items-center justify-between rounded-2xl border-2 px-4 py-3.5 text-right transition-all',
+                'relative w-full rounded-2xl border-2 p-3.5 text-right transition-all sm:p-4',
                 isSelected
                   ? 'border-teal bg-teal/5 shadow-md'
                   : 'border-sage/40 bg-white hover:border-teal/40',
               )}
               aria-pressed={isSelected}
             >
-              {/* Selected checkmark */}
-              <div
-                className={cn(
-                  'flex h-6 w-6 shrink-0 items-center justify-center rounded-full border-2 transition-colors',
-                  isSelected
-                    ? 'border-teal bg-teal'
-                    : 'border-sage/60 bg-white',
-                )}
-              >
-                {isSelected && <Check className="h-3.5 w-3.5 text-white" strokeWidth={3} />}
-              </div>
-
-              {/* Middle: qty + label */}
-              <div className="mx-3 flex-1 text-right">
-                <div className="flex items-center gap-2 mb-1">
-                  <span className="font-bold text-charcoal">
-                    {offer.qty === 1 ? 'قطعة واحدة' : offer.qty === 2 ? 'قطعتان' : '3 قطع'}
-                  </span>
-                  <span
-                    className={cn(
-                      'rounded-full px-2 py-0.5 text-[11px] font-bold',
-                      BADGE_STYLES[offer.badgeColor],
-                    )}
-                  >
-                    {offer.badge}
-                  </span>
-                </div>
-                {offer.desc && (
-                  <p className="text-xs text-charcoal/70 mb-1 leading-snug font-medium">
-                    {offer.desc}
-                  </p>
-                )}
-                <div className="flex items-center gap-2">
-                  <span className="text-[11px] text-charcoal/50">
-                    {perUnit} ريال / للقطعة
-                  </span>
-                  {(offer.savings ?? 0) > 0 && (
-                    <span className="text-[11px] font-semibold text-gold">
-                      وفّر {offer.savings} ريال
-                    </span>
+              <div className="flex items-start gap-3">
+                <div
+                  className={cn(
+                    'mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full border-2 transition-colors',
+                    isSelected ? 'border-teal bg-teal' : 'border-sage/60 bg-white',
                   )}
+                >
+                  {isSelected && <Check className="h-3.5 w-3.5 text-white" strokeWidth={3} />}
                 </div>
-              </div>
 
-              {/* Price */}
-              <div className="text-left flex flex-col items-end justify-center">
-                <p className="font-extrabold text-teal text-lg md:text-xl">{offer.price} ريال</p>
-                {offer.qty > 1 && (
-                  <p className="text-xs text-charcoal/40 line-through">
-                    {basePrice * offer.qty} ريال
-                  </p>
-                )}
-                {offer.qty > 1 && (
-                   <span className="mt-1 text-[10px] font-bold text-teal bg-teal/10 px-2 py-0.5 rounded flex items-center gap-1">
-                     🚚 شحن مجاني
-                   </span>
-                )}
+                <div className="min-w-0 flex-1">
+                  <div className="mb-2 flex flex-col gap-2 sm:mb-1 sm:flex-row sm:items-start sm:justify-between">
+                    <div className="min-w-0 flex-1">
+                      <div className="mb-1.5 flex flex-wrap items-center gap-x-2 gap-y-1">
+                        <span className="text-base font-bold text-charcoal sm:text-[17px]">
+                          {QTY_LABELS[offer.qty]}
+                        </span>
+                        <span
+                          className={cn(
+                            'inline-flex max-w-full rounded-full px-2 py-0.5 text-[10px] font-bold leading-snug sm:text-[11px]',
+                            BADGE_STYLES[offer.badgeColor],
+                          )}
+                        >
+                          {offer.badge}
+                        </span>
+                      </div>
+
+                      {offer.desc && (
+                        <p className="text-xs leading-relaxed text-charcoal/70 sm:text-[13px]">
+                          {offer.desc}
+                        </p>
+                      )}
+                    </div>
+
+                    <div className="flex shrink-0 items-center justify-between gap-3 sm:flex-col sm:items-end sm:justify-center sm:gap-0.5">
+                      <div className="text-right sm:text-left">
+                        <p className="text-lg font-extrabold text-teal sm:text-xl">
+                          {offer.price} ريال
+                        </p>
+                        {offer.qty > 1 && (
+                          <p className="text-[11px] text-charcoal/40 line-through sm:text-xs">
+                            {basePrice * offer.qty} ريال
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="flex flex-wrap items-center gap-x-2 gap-y-1.5">
+                    <span className="text-[11px] text-charcoal/50 sm:text-xs">
+                      {perUnit} ريال / للقطعة
+                    </span>
+                    {(offer.savings ?? 0) > 0 && (
+                      <span className="text-[11px] font-semibold text-gold sm:text-xs">
+                        وفّر {offer.savings} ريال
+                      </span>
+                    )}
+                    {offer.qty > 1 && (
+                      <span className="inline-flex items-center gap-1 rounded-full bg-teal/10 px-2 py-0.5 text-[10px] font-bold text-teal sm:text-[11px]">
+                        🚚 شحن مجاني
+                      </span>
+                    )}
+                  </div>
+                </div>
               </div>
             </button>
           )
         })}
       </div>
 
-      {/* Savings highlight */}
       {(selected.savings ?? 0) > 0 && (
-        <div className="flex items-center justify-center gap-2 rounded-xl bg-gold/10 px-4 py-2.5">
-          <span className="text-sm font-bold text-gold">
+        <div className="flex items-center justify-center rounded-xl bg-gold/10 px-3 py-2.5 sm:px-4">
+          <span className="text-center text-xs font-bold text-gold sm:text-sm">
             ستوفّر {selected.savings} ريال مع هذا الخيار 🎉
           </span>
         </div>
       )}
 
-      {/* CTA */}
       <button
         onClick={handleAddToCart}
-        className="flex w-full items-center justify-center gap-3 rounded-2xl bg-teal py-4 md:py-5 text-lg font-extrabold text-white shadow-lg shadow-teal/30 transition-all hover:bg-teal-dark active:scale-[0.98] mt-2 animate-bounce hover:animate-none"
+        className="mt-1 flex w-full items-center justify-center gap-2 rounded-2xl bg-teal px-4 py-3.5 text-base font-extrabold text-white shadow-lg shadow-teal/30 transition-all hover:animate-none hover:bg-teal-dark active:scale-[0.98] sm:gap-3 sm:py-4 sm:text-lg md:py-5 animate-bounce"
       >
-        <ShoppingCart className="h-6 w-6" />
-        أكمل الطلب الآن — الدفع عند الاستلام
+        <ShoppingCart className="h-5 w-5 shrink-0 sm:h-6 sm:w-6" />
+        <span className="leading-snug">أكمل الطلب الآن — الدفع عند الاستلام</span>
       </button>
 
-      {/* Micro-trust */}
-      <div className="flex flex-wrap items-center justify-center gap-2 md:gap-4 text-xs md:text-sm text-charcoal/60 font-bold bg-mist/50 py-3 px-2 rounded-xl mt-1">
-        <span className="flex items-center gap-1"><Check className="w-3 h-3 text-teal" /> الدفع عند الاستلام</span>
-        <span className="flex items-center gap-1"><Check className="w-3 h-3 text-teal" /> شحن سريع 2-4 أيام</span>
-        <span className="flex items-center gap-1"><Check className="w-3 h-3 text-teal" /> إرجاع مجاني</span>
+      <div className="mt-1 flex flex-col items-stretch gap-2 rounded-xl bg-mist/50 px-3 py-3 text-xs font-bold text-charcoal/60 sm:flex-row sm:flex-wrap sm:items-center sm:justify-center sm:gap-4 sm:text-sm">
+        <span className="flex items-center justify-center gap-1 sm:justify-start">
+          <Check className="h-3 w-3 shrink-0 text-teal" /> الدفع عند الاستلام
+        </span>
+        <span className="flex items-center justify-center gap-1 sm:justify-start">
+          <Check className="h-3 w-3 shrink-0 text-teal" /> شحن سريع 2-4 أيام
+        </span>
+        <span className="flex items-center justify-center gap-1 sm:justify-start">
+          <Check className="h-3 w-3 shrink-0 text-teal" /> إرجاع مجاني
+        </span>
       </div>
     </div>
   )

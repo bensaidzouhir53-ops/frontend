@@ -86,8 +86,8 @@ export default function ProductPageContent({
               </p>
 
               {/* Offer Selector */}
-              <div id="offer" className="bg-white rounded-[2.5rem] p-6 md:p-8 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-teal/10 relative overflow-hidden">
-                <h3 className="font-extrabold text-charcoal text-xl mb-6 text-center">
+              <div id="offer" className="overflow-hidden rounded-[1.75rem] border border-teal/10 bg-white p-4 shadow-[0_8px_30px_rgb(0,0,0,0.04)] sm:rounded-[2.5rem] sm:p-6 md:p-8">
+                <h3 className="mb-4 text-center text-lg font-extrabold leading-snug text-charcoal sm:mb-6 sm:text-xl">
                   اختر العرض المناسب لك (كمية محدودة)
                 </h3>
                 <OfferSelector product={product} />
@@ -680,7 +680,6 @@ export default function ProductPageContent({
             اطلب الآن والدفع عند الاستلام 📦
             <ChevronLeft className="w-4 h-4" />
           </Link>
-          <p className="text-center text-[10px] text-charcoal/60 mt-2 font-bold tracking-wide">🔥 العرض الذهبي: الشحن مجاني لطلب أكثر من عبوة 🔥</p>
         </div>
       </div>
     </main>
