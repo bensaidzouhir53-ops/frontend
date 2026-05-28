@@ -48,7 +48,7 @@ export const PRODUCTS: Product[] = [
       {
         name: 'العبهر',
         desc: 'يذوب البلغم المتحجر في الصدر ويسهل طرده، ويريحك من ثقل الصدر والكتمة خصوصاً وقت النوم.',
-        image: 'https://placehold.co/400x400/0f766e/ffffff?text=Styrax'
+        image: '/images/ingredient-styrax.png'
       },
       {
         name: 'هيدروتيس',
