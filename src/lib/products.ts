@@ -38,7 +38,7 @@ export const PRODUCTS: Product[] = [
       {
         name: 'زهرة البيلسان',
         desc: 'تطرد السموم والالتهابات من الصدر، وتهدي الكحة الناشفة والمزعجة اللي تقطع أنفاسك وتفضحك بالمجالس.',
-        image: 'https://placehold.co/400x400/0f766e/ffffff?text=Elderflower'
+        image: '/images/ingredient-elderflower.png'
       },
       {
         name: 'هاماميليس',
