@@ -4,8 +4,33 @@ import Link from 'next/link'
 import { Wind, Star, ShieldCheck, HeartPulse, CheckCircle2, ArrowLeft, PackageCheck } from 'lucide-react'
 import { PRODUCTS } from '@/lib/products'
 import ProductCard from '@/components/product/ProductCard'
+import PainPointCard from '@/components/home/PainPointCard'
 import TrustBadges from '@/components/shared/TrustBadges'
 import FAQAccordion from '@/components/shared/FAQAccordion'
+
+const PAIN_POINTS = [
+  {
+    icon: '🌪️',
+    title: 'مواسم الغبار والتقلبات',
+    desc: 'تزيد من حساسية الصدر والجيوب الأنفية وتخلي التنفس متعب.',
+    image: '/images/pain-dust-season.jpg',
+    accent: 'teal' as const,
+  },
+  {
+    icon: '❄️',
+    title: 'هواء المكيفات الجاف',
+    desc: 'يسبب جفاف في الممرات التنفسية ويزعجك وقت النوم.',
+    image: '/images/pain-ac-dry.jpg',
+    accent: 'gold' as const,
+  },
+  {
+    icon: '💨',
+    title: 'دخان وبخور البيت',
+    desc: 'التعرض اليومي لها يراكم الترسبات ويخلي النفس ثقيل.',
+    image: '/images/pain-smoke-incense.jpg',
+    accent: 'sage' as const,
+  },
+]
 
 export default function HomePage() {
   return (
@@ -102,19 +127,9 @@ export default function HomePage() {
             الجو في السعودية يضع جهازك التنفسي تحت ضغط يومي: غبار، مكيفات جافة على مدار السنة، شيشة، وغبار الدوام. كلها تتراكم وتسبب ثقل، بلغم، وكتمة. الحل ما يكون من صيدلية كيماوية، بل من صيدلية طبيعية متخصصة.
           </p>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {[
-              { icon: '🌪️', title: 'مواسم الغبار والتقلبات', desc: 'تزيد من حساسية الصدر والجيوب الأنفية وتخلي التنفس متعب.' },
-              { icon: '❄️', title: 'هواء المكيفات الجاف', desc: 'يسبب جفاف في الممرات التنفسية ويزعجك وقت النوم.' },
-              { icon: '💨', title: 'دخان وبخور البيت', desc: 'التعرض اليومي لها يراكم الترسبات ويخلي النفس ثقيل.' }
-            ].map((pain, i) => (
-              <div key={i} className="bg-mist/30 p-8 rounded-3xl border border-sage/20 hover:bg-mist hover:scale-105 transition-all">
-                <div className="w-16 h-16 bg-white rounded-2xl shadow-sm flex items-center justify-center text-3xl mx-auto mb-4">
-                  {pain.icon}
-                </div>
-                <h3 className="font-bold text-charcoal text-lg mb-2">{pain.title}</h3>
-                <p className="text-charcoal/70 text-sm leading-relaxed">{pain.desc}</p>
-              </div>
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
+            {PAIN_POINTS.map((pain) => (
+              <PainPointCard key={pain.title} {...pain} />
             ))}
           </div>
         </div>
