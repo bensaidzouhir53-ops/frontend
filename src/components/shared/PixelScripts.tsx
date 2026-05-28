@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element -- Meta noscript pixel requires a raw 1x1 img */
 'use client'
 
 import Script from 'next/script'
