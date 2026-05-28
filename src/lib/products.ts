@@ -58,7 +58,7 @@ export const PRODUCTS: Product[] = [
       {
         name: 'جونجينج جراس',
         desc: 'عشبة قوية تصفي الرئة من ترسبات النيكوتين والقطران، وتعطيك إحساس بالانتعاش الفوري والنظافة اللي تدور عليها.',
-        image: 'https://placehold.co/400x400/0f766e/ffffff?text=Gongjing+Grass'
+        image: '/images/ingredient-gongjing-grass.png'
       }
     ],
     faqs: [
