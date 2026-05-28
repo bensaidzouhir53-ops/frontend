@@ -28,7 +28,7 @@ export const PRODUCTS: Product[] = [
       {
         name: 'الكاليبتوس',
         desc: 'يوسع لك الشعب الهوائية ويفك الكتمة من أول بخة، يخليك تتنفس براحة وتسحب هوا نظيف يرد الروح.',
-        image: 'https://placehold.co/400x400/0f766e/ffffff?text=Eucalyptus'
+        image: '/images/ingredient-eucalyptus.png'
       },
       {
         name: 'ببتيدات الكولاجين',
