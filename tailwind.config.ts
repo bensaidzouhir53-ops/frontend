@@ -27,6 +27,7 @@ const config: Config = {
         'fade-in': 'fadeIn 0.2s ease-out',
         'countdown': 'countdown linear forwards',
         'marquee': 'marquee 25s linear infinite',
+        'marquee-ltr': 'marqueeLtr 45s linear infinite',
       },
       keyframes: {
         slideInRight: {
@@ -40,6 +41,10 @@ const config: Config = {
         marquee: {
           '0%': { transform: 'translateX(0%)' },
           '100%': { transform: 'translateX(100%)' }, // moves left in RTL
+        },
+        marqueeLtr: {
+          '0%': { transform: 'translateX(-50%)' },
+          '100%': { transform: 'translateX(0%)' },
         },
       },
       boxShadow: {

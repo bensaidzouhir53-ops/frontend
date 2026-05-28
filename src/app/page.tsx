@@ -4,33 +4,10 @@ import Link from 'next/link'
 import { Wind, Star, ShieldCheck, HeartPulse, CheckCircle2, ArrowLeft, PackageCheck } from 'lucide-react'
 import { PRODUCTS } from '@/lib/products'
 import ProductCard from '@/components/product/ProductCard'
-import PainPointCard from '@/components/home/PainPointCard'
+import PainPointsMarquee from '@/components/home/PainPointsMarquee'
 import TrustBadges from '@/components/shared/TrustBadges'
 import FAQAccordion from '@/components/shared/FAQAccordion'
-
-const PAIN_POINTS = [
-  {
-    icon: '🌪️',
-    title: 'مواسم الغبار والتقلبات',
-    desc: 'تزيد من حساسية الصدر والجيوب الأنفية وتخلي التنفس متعب.',
-    image: '/images/pain-dust-season.jpg',
-    accent: 'teal' as const,
-  },
-  {
-    icon: '❄️',
-    title: 'هواء المكيفات الجاف',
-    desc: 'يسبب جفاف في الممرات التنفسية ويزعجك وقت النوم.',
-    image: '/images/pain-ac-dry.jpg',
-    accent: 'gold' as const,
-  },
-  {
-    icon: '💨',
-    title: 'دخان وبخور البيت',
-    desc: 'التعرض اليومي لها يراكم الترسبات ويخلي النفس ثقيل.',
-    image: '/images/pain-smoke-incense.jpg',
-    accent: 'sage' as const,
-  },
-]
+import { PAIN_POINTS } from '@/lib/pain-points'
 
 export default function HomePage() {
   return (
@@ -127,11 +104,7 @@ export default function HomePage() {
             الجو في السعودية يضع جهازك التنفسي تحت ضغط يومي: غبار، مكيفات جافة على مدار السنة، شيشة، وغبار الدوام. كلها تتراكم وتسبب ثقل، بلغم، وكتمة. الحل ما يكون من صيدلية كيماوية، بل من صيدلية طبيعية متخصصة.
           </p>
 
-          <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
-            {PAIN_POINTS.map((pain) => (
-              <PainPointCard key={pain.title} {...pain} />
-            ))}
-          </div>
+          <PainPointsMarquee items={PAIN_POINTS} />
         </div>
       </section>
 
