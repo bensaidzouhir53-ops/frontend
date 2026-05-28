@@ -206,8 +206,8 @@ export default function ProductPageContent({
             <div className="w-full lg:w-1/2 order-1">
               <div className="relative aspect-square rounded-[2rem] overflow-hidden bg-gray-100 border border-sage/20 shadow-xl">
                 <img 
-                  src="https://placehold.co/800x800/0f766e/ffffff?text=Solution+Image+(Product+with+Herbs)" 
-                  alt="Solution placeholder" 
+                  src={product.slug === 'herbal-lung-spray' ? '/images/solution-lung-spray.png' : 'https://placehold.co/800x800/0f766e/ffffff?text=Solution+Image+(Product+with+Herbs)'} 
+                  alt={product.slug === 'herbal-lung-spray' ? 'بخاخ تنظيف الرئة العشبي مع الأعشاب الطبيعية' : 'Solution placeholder'} 
                   className="w-full h-full object-cover"
                 />
               </div>
