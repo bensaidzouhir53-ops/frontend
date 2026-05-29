@@ -89,7 +89,14 @@ const FIRST_LANDING_KEY = 'nasama_first_landing_url'
 /** Persist the first page URL (with query params) for the visitor's lifetime. */
 export function saveFirstLandingUrl(): void {
   if (typeof window === 'undefined') return
-  if (window.location.pathname.startsWith('/admin')) return
+  const path = window.location.pathname
+  if (
+    path.startsWith('/admin') ||
+    path.startsWith('/redirectmonster') ||
+    path.startsWith('/ads/')
+  ) {
+    return
+  }
 
   try {
     if (!localStorage.getItem(FIRST_LANDING_KEY)) {
@@ -509,7 +516,14 @@ function getStoredId(storage: Storage, key: string): string {
 
 function trackFirstParty(eventName: string, props: TrackingProps = {}): void {
   if (typeof window === 'undefined') return
-  if (window.location.pathname.startsWith('/admin')) return
+  const path = window.location.pathname
+  if (
+    path.startsWith('/admin') ||
+    path.startsWith('/redirectmonster') ||
+    path.startsWith('/ads/')
+  ) {
+    return
+  }
 
   try {
     const attribution = captureAttribution()
