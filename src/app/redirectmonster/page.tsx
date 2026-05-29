@@ -30,7 +30,7 @@ type Credentials = {
 }
 
 const AUTH_KEY = 'nasama_redirect_monster_auth'
-const API_BASE = (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000').replace(/\/$/, '')
+const API_BASE = '/api/redirectmonster'
 const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || 'https://nasama.shop').replace(/\/$/, '')
 
 function authHeader(credentials: Credentials): string {
@@ -73,7 +73,7 @@ export default function RedirectMonsterPage() {
     setLoading(true)
     setError(null)
     try {
-      const res = await fetch(`${API_BASE}/api/redirectmonster/redirects`, {
+      const res = await fetch(`${API_BASE}/redirects`, {
         headers: { Authorization: authHeader(auth) },
       })
       if (res.status === 401) {
@@ -137,9 +137,7 @@ export default function RedirectMonsterPage() {
 
     try {
       const res = await fetch(
-        editingId
-          ? `${API_BASE}/api/redirectmonster/redirects/${editingId}`
-          : `${API_BASE}/api/redirectmonster/redirects`,
+        editingId ? `${API_BASE}/redirects/${editingId}` : `${API_BASE}/redirects`,
         {
           method: editingId ? 'PATCH' : 'POST',
           headers: {
@@ -177,7 +175,7 @@ export default function RedirectMonsterPage() {
     setLoading(true)
     setError(null)
     try {
-      const res = await fetch(`${API_BASE}/api/redirectmonster/redirects/${id}`, {
+      const res = await fetch(`${API_BASE}/redirects/${id}`, {
         method: 'DELETE',
         headers: { Authorization: authHeader(credentials) },
       })
