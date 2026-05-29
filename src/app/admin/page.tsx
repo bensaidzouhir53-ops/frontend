@@ -375,7 +375,7 @@ export default function AdminDashboardPage() {
   function testOrderSound() {
     unlockOrderNotificationSound()
     playOrderNotificationSound()
-    setToast('Test sound played — you should hear a chime')
+                setToast('Test sound played — ka-ching!')
     setTimeout(() => setToast(null), 2500)
   }
 
@@ -613,7 +613,7 @@ export default function AdminDashboardPage() {
                 <p className="text-lg font-extrabold text-charcoal">Order notifications</p>
                 <p className="mt-1 text-sm font-bold text-charcoal/60">
                   {soundEnabled
-                    ? 'Active — you will hear a chime when a new order arrives today.'
+                    ? 'Active — ka-ching when a new order arrives today.'
                     : 'Muted — turn sound on to hear new orders.'}
                 </p>
                 <p className="mt-1 text-xs font-bold text-charcoal/40">
