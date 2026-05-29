@@ -1,9 +1,11 @@
 'use client'
 
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import type { FormEvent, ReactNode } from 'react'
 import {
   BarChart3,
+  Bell,
+  BellOff,
   CheckCircle2,
   Clock,
   Copy,
@@ -22,11 +24,16 @@ import {
   TrendingUp,
   Truck,
   Users,
+  Volume2,
   X,
   XCircle,
   type LucideIcon,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import {
+  playOrderNotificationSound,
+  unlockOrderNotificationSound,
+} from '@/lib/orderNotificationSound'
 
 type MetricSummary = {
   revenue: number
@@ -205,6 +212,11 @@ export default function AdminDashboardPage() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [toast, setToast] = useState<string | null>(null)
+  const [soundEnabled, setSoundEnabled] = useState(true)
+  const [newOrderAlert, setNewOrderAlert] = useState<OrderSummary | null>(null)
+  const [lastOrderCheck, setLastOrderCheck] = useState<Date | null>(null)
+  const knownOrderIdsRef = useRef(new Set<string>())
+  const orderPollingReadyRef = useRef(false)
 
   const auth = useMemo(() => {
     if (!credentials) return null
@@ -262,6 +274,12 @@ export default function AdminDashboardPage() {
           nextOffset === 0 ? ordersData.orders : [...current, ...ordersData.orders],
         )
         setOrdersHasMore(ordersData.has_more)
+
+        if (nextOffset === 0) {
+          for (const order of ordersData.orders) knownOrderIdsRef.current.add(order.id)
+          for (const order of metricsData.recent_orders) knownOrderIdsRef.current.add(order.id)
+          orderPollingReadyRef.current = true
+        }
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Unable to load dashboard')
       } finally {
@@ -330,6 +348,47 @@ export default function AdminDashboardPage() {
     setMetrics(null)
     setOrders([])
     setSelectedOrder(null)
+    setNewOrderAlert(null)
+    knownOrderIdsRef.current.clear()
+    orderPollingReadyRef.current = false
+  }
+
+  const handleNewOrders = useCallback(
+    (incoming: OrderSummary[]) => {
+      if (incoming.length === 0) return
+
+      const latest = incoming[0]
+      setNewOrderAlert(latest)
+      setToast(
+        incoming.length === 1
+          ? `New order: ${latest.order_number} — ${formatSar(latest.total)}`
+          : `${incoming.length} new orders — latest ${latest.order_number}`,
+      )
+      setTimeout(() => setToast(null), 6000)
+
+      if (soundEnabled) playOrderNotificationSound()
+      void loadDashboard(0)
+    },
+    [loadDashboard, soundEnabled],
+  )
+
+  function testOrderSound() {
+    unlockOrderNotificationSound()
+    playOrderNotificationSound()
+    setToast('Test sound played — you should hear a chime')
+    setTimeout(() => setToast(null), 2500)
+  }
+
+  function toggleSound() {
+    setSoundEnabled((current) => {
+      const next = !current
+      window.localStorage.setItem('nasama_admin_sound', next ? '1' : '0')
+      if (next) {
+        unlockOrderNotificationSound()
+        playOrderNotificationSound()
+      }
+      return next
+    })
   }
 
   function copyToClipboard(value: string, label: string) {
@@ -349,14 +408,55 @@ export default function AdminDashboardPage() {
     } catch {
       window.sessionStorage.removeItem('nasama_admin_auth')
     }
+    setSoundEnabled(window.localStorage.getItem('nasama_admin_sound') !== '0')
   }, [])
 
   useEffect(() => {
     if (auth) void loadDashboard(0)
   }, [auth, loadDashboard])
 
+  useEffect(() => {
+    if (!auth) return
+
+    let cancelled = false
+
+    const pollForNewOrders = async () => {
+      if (!orderPollingReadyRef.current) return
+      try {
+        const params = new URLSearchParams({
+          from: todayIso(),
+          to: todayIso(),
+          limit: '30',
+          offset: '0',
+        })
+        const data = await adminFetch<OrdersResponse>(`/api/admin/orders?${params.toString()}`)
+        if (cancelled) return
+        setLastOrderCheck(new Date())
+
+        const fresh = data.orders.filter((order) => !knownOrderIdsRef.current.has(order.id))
+        for (const order of data.orders) knownOrderIdsRef.current.add(order.id)
+
+        if (fresh.length > 0) handleNewOrders(fresh)
+      } catch {
+        // Silent background poll — ignore transient network errors.
+      }
+    }
+
+    const intervalId = window.setInterval(() => {
+      void pollForNewOrders()
+    }, 10000)
+
+    void pollForNewOrders()
+
+    return () => {
+      cancelled = true
+      window.clearInterval(intervalId)
+    }
+  }, [auth, adminFetch, handleNewOrders])
+
   function handleLogin(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
+    unlockOrderNotificationSound()
     const nextCredentials = { username, password }
     window.sessionStorage.setItem('nasama_admin_auth', JSON.stringify(nextCredentials))
     setCredentials(nextCredentials)
@@ -479,6 +579,19 @@ export default function AdminDashboardPage() {
               Refresh
             </button>
             <button
+              onClick={toggleSound}
+              className={cn(
+                'flex items-center gap-2 rounded-xl px-3 py-2.5 text-sm font-bold',
+                soundEnabled
+                  ? 'bg-gold/20 text-gold hover:bg-gold/30'
+                  : 'bg-white/10 text-white/60 hover:bg-white/20',
+              )}
+              title={soundEnabled ? 'Order sound on — click to mute' : 'Order sound off — click to enable'}
+            >
+              {soundEnabled ? <Bell className="h-4 w-4" /> : <BellOff className="h-4 w-4" />}
+              {soundEnabled ? 'Sound on' : 'Sound off'}
+            </button>
+            <button
               onClick={logout}
               className="flex items-center gap-2 rounded-xl bg-white/10 px-3 py-2.5 text-sm font-bold hover:bg-white/20"
               title="Sign out"
@@ -489,12 +602,92 @@ export default function AdminDashboardPage() {
           </div>
         </div>
 
+        <div className="mb-6 rounded-[1.5rem] border-2 border-teal/30 bg-white p-5 shadow-card">
+          <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+            <div className="flex items-start gap-4">
+              <span className="relative mt-1 flex h-4 w-4 shrink-0">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-teal opacity-60" />
+                <span className="relative inline-flex h-4 w-4 rounded-full bg-teal" />
+              </span>
+              <div>
+                <p className="text-lg font-extrabold text-charcoal">Order notifications</p>
+                <p className="mt-1 text-sm font-bold text-charcoal/60">
+                  {soundEnabled
+                    ? 'Active — you will hear a chime when a new order arrives today.'
+                    : 'Muted — turn sound on to hear new orders.'}
+                </p>
+                <p className="mt-1 text-xs font-bold text-charcoal/40">
+                  {lastOrderCheck
+                    ? `Last checked ${lastOrderCheck.toLocaleTimeString('en-GB')}`
+                    : 'Checking for new orders…'}
+                </p>
+              </div>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              <button
+                onClick={testOrderSound}
+                className="flex items-center gap-2 rounded-xl bg-teal px-4 py-2.5 text-sm font-extrabold text-white hover:bg-teal-dark"
+              >
+                <Volume2 className="h-4 w-4" />
+                Test sound
+              </button>
+              <button
+                onClick={toggleSound}
+                className={cn(
+                  'flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-extrabold',
+                  soundEnabled
+                    ? 'bg-gold/15 text-gold-dark hover:bg-gold/25'
+                    : 'bg-mist text-charcoal/70 hover:bg-sage/20',
+                )}
+              >
+                {soundEnabled ? <Bell className="h-4 w-4" /> : <BellOff className="h-4 w-4" />}
+                {soundEnabled ? 'Sound on' : 'Sound off'}
+              </button>
+            </div>
+          </div>
+        </div>
+
         {error && (
           <div className="mb-6 flex items-center justify-between rounded-2xl border border-red-200 bg-red-50 px-4 py-3 font-bold text-red-700">
             <span>{error}</span>
             <button onClick={() => setError(null)}>
               <X className="h-4 w-4" />
             </button>
+          </div>
+        )}
+
+        {newOrderAlert && (
+          <div className="mb-6 flex flex-col gap-3 rounded-2xl border border-gold/40 bg-gradient-to-r from-gold/15 to-teal/10 px-5 py-4 shadow-lg sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex items-start gap-3">
+              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-gold/20 text-gold-dark">
+                <Volume2 className="h-5 w-5" />
+              </span>
+              <div>
+                <p className="text-sm font-extrabold uppercase tracking-[0.15em] text-gold-dark">
+                  New order received
+                </p>
+                <p className="mt-1 text-lg font-extrabold text-charcoal">
+                  {newOrderAlert.order_number} · {newOrderAlert.customer_name}
+                </p>
+                <p className="text-sm font-bold text-charcoal/60">
+                  {formatSar(newOrderAlert.total)} · {newOrderAlert.phone}
+                </p>
+              </div>
+            </div>
+            <div className="flex gap-2">
+              <button
+                onClick={() => void loadOrder(newOrderAlert.id)}
+                className="rounded-xl bg-teal px-4 py-2.5 text-sm font-extrabold text-white hover:bg-teal-dark"
+              >
+                View order
+              </button>
+              <button
+                onClick={() => setNewOrderAlert(null)}
+                className="rounded-xl bg-white px-4 py-2.5 text-sm font-extrabold text-charcoal hover:bg-mist"
+              >
+                Dismiss
+              </button>
+            </div>
           </div>
         )}
 
