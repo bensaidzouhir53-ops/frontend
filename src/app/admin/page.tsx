@@ -375,7 +375,7 @@ export default function AdminDashboardPage() {
   function testOrderSound() {
     unlockOrderNotificationSound()
     playOrderNotificationSound()
-                setToast('Test sound played — ka-ching!')
+    setToast('Test sound played — Shopify cha-ching!')
     setTimeout(() => setToast(null), 2500)
   }
 
@@ -613,7 +613,7 @@ export default function AdminDashboardPage() {
                 <p className="text-lg font-extrabold text-charcoal">Order notifications</p>
                 <p className="mt-1 text-sm font-bold text-charcoal/60">
                   {soundEnabled
-                    ? 'Active — ka-ching when a new order arrives today.'
+                    ? 'Active — Shopify-style cha-ching when a new order arrives.'
                     : 'Muted — turn sound on to hear new orders.'}
                 </p>
                 <p className="mt-1 text-xs font-bold text-charcoal/40">
