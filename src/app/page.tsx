@@ -20,7 +20,7 @@ const PAIN_POINTS = [
     icon: '❄️',
     title: 'هواء المكيفات الجاف',
     desc: 'يسبب جفاف في الممرات التنفسية ويزعجك وقت النوم.',
-    image: '/images/pain-ac-dry.jpg',
+    image: '/images/pain-ac-dry.png',
     accent: 'gold' as const,
   },
   {
