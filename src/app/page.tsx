@@ -27,7 +27,7 @@ const PAIN_POINTS = [
     icon: '💨',
     title: 'دخان وبخور البيت',
     desc: 'التعرض اليومي لها يراكم الترسبات ويخلي النفس ثقيل.',
-    image: '/images/pain-smoke-incense.jpg',
+    image: '/images/pain-smoke-incense.png',
     accent: 'sage' as const,
   },
 ]
