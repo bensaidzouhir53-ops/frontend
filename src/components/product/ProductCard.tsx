@@ -42,7 +42,7 @@ export default function ProductCard({ product, className }: ProductCardProps) {
       {/* Image — links to product page */}
       <Link href={`/products/${product.slug}`} className="relative block aspect-square overflow-hidden bg-mist">
         <img
-          src="https://placehold.co/400x400/e2e8f0/475569?text=Product+Image"
+          src={product.image}
           alt={product.nameAr}
           className="object-cover transition-transform duration-500 group-hover:scale-105 w-full h-full"
         />
