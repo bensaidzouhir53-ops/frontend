@@ -400,7 +400,7 @@ export default function ProductPageContent({
 
             <div className="grid grid-cols-1 gap-6 md:grid-cols-3 md:gap-8">
               {[
-                { step: 1, title: 'رج العبوة جيداً', desc: 'قبل كل استخدام، رج العبوة عشان تتجانس المستخلصات العشبية الطبيعية.', image: '/images/howto-step-1-shake.jpg' },
+                { step: 1, title: 'رج العبوة جيداً', desc: 'قبل كل استخدام، رج العبوة عشان تتجانس المستخلصات العشبية الطبيعية.', image: '/images/howto-step-1-shake.png' },
                 { step: 2, title: 'بخ داخل الفم', desc: 'وجه البخاخ داخل الفم واضغط من 2 إلى 3 بخات لتغطية الممرات التنفسية.', image: '/images/howto-step-2-spray.png' },
                 { step: 3, title: 'مرتين يومياً', desc: 'استخدمه في الصباح لطرد البلغم، وقبل النوم لتنفس عميق ونوم مريح.', image: '/images/howto-step-3-routine.jpg' }
               ].map((item) => (
