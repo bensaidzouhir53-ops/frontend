@@ -13,7 +13,7 @@ const PAIN_POINTS = [
     icon: '🌪️',
     title: 'مواسم الغبار والتقلبات',
     desc: 'تزيد من حساسية الصدر والجيوب الأنفية وتخلي التنفس متعب.',
-    image: '/images/pain-dust-season.jpg',
+    image: '/images/pain-dust-season.png',
     accent: 'teal' as const,
   },
   {
