@@ -183,7 +183,11 @@ function apiBase(): string {
 }
 
 function authHeader(username: string, password: string): string {
-  return `Basic ${btoa(`${username}:${password}`)}`
+  const value = `${username}:${password}`
+  const bytes = new TextEncoder().encode(value)
+  let binary = ''
+  for (const byte of bytes) binary += String.fromCharCode(byte)
+  return `Basic ${btoa(binary)}`
 }
 
 function whatsappLink(phoneE164: string, orderNumber: string): string {
@@ -195,8 +199,10 @@ function whatsappLink(phoneE164: string, orderNumber: string): string {
 }
 
 export default function AdminDashboardPage() {
-  const [username, setUsername] = useState('')
+  const [username, setUsername] = useState('admin')
   const [password, setPassword] = useState('')
+  const [loginError, setLoginError] = useState<string | null>(null)
+  const [loggingIn, setLoggingIn] = useState(false)
   const [credentials, setCredentials] = useState<{ username: string; password: string } | null>(
     null,
   )
@@ -219,6 +225,18 @@ export default function AdminDashboardPage() {
   const knownOrderIdsRef = useRef(new Set<string>())
   const orderPollingReadyRef = useRef(false)
 
+  const forceLogout = useCallback((message?: string) => {
+    window.sessionStorage.removeItem('nasama_admin_auth')
+    setCredentials(null)
+    setMetrics(null)
+    setOrders([])
+    setSelectedOrder(null)
+    setNewOrderAlert(null)
+    knownOrderIdsRef.current.clear()
+    orderPollingReadyRef.current = false
+    if (message) setLoginError(message)
+  }, [])
+
   const auth = useMemo(() => {
     if (!credentials) return null
     return authHeader(credentials.username, credentials.password)
@@ -237,6 +255,14 @@ export default function AdminDashboardPage() {
         cache: 'no-store',
       })
       const body = await response.json().catch(() => ({}))
+      if (response.status === 401) {
+        forceLogout('Invalid admin credentials — please sign in again.')
+        throw new Error(
+          typeof body?.detail?.message === 'string'
+            ? body.detail.message
+            : 'Invalid admin credentials',
+        )
+      }
       if (!response.ok) {
         const message =
           typeof body?.detail?.message === 'string'
@@ -246,7 +272,7 @@ export default function AdminDashboardPage() {
       }
       return body as T
     },
-    [auth],
+    [auth, forceLogout],
   )
 
   const loadDashboard = useCallback(
@@ -344,14 +370,9 @@ export default function AdminDashboardPage() {
   }
 
   function logout() {
-    window.sessionStorage.removeItem('nasama_admin_auth')
-    setCredentials(null)
-    setMetrics(null)
-    setOrders([])
-    setSelectedOrder(null)
-    setNewOrderAlert(null)
-    knownOrderIdsRef.current.clear()
-    orderPollingReadyRef.current = false
+    forceLogout()
+    setUsername('admin')
+    setPassword('')
   }
 
   const handleNewOrders = useCallback(
@@ -455,12 +476,62 @@ export default function AdminDashboardPage() {
     }
   }, [auth, adminFetch, handleNewOrders])
 
-  function handleLogin(event: FormEvent<HTMLFormElement>) {
+  async function handleLogin(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
+    setLoginError(null)
+    setLoggingIn(true)
     unlockOrderNotificationSound()
-    const nextCredentials = { username, password }
-    setCredentials(nextCredentials)
-    window.sessionStorage.setItem('nasama_admin_auth', JSON.stringify(nextCredentials))
+
+    const nextCredentials = {
+      username: username.trim(),
+      password: password,
+    }
+
+    if (!nextCredentials.username || !nextCredentials.password) {
+      setLoginError('Enter username and password.')
+      setLoggingIn(false)
+      return
+    }
+
+    const probeAuth = authHeader(nextCredentials.username, nextCredentials.password)
+    const today = todayIso()
+
+    try {
+      const response = await fetch(
+        `${apiBase()}/api/admin/metrics?from=${today}&to=${today}`,
+        {
+          headers: { Authorization: probeAuth },
+          cache: 'no-store',
+        },
+      )
+      const body = await response.json().catch(() => ({}))
+
+      if (response.status === 401) {
+        setLoginError(
+          typeof body?.detail?.message === 'string'
+            ? body.detail.message
+            : 'Invalid admin credentials',
+        )
+        return
+      }
+
+      if (!response.ok) {
+        setLoginError(
+          typeof body?.detail?.message === 'string'
+            ? body.detail.message
+            : 'Could not sign in. Redeploy backend with ADMIN_USERNAME and ADMIN_PASSWORD.',
+        )
+        return
+      }
+
+      window.sessionStorage.setItem('nasama_admin_auth', JSON.stringify(nextCredentials))
+      setCredentials(nextCredentials)
+      setPassword('')
+    } catch {
+      setLoginError('Could not reach the admin API. Check that backend and frontend are deployed.')
+    } finally {
+      setLoggingIn(false)
+    }
   }
 
   const summary = metrics?.summary
@@ -505,11 +576,21 @@ export default function AdminDashboardPage() {
                 required
               />
             </label>
-            <button className="w-full rounded-2xl bg-teal px-5 py-4 font-extrabold text-white shadow-lg shadow-teal/20 hover:bg-teal-dark">
-              Open dashboard
+            <button
+              disabled={loggingIn}
+              className="w-full rounded-2xl bg-teal px-5 py-4 font-extrabold text-white shadow-lg shadow-teal/20 hover:bg-teal-dark disabled:cursor-not-allowed disabled:opacity-60"
+            >
+              {loggingIn ? 'Signing in…' : 'Open dashboard'}
             </button>
-            <p className="mt-4 text-center text-xs font-bold text-charcoal/40">
-              Set ADMIN_USERNAME and ADMIN_PASSWORD in the backend Easypanel env, then redeploy.
+            {loginError && (
+              <p className="mt-4 rounded-xl bg-red-50 px-3 py-3 text-center text-sm font-bold text-red-600">
+                {loginError}
+              </p>
+            )}
+            <p className="mt-4 text-center text-xs font-bold leading-relaxed text-charcoal/50">
+              Username: <span className="text-charcoal">admin</span>
+              <br />
+              Password: <span className="text-charcoal">Nasama@Admin2026</span> (include the @ symbol)
             </p>
           </form>
         </div>
