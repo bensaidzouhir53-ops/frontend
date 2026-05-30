@@ -21,11 +21,16 @@ async function proxy(request: Request, context: RouteContext): Promise<Response>
   }
 
   const backendPath = getAdminBackendPath(request, path)
+  const hasBody = request.method !== 'GET' && request.method !== 'HEAD'
+  const body = hasBody ? await request.text() : undefined
+  const contentType =
+    request.headers.get('content-type') || (body ? 'application/json' : null)
 
   return forwardAdminRequest(backendPath, {
     method: request.method,
     authorization: auth,
-    body: request.method === 'GET' || request.method === 'HEAD' ? undefined : await request.text(),
+    contentType,
+    body,
   })
 }
 

@@ -2,18 +2,20 @@ import { getBackendCandidates } from '@/lib/orders.server'
 
 export async function forwardAdminRequest(
   backendPath: string,
-  init: RequestInit & { authorization?: string | null },
+  init: RequestInit & { authorization?: string | null; contentType?: string | null },
 ): Promise<Response> {
   const headers: Record<string, string> = {}
   const auth = init.authorization?.trim()
   if (auth) headers['Authorization'] = auth
 
   const contentType =
-    init.headers instanceof Headers
+    init.contentType?.trim() ||
+    (init.headers instanceof Headers
       ? init.headers.get('content-type')
-      : (init.headers as Record<string, string> | undefined)?.['Content-Type']
+      : (init.headers as Record<string, string> | undefined)?.['Content-Type'])
 
   if (contentType) headers['Content-Type'] = contentType
+  else if (init.body) headers['Content-Type'] = 'application/json'
 
   let lastError: unknown
 

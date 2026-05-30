@@ -182,6 +182,26 @@ function apiBase(): string {
   return ''
 }
 
+function parseAdminError(body: unknown, fallback: string): string {
+  if (!body || typeof body !== 'object') return fallback
+
+  const detail = (body as { detail?: unknown }).detail
+
+  if (typeof detail === 'string') return detail
+
+  if (Array.isArray(detail)) {
+    const first = detail[0] as { msg?: string } | undefined
+    if (first?.msg) return first.msg
+  }
+
+  if (detail && typeof detail === 'object' && 'message' in detail) {
+    const message = (detail as { message?: unknown }).message
+    if (typeof message === 'string') return message
+  }
+
+  return fallback
+}
+
 function authHeader(username: string, password: string): string {
   const value = `${username}:${password}`
   const bytes = new TextEncoder().encode(value)
@@ -264,10 +284,7 @@ export default function AdminDashboardPage() {
         )
       }
       if (!response.ok) {
-        const message =
-          typeof body?.detail?.message === 'string'
-            ? body.detail.message
-            : 'Admin request failed'
+        const message = parseAdminError(body, 'Request failed')
         throw new Error(message)
       }
       return body as T
