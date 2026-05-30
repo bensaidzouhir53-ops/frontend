@@ -178,7 +178,8 @@ function daysAgoIso(days: number): string {
 }
 
 function apiBase(): string {
-  return (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000').replace(/\/$/, '')
+  // Same-origin proxy → frontend/src/app/api/admin/[...path]/route.ts
+  return ''
 }
 
 function authHeader(username: string, password: string): string {
@@ -458,8 +459,8 @@ export default function AdminDashboardPage() {
     event.preventDefault()
     unlockOrderNotificationSound()
     const nextCredentials = { username, password }
-    window.sessionStorage.setItem('nasama_admin_auth', JSON.stringify(nextCredentials))
     setCredentials(nextCredentials)
+    window.sessionStorage.setItem('nasama_admin_auth', JSON.stringify(nextCredentials))
   }
 
   const summary = metrics?.summary
@@ -508,7 +509,7 @@ export default function AdminDashboardPage() {
               Open dashboard
             </button>
             <p className="mt-4 text-center text-xs font-bold text-charcoal/40">
-              Configure ADMIN_USERNAME & ADMIN_PASSWORD on the API backend.
+              Set ADMIN_USERNAME and ADMIN_PASSWORD in the backend Easypanel env, then redeploy.
             </p>
           </form>
         </div>
@@ -527,7 +528,7 @@ export default function AdminDashboardPage() {
             <h1 className="mt-2 text-3xl font-extrabold md:text-4xl">Admin dashboard</h1>
             <p className="mt-2 flex items-center gap-2 text-sm text-white/60">
               <ShieldCheck className="h-4 w-4 text-sage" />
-              Metrics count only valid KSA traffic (country GeoIP check).
+              Metrics count storefront traffic (clicks, cart, checkout) and confirmed orders.
             </p>
           </div>
           <div className="flex flex-wrap items-end gap-3">

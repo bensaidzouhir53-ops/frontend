@@ -1,7 +1,4 @@
-const CHA_CHING_SRC = '/sounds/cha-ching.mp3'
-
 let audioContext: AudioContext | null = null
-let chaChingAudio: HTMLAudioElement | null = null
 let audioUnlocked = false
 
 function getAudioContext(): AudioContext | null {
@@ -14,57 +11,19 @@ function getAudioContext(): AudioContext | null {
   return audioContext
 }
 
-function getChaChingAudio(): HTMLAudioElement | null {
-  if (typeof window === 'undefined') return null
-  if (!chaChingAudio) {
-    chaChingAudio = new Audio(CHA_CHING_SRC)
-    chaChingAudio.preload = 'auto'
-    chaChingAudio.volume = 1
-  }
-  return chaChingAudio
-}
-
 /** Call once after a user gesture (e.g. login) so browsers allow playback later. */
 export function unlockOrderNotificationSound(): void {
   const ctx = getAudioContext()
   if (ctx?.state === 'suspended') void ctx.resume()
-
-  const audio = getChaChingAudio()
-  if (!audio || audioUnlocked) return
-
-  audio.muted = true
-  const attempt = audio.play()
-  if (!attempt) {
-    audioUnlocked = true
-    audio.pause()
-    audio.currentTime = 0
-    audio.muted = false
-    return
-  }
-
-  void attempt
-    .then(() => {
-      audio.pause()
-      audio.currentTime = 0
-      audio.muted = false
-      audioUnlocked = true
-    })
-    .catch(() => {
-      audio.muted = false
-    })
+  audioUnlocked = true
 }
 
 /** Shopify-style cash register cha-ching for a new store order. */
 export function playOrderNotificationSound(): void {
-  const audio = getChaChingAudio()
-  if (!audio) return
-
-  audio.muted = false
-  audio.currentTime = 0
-  void audio.play().catch(() => {
-    // Fallback if the MP3 fails (e.g. file missing on deploy).
-    playSyntheticChaChing()
-  })
+  if (!audioUnlocked) {
+    unlockOrderNotificationSound()
+  }
+  playSyntheticChaChing()
 }
 
 function playSyntheticChaChing(): void {
