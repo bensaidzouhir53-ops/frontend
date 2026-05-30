@@ -118,6 +118,18 @@ function getDefaultProductionApiUrl(): string | null {
   return 'https://api.nasama.shop'
 }
 
+function isRetryableBackendFailure(status: number, body: unknown): boolean {
+  if (status === 502 || status === 504) return true
+
+  if (status === 503) {
+    if (!body || typeof body !== 'object') return true
+    const detail = (body as { detail?: unknown }).detail
+    return detail === undefined
+  }
+
+  return false
+}
+
 function isInternalBackendUrl(url: string): boolean {
   try {
     const { hostname, protocol } = new URL(url)
@@ -193,7 +205,15 @@ export async function forwardOrderToBackend(
         return { ok: true, data: responseBody as CreateOrderResult }
       }
 
-      // Backend responded — return API error (DB, validation, geoip, etc.)
+      if (isRetryableBackendFailure(res.status, responseBody)) {
+        lastError = new Error(`Backend gateway error ${res.status} at ${baseUrl}`)
+        console.error(
+          `[orders] Gateway/proxy error ${res.status} at ${baseUrl} — trying next candidate`,
+        )
+        continue
+      }
+
+      // Backend responded with a real API error (validation, geoip block, etc.)
       return { ok: false, status: res.status, body: responseBody }
     } catch (error) {
       lastError = error

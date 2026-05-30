@@ -30,11 +30,13 @@ export async function createOrder(payload: OrderPayload): Promise<OrderResponse>
   const body = await res.json().catch(() => ({}))
 
   if (!res.ok) {
-    if (res.status >= 502) {
-      throw new Error('الخادم غير متاح حالياً. يرجى المحاولة بعد دقيقة.')
-    }
     throw new Error(
-      parseApiError(body, 'حدث خطأ، يرجى المحاولة مجدداً'),
+      parseApiError(
+        body,
+        res.status >= 502
+          ? 'الخادم غير متاح حالياً. يرجى المحاولة بعد دقيقة.'
+          : 'حدث خطأ، يرجى المحاولة مجدداً',
+      ),
     )
   }
 

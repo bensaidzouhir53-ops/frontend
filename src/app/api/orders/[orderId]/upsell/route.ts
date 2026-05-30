@@ -31,6 +31,20 @@ export async function POST(request: Request, context: RouteContext) {
         return NextResponse.json(body, { status: res.status })
       }
 
+      const detail = (body as { detail?: unknown }).detail
+      const isGatewayError =
+        res.status === 502 ||
+        res.status === 504 ||
+        (res.status === 503 && detail === undefined)
+
+      if (isGatewayError) {
+        lastError = new Error(`Backend gateway error ${res.status} at ${baseUrl}`)
+        console.error(
+          `[upsell] Gateway/proxy error ${res.status} at ${baseUrl} — trying next candidate`,
+        )
+        continue
+      }
+
       return NextResponse.json(body, { status: res.status })
     } catch (error) {
       lastError = error

@@ -527,7 +527,7 @@ export default function AdminDashboardPage() {
             <h1 className="mt-2 text-3xl font-extrabold md:text-4xl">Admin dashboard</h1>
             <p className="mt-2 flex items-center gap-2 text-sm text-white/60">
               <ShieldCheck className="h-4 w-4 text-sage" />
-              Metrics count only valid KSA traffic (MaxMind + secondary VPN check).
+              Metrics count only valid KSA traffic (country GeoIP check).
             </p>
           </div>
           <div className="flex flex-wrap items-end gap-3">
