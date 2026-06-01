@@ -3,7 +3,7 @@ import type { Product, Offer } from '@/types'
 export const PRODUCTS: Product[] = [
   {
     slug: 'herbal-lung-spray',
-    sku: 'NA847291',
+    sku: 'HBLEANSPRY3',
     nameAr: 'بخاخ تنظيف الرئتين العشبي لتنفس مريح',
     nameEn: 'Herbal Lung Cleansing Spray',
     shortDescAr: 'تركيبة عشبية طبيعية لدعم إحساس التنفس المريح في يومك',
