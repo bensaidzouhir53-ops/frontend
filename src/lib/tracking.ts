@@ -133,6 +133,13 @@ function utmFromUrl(url: string): NonNullable<AttributionData['utm']> {
   }
 }
 
+/** Meta click ID cookie format — required for CAPI match quality. */
+export function buildFbcFromFbclid(fbclid: string): string {
+  const id = fbclid.trim()
+  if (id.startsWith('fb.')) return id
+  return `fb.1.${Date.now()}.${id}`
+}
+
 function clickIdsFromUrl(url: string): Pick<
   AttributionData,
   'fbclid' | 'ttclid' | 'sc_click_id'
@@ -171,10 +178,20 @@ export function captureAttribution(): AttributionData {
         sc_click_id: params.get('sc_click_id') ?? undefined,
       }
 
+  let fbc = getCookie('_fbc')
+  if (!fbc && clickIds.fbclid) {
+    fbc = buildFbcFromFbclid(clickIds.fbclid)
+    try {
+      document.cookie = `_fbc=${encodeURIComponent(fbc)}; path=/; max-age=7776000; SameSite=Lax`
+    } catch {
+      // ignore cookie write failures
+    }
+  }
+
   return {
     ...clickIds,
     _fbp: getCookie('_fbp'),
-    _fbc: getCookie('_fbc'),
+    _fbc: fbc,
     _ttp: getCookie('_ttp'),
     _scid: getCookie('_scid'),
     landing_page: attributionUrl,
@@ -194,15 +211,22 @@ export function captureAttribution(): AttributionData {
 // Pixel loaders
 // ---------------------------------------------------------------------------
 
+function flushMetaQueue(): void {
+  _metaQueue.forEach(([action, event, params]) => window.fbq?.(action, event, params))
+  _metaQueue.length = 0
+}
+
 function loadMetaPixel(pixelId: string): void {
   if (!pixelId || typeof window === 'undefined') return
-  if (_metaReady || window.fbq) {
-    _metaReady = true
-    _metaQueue.forEach(([action, event, params]) => window.fbq?.(action, event, params))
-    _metaQueue.length = 0
+  if (_metaReady) {
+    flushMetaQueue()
     return
   }
-  _metaReady = true
+  if (window.fbq) {
+    _metaReady = true
+    flushMetaQueue()
+    return
+  }
 
   if (!window.fbq) {
     const fbq = function (...args: unknown[]) {
@@ -223,16 +247,17 @@ function loadMetaPixel(pixelId: string): void {
     const script = document.createElement('script')
     script.async = true
     script.src = 'https://connect.facebook.net/en_US/fbevents.js'
+    script.onload = () => {
+      _metaReady = true
+      flushMetaQueue()
+    }
     document.head.appendChild(script)
   }
 
   window.fbq('init', pixelId)
   window.fbq('track', 'PageView')
-
-  _metaQueue.forEach(([action, event, params]) => {
-    window.fbq?.(action, event, params)
-  })
-  _metaQueue.length = 0
+  _metaReady = true
+  flushMetaQueue()
 }
 
 function loadTikTokPixel(pixelId: string): void {
@@ -422,8 +447,7 @@ export function initPixelsFromServerConfig(config: ServerPixelConfigInput): void
 
   if (meta && window.fbq) {
     _metaReady = true
-    _metaQueue.forEach(([action, event, params]) => window.fbq?.(action, event, params))
-    _metaQueue.length = 0
+    flushMetaQueue()
   }
   if (tiktok && window.ttq?.track) {
     _ttqReady = true
