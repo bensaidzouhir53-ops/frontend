@@ -328,6 +328,7 @@ const MOLIEN_DROPS_SECTIONS: ProductPageSections = {
       title: 'مع كوب ماء دافئ',
       desc: 'أضف من 15 إلى 20 قطرة في كوب ماء دافئ واشربها — مناسبة إذا تفضل طريقة أخف على الحلق.',
       image: '/images/molien-howto-glass-water.svg',
+      video: '/videos/molien-howto-glass-water.mp4',
     },
   ],
   howToUseTitle: 'طريقتين سهلتين للاستخدام',
