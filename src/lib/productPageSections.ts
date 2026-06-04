@@ -303,8 +303,8 @@ const MOLIEN_DROPS_SECTIONS: ProductPageSections = {
     { feature: 'ضمان النتيجة', us: 'ارتاح أو نرجع لك فلوسك (30 يوم)', them: 'تدفع فلوسك وتخاطر بدون ضمان' },
   ],
   dayProcess: {
-    image: '/images/mullein-lung-drops.jpg',
-    imageAlt: 'قطرة المولين لإذابة البلغم المتحجر',
+    image: '/images/molien-day-process.png',
+    imageAlt: 'رجل سعودي يشعر بالراحة بعد استخدام قطرة المولين لإذابة البلغم المتحجر',
     overlayTitle:
       'ينفع لكل اللي يصحى على بلغم ناشب أو غثيان صباحي في الحلق',
     overlayDesc:
