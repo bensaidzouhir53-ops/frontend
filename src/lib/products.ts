@@ -114,22 +114,22 @@ export const PRODUCTS: Product[] = [
       {
         name: 'مستخلص الآذريون (60 ملغ)',
         desc: 'مضاد التهاب طبيعي يهدّي التهيج في بطانة الحلق والفم — يسرّع شفاء الأنسجة المتهيجة ويريّح الحلق الملتهب كل صباح.',
-        image: '/images/ingredient-elderflower.png',
+        image: '/images/ingredient-calendula.png',
       },
       {
         name: 'مستخلص الزعتر (60 ملغ)',
         desc: 'مطهّر طبيعي غني بالزيوت العطرية — يساعد على طرد البلغم الكثيف ويهدّي الكحة المنتجة ويحمي الممرات التنفسية من الجراثيم.',
-        image: '/images/ingredient-hamamelis.png',
+        image: '/images/ingredient-thyme.png',
       },
       {
         name: 'مستخلص الأستراجالوس (50 ملغ)',
         desc: 'يعزّز المناعة ويدعم مقاومة الجسم للالتهابات التنفسية — يقلّل التهاب الشعب الهوائية ويساعد الرئة على التعافي مع الاستخدام المستمر.',
-        image: '/images/ingredient-collagen.png',
+        image: '/images/ingredient-astragalus.png',
       },
       {
         name: 'مستخلص قشر البرتقال (30 ملغ)',
         desc: 'غني بمضادات الأكسدة والمركبات النباتية — يخفّف إجهاد الرئة، يقلّل الالتهاب، ويساعد على تقليل المخاط الزائد في الممرات التنفسية.',
-        image: '/images/ingredient-styrax.png',
+        image: '/images/ingredient-orange-peel.png',
       },
     ],
     faqs: [
