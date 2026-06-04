@@ -5,20 +5,35 @@ type HowToUseStepProps = {
   title: string
   desc: string
   image: string
+  video?: string
 }
 
-export default function HowToUseStep({ step, title, desc, image }: HowToUseStepProps) {
+export default function HowToUseStep({ step, title, desc, image, video }: HowToUseStepProps) {
   return (
     <article className="group overflow-hidden rounded-[2rem] border border-sage/20 bg-white text-center shadow-card transition-shadow duration-300 hover:border-teal/30 hover:shadow-card-hover">
       <div className="relative aspect-[4/3] overflow-hidden bg-mist ring-1 ring-inset ring-sage/20">
-        <Image
-          src={image}
-          alt={title}
-          fill
-          sizes="(max-width: 768px) 100vw, 33vw"
-          loading="lazy"
-          className="object-cover"
-        />
+        {video ? (
+          <video
+            src={video}
+            poster={image}
+            controls
+            playsInline
+            muted
+            loop
+            preload="metadata"
+            className="h-full w-full object-cover"
+            aria-label={title}
+          />
+        ) : (
+          <Image
+            src={image}
+            alt={title}
+            fill
+            sizes="(max-width: 768px) 100vw, 33vw"
+            loading="lazy"
+            className="object-cover"
+          />
+        )}
 
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-charcoal/30 via-transparent to-transparent" />
 

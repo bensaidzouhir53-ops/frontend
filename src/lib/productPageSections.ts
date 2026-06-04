@@ -17,6 +17,7 @@ export interface HowToUseStep {
   title: string
   desc: string
   image: string
+  video?: string
 }
 
 export interface ComparisonRow {
@@ -51,6 +52,23 @@ export interface BeforeAfterContent {
   afterAlt: string
 }
 
+export interface TrustOriginPoint {
+  title: string
+  desc: string
+}
+
+export interface TrustOriginContent {
+  badge: string
+  title: string
+  subtitle: string
+  body: string
+  countryLabel: string
+  countryValue: string
+  image: string
+  imageAlt: string
+  points: TrustOriginPoint[]
+}
+
 export interface ProductPageSections {
   painAlert: string
   painTitle: string
@@ -77,6 +95,7 @@ export interface ProductPageSections {
   comparisonRows: ComparisonRow[]
   dayProcess: DayProcessContent
   beforeAfterComparison?: BeforeAfterContent
+  trustOrigin?: TrustOriginContent
   showImageReviews: boolean
   reviewsKey: 'herbal-lung-spray' | 'molien-drops'
 }
@@ -302,6 +321,7 @@ const MOLIEN_DROPS_SECTIONS: ProductPageSections = {
       title: 'تحت اللسان مباشرة',
       desc: 'ضع من 15 إلى 20 قطرة تحت اللسان واتركها تمتص — الطريقة الأسرع لامتصاص مستخلصات المولين.',
       image: '/images/molien-howto-under-tongue.svg',
+      video: '/videos/molien-howto-under-tongue.mp4',
     },
     {
       step: 2,
@@ -339,6 +359,36 @@ const MOLIEN_DROPS_SECTIONS: ProductPageSections = {
     afterLabel: 'بعد',
     beforeAlt: 'حالة الرئة قبل استخدام قطرة المولين — بلغم متحجر وانسداد',
     afterAlt: 'حالة الرئة بعد استخدام قطرة المولين — رئتين نظيفتين وتنفس مريح',
+  },
+  trustOrigin: {
+    badge: 'ثقة ومصدر واضح',
+    title: 'من بلدنا — تستخدمه وأنت مطمّن 🇸🇦',
+    subtitle:
+      'قطرة المولين مو كلام فاضي؛ تركيبة طبيعية ومصدرها واضح قدامك، مصنوعة على مقاس السوق السعودي.',
+    body:
+      'نعرف إنك تبي شي يطلع من بلدك وتثق فيه — مو منتجات غامضة من برّا. مكوناتنا الطبيعية تمر بفحوصات جودة في مختبرات معتمدة، والمنتج مطابق لمواصفات هيئة الغذاء والدواء (SFDA). استخدمها وأنت مرتاح؛ من بلدنا وللسعوديين اللي يدورون على حل عشبي موثوق.',
+    countryLabel: 'بلد المنشأ',
+    countryValue: 'المملكة العربية السعودية 🇸🇦',
+    image: '/images/molien-trust-origin.png',
+    imageAlt: 'مكونات قطرة المولين الطبيعية في مختبر معتمد — جودة وثقة',
+    points: [
+      {
+        title: 'صنع في السعودية',
+        desc: 'المنتج يطلع من بلدنا ويخدم احتياج السوق السعودي — مو استيراد مجهول المصدر.',
+      },
+      {
+        title: 'معتمد SFDA',
+        desc: 'مطابق لمواصفات هيئة الغذاء والدواء — تستخدمه وأنت مطمّن على الأمان.',
+      },
+      {
+        title: 'جودة مختبرية',
+        desc: 'مكونات طبيعية مفحوصة بمعايير جودة عالية قبل ما توصل لباب بيتك.',
+      },
+      {
+        title: 'توصيل ودفع مريح',
+        desc: 'نوصل لكل مناطق المملكة والدفع عند الاستلام — تطلب وأنت مرتاح.',
+      },
+    ],
   },
   showImageReviews: false,
   reviewsKey: 'molien-drops',

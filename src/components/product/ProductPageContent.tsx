@@ -11,6 +11,7 @@ import { getDefaultOffer } from '@/lib/products'
 import OfferSelector from '@/components/product/OfferSelector'
 import ProductDayProcessSection from '@/components/product/ProductDayProcessSection'
 import ProductBeforeAfterSection from '@/components/product/ProductBeforeAfterSection'
+import ProductTrustOriginSection from '@/components/product/ProductTrustOriginSection'
 import HowToUseStep from '@/components/product/HowToUseStep'
 import ProductReviewsGrid from '@/components/product/ProductReviewsGrid'
 import TrustBadges from '@/components/shared/TrustBadges'
@@ -402,6 +403,11 @@ export default function ProductPageContent({
             </div>
           </div>
         </section>
+      )}
+
+      {/* ── 4.8 Trust & Country of Origin ── */}
+      {sections.trustOrigin && (
+        <ProductTrustOriginSection content={sections.trustOrigin} />
       )}
 
       {/* ── 5. Comparison Table (Us vs. Them) ── */}
