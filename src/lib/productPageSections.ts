@@ -61,6 +61,7 @@ export interface ProductPageSections {
   howToUseSteps: HowToUseStep[]
   comparisonRows: ComparisonRow[]
   dayProcess: DayProcessContent
+  showImageReviews: boolean
   reviewsKey: 'herbal-lung-spray' | 'molien-drops'
 }
 
@@ -223,6 +224,7 @@ const HERBAL_LUNG_SPRAY_SECTIONS: ProductPageSections = {
       'راح تحب شعور التنفس العميق من جديد، وودع كتمة الصدر للأبد.',
     phases: SHARED_DAY_PROCESS_PHASES,
   },
+  showImageReviews: true,
   reviewsKey: 'herbal-lung-spray',
 }
 
@@ -307,6 +309,7 @@ const MOLIEN_DROPS_SECTIONS: ProductPageSections = {
       'راح تحب شعور الحلق النظيف والصباح الخفيف — ودع البلغم المتحجر للأبد.',
     phases: MOLIEN_DAY_PROCESS_PHASES,
   },
+  showImageReviews: false,
   reviewsKey: 'molien-drops',
 }
 

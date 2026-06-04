@@ -35,11 +35,13 @@ export default function ProductPageContent({
     { icon: HeartPulse, color: 'text-red-400' },
   ]
   const productReviews =
-    sections.reviewsKey === 'herbal-lung-spray'
-      ? HERBAL_LUNG_SPRAY_REVIEWS
-      : sections.reviewsKey === 'molien-drops'
-        ? MOLIEN_DROPS_REVIEWS
-        : DEFAULT_PRODUCT_REVIEWS
+    sections.showImageReviews
+      ? sections.reviewsKey === 'herbal-lung-spray'
+        ? HERBAL_LUNG_SPRAY_REVIEWS
+        : sections.reviewsKey === 'molien-drops'
+          ? MOLIEN_DROPS_REVIEWS
+          : DEFAULT_PRODUCT_REVIEWS
+      : []
 
   return (
     <main dir="rtl" className="bg-ivory min-h-screen pb-24 lg:pb-0">
@@ -478,7 +480,7 @@ export default function ProductPageContent({
       </section>
 
       {/* ── 7. Image Reviews / Proof Section ── */}
-      {true && (
+      {sections.showImageReviews && (
         <section id="reviews" className="py-16 md:py-24 bg-charcoal text-white relative overflow-hidden">
           <div className="absolute inset-0 opacity-0" />
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
