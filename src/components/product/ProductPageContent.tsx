@@ -12,7 +12,8 @@ import OfferSelector from '@/components/product/OfferSelector'
 import HowToUseStep from '@/components/product/HowToUseStep'
 import TrustBadges from '@/components/shared/TrustBadges'
 import FAQAccordion from '@/components/shared/FAQAccordion'
-import { DEFAULT_PRODUCT_REVIEWS, HERBAL_LUNG_SPRAY_REVIEWS } from '@/lib/productReviews'
+import { DEFAULT_PRODUCT_REVIEWS, HERBAL_LUNG_SPRAY_REVIEWS, MOLIEN_DROPS_REVIEWS } from '@/lib/productReviews'
+import { getProductPageSections, hasFullProductPage } from '@/lib/productPageSections'
 
 interface ProductPageContentProps {
   product: Product
@@ -23,6 +24,21 @@ export default function ProductPageContent({
   product,
   crossSellProducts,
 }: ProductPageContentProps) {
+  const sections = getProductPageSections(product.slug)
+  const painIcons = [Wind, HeartPulse, AlertTriangle]
+  const solutionIcons = [
+    { icon: ShieldCheck, color: 'text-teal' },
+    { icon: Zap, color: 'text-gold' },
+    { icon: Wind, color: 'text-blue-500' },
+    { icon: HeartPulse, color: 'text-red-400' },
+  ]
+  const productReviews =
+    sections.reviewsKey === 'herbal-lung-spray'
+      ? HERBAL_LUNG_SPRAY_REVIEWS
+      : sections.reviewsKey === 'molien-drops'
+        ? MOLIEN_DROPS_REVIEWS
+        : DEFAULT_PRODUCT_REVIEWS
+
   return (
     <main dir="rtl" className="bg-ivory min-h-screen pb-24 lg:pb-0 scroll-smooth">
       {/* ── Breadcrumb ── */}
@@ -139,41 +155,28 @@ export default function ProductPageContent({
             <div className="w-full lg:w-1/2 text-right order-2 lg:order-1">
               <div className="inline-flex items-center gap-3 text-white mb-5 bg-gradient-to-r from-red-600 to-red-500 px-5 py-2.5 rounded-full font-extrabold text-sm shadow-[0_4px_20px_rgba(220,38,38,0.4)] animate-pulse">
                 <BellRing className="w-5 h-5 animate-bounce" />
-                {product.slug === 'herbal-lung-spray' ? 'رسالة مهمة لكل مدخن: لا تتجاهل هذي العلامات 🚨' : 'تنبيه: لا تتجاهل هذي العلامات 🚨'}
+                {sections.painAlert}
               </div>
               <h2 className="text-3xl md:text-4xl font-extrabold text-charcoal mb-6 leading-tight tracking-tight">
-                {product.slug === 'herbal-lung-spray'
-                  ? 'الكتمة ذابحتك؟ الشيشة والدخان جالسة تراكم ترسبات تقطع أنفاسك وتسرق راحتك اليومية! ⚠️'
-                  : 'غبار، مكيفات 24 ساعة، أو حتى دخان.. كلها تراكمات تتعب صدرك!'}
-                </h2>
+                {sections.painTitle}
+              </h2>
               <p className="text-lg text-charcoal/70 mb-8 leading-relaxed font-medium">
-                {product.slug === 'herbal-lung-spray'
-                  ? 'البلغم الصباحي الغثيث اللي تحاول تطلعه، الكحة اللي تفضحك بكل مكان، وصوت الصدر وقت النوم أو مع أقل مجهود في النادي أو الدوام.. هذي مو مجرد أرقام، هذي صرخة من رئتك تقولك: "أنا مكتومة، أحتاج أتنظف!" لا تستمر تتجاهل هالإنذارات لين يطيح الفاس بالراس.'
-                  : 'الجو عندنا في السعودية متعب جداً للجهاز التنفسي. تخيل كمية الغبار اللي نتعرض لها يومياً، أو جفاف هواء المكيفات اللي يخليك تصحى من النوم وحلقك ناشف وصدرك مكتوم.'}
+                {sections.painBody}
               </p>
               
               <div className="space-y-5 mb-8">
-                {(product.slug === 'herbal-lung-spray'
-                  ? [
-                      { text: 'تصحى الصبح وتكح كحة ناشفة ومزعجة تحسها تطلع من قلب صدرك؟', icon: Wind },
-                      { text: 'تحس بـ "كتمة" وثقل يمنعك تأخذ نفس عميق ومريح، خصوصاً قبل النوم؟', icon: HeartPulse },
-                      { text: 'البلغم ناشب بحلقك ومسوي لك إحراج دايم وتبي تتخلص منه للأبد؟', icon: AlertTriangle }
-                    ]
-                  : [
-                      { text: 'تحس بصعوبة في التنفس أو ثقل في الصدر؟', icon: Wind },
-                      { text: 'تنزعج من روائح البخور أو الدخان في البيت؟', icon: Zap },
-                      { text: 'تصحى من النوم مو مرتاح وتحس بكتمة؟', icon: HeartPulse }
-                    ]
-                ).map((item, i) => (
+                {sections.painPoints.map((item, i) => {
+                  const Icon = painIcons[i] ?? AlertTriangle
+                  return (
                   <div key={i} className="flex items-center gap-4 justify-end p-4 rounded-2xl bg-mist/40 border border-sage/30 hover:border-red-200 hover:bg-red-50/50 transition-colors group">
                     <span className="text-[17px] font-bold text-charcoal/80 group-hover:text-charcoal transition-colors">
                       {item.text}
                     </span>
                     <div className="w-10 h-10 bg-white rounded-xl shadow-sm flex items-center justify-center flex-shrink-0 border border-sage/20 group-hover:border-red-200 transition-colors">
-                      <item.icon className="w-5 h-5 text-red-400 group-hover:text-red-500" />
+                      <Icon className="w-5 h-5 text-red-400 group-hover:text-red-500" />
                     </div>
                   </div>
-                ))}
+                )})}
               </div>
             </div>
             
@@ -181,15 +184,15 @@ export default function ProductPageContent({
               <div className="absolute inset-0 bg-red-500/10 blur-[60px] rounded-full" />
               <div className="relative aspect-[4/5] rounded-[2.5rem] overflow-hidden bg-gray-100 border border-sage/20 shadow-2xl">
                 <img 
-                  src={product.slug === 'herbal-lung-spray' ? '/images/pain-point-lung.png' : 'https://placehold.co/800x1000/f87171/ffffff?text=Pain+Point+Image'} 
-                  alt={product.slug === 'herbal-lung-spray' ? 'شخص يعاني من كتمة في الصدر' : 'Pain placeholder'} 
+                  src={sections.painImage} 
+                  alt={sections.painImageAlt} 
                   className="w-full h-full object-cover grayscale-[30%] contrast-125"
                 />
                 {/* Overlay gradient for dramatic effect */}
                 <div className="absolute inset-0 bg-gradient-to-t from-charcoal/80 via-transparent to-transparent" />
                 <div className="absolute bottom-6 right-6 left-6 text-right">
                   <p className="text-white font-extrabold text-xl mb-1 shadow-black drop-shadow-md">
-                    {product.slug === 'herbal-lung-spray' ? 'لا تخلي الكتمة تسيطر على يومك' : 'لا تتجاهل إشارات جسمك'}
+                    {sections.painOverlay}
                   </p>
                 </div>
               </div>
@@ -207,8 +210,8 @@ export default function ProductPageContent({
             <div className="w-full lg:w-1/2 order-1">
               <div className="relative aspect-square rounded-[2rem] overflow-hidden bg-gray-100 border border-sage/20 shadow-xl">
                 <img 
-                  src={product.slug === 'herbal-lung-spray' ? '/images/solution-lung-spray.png' : 'https://placehold.co/800x800/0f766e/ffffff?text=Solution+Image+(Product+with+Herbs)'} 
-                  alt={product.slug === 'herbal-lung-spray' ? 'بخاخ تنظيف الرئة العشبي مع الأعشاب الطبيعية' : 'Solution placeholder'} 
+                  src={sections.solutionImage} 
+                  alt={sections.solutionImageAlt} 
                   className="w-full h-full object-cover"
                 />
               </div>
@@ -218,41 +221,26 @@ export default function ProductPageContent({
             <div className="w-full lg:w-1/2 text-right lg:text-left order-2">
               <div className="inline-flex items-center gap-2 text-teal mb-4 bg-teal/10 px-5 py-2 rounded-full font-bold text-sm lg:flex-row-reverse border border-teal/20 shadow-sm">
                 <Leaf className="w-4 h-4" />
-                {product.slug === 'herbal-lung-spray' ? 'الحل اللي تدور عليه 🌿' : 'الحل من الطبيعة'}
+                {sections.solutionBadge}
               </div>
               <h2 className="text-3xl md:text-4xl font-extrabold text-charcoal mb-6 leading-tight tracking-tight">
-                {product.slug === 'herbal-lung-spray'
-                  ? 'رجع لنفسك خفته.. ونظّف صدرك من تراكمات السنين!'
-                  : 'روتين يومي بسيط، يرجع لك إحساس الخفة والراحة'}
+                {sections.solutionTitle}
               </h2>
               <p className="text-lg text-charcoal/70 mb-8 leading-relaxed font-medium">
-                {product.slug === 'herbal-lung-spray'
-                  ? 'جبنا لك الخلاصة بتركيبة عشبية طبيعية 100٪، تشتغل من أول استخدام عشان تفكك العوالق وتذيب البلغم المتراكم من الدخان. روتين يومي يريح صدرك ويخليك تتنفس بعمق وكأنك مولود من جديد، بدون أي كيماويات.'
-                  : 'وفرنا لك تركيبة عشبية طبيعية 100٪، مصممة خصيصاً عشان تنظف الممرات التنفسية وتدعم تنفسك بشكل يومي. بدون أدوية، بدون كيماويات، مجرد قوة الطبيعة النقية.'}
+                {sections.solutionBody}
               </p>
               
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {(product.slug === 'herbal-lung-spray'
-                  ? [
-                      { title: 'ينظف الرئة من آثار الدخان', icon: ShieldCheck, color: 'text-teal' },
-                      { title: 'يذيب البلغم ويريح الصدر', icon: Zap, color: 'text-gold' },
-                      { title: 'يوسع الشعب الهوائية', icon: Wind, color: 'text-blue-500' },
-                      { title: 'ينعش التنفس فوراً', icon: HeartPulse, color: 'text-red-400' }
-                    ]
-                  : [
-                      { title: 'يوسع الشعب الهوائية', icon: Wind, color: 'text-teal' },
-                      { title: 'يذيب الترسبات والبلغم', icon: Zap, color: 'text-gold' },
-                      { title: 'ينعش التنفس فوراً', icon: HeartPulse, color: 'text-red-400' },
-                      { title: 'آمن للاستخدام اليومي', icon: ShieldCheck, color: 'text-green-500' }
-                    ]
-                ).map((feature, i) => (
+                {sections.solutionFeatures.map((feature, i) => {
+                  const { icon: FeatureIcon, color } = solutionIcons[i] ?? solutionIcons[0]
+                  return (
                   <div key={i} className="bg-white p-4 rounded-xl border border-sage/20 flex items-center justify-between lg:flex-row-reverse gap-3 shadow-sm hover:shadow-md hover:border-teal/30 transition-all group">
                     <span className="font-bold text-charcoal text-sm lg:text-left text-right w-full group-hover:text-teal transition-colors">{feature.title}</span>
                     <div className={`w-10 h-10 bg-mist rounded-full flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform`}>
-                      <feature.icon className={`w-5 h-5 ${feature.color}`} />
+                      <FeatureIcon className={`w-5 h-5 ${color}`} />
                     </div>
                   </div>
-                ))}
+                )})}
               </div>
             </div>
 
@@ -271,24 +259,11 @@ export default function ProductPageContent({
                 آلية العمل
               </div>
               <h2 className="text-3xl md:text-4xl font-extrabold text-charcoal mb-10 leading-tight">
-                {product.slug === 'herbal-lung-spray' 
-                  ? 'كيف يطرد الدخان والترسبات وينظف صدرك حرفياً؟ 🍃' 
-                  : 'كيف يشتغل المنتج ويريح صدرك؟'}
+                {sections.mechanismTitle}
               </h2>
               
               <div className="relative space-y-8">
-                {(product.slug === 'herbal-lung-spray'
-                  ? [
-                      { step: 1, title: 'تفكيك ترسبات السنين فوراً', desc: 'بمجرد بخات بسيطة بالفم، تتغلغل المستخلصات العشبية القوية لتفكيك طبقات النيكوتين والقطران المتصلبة في ممراتك التنفسية.' },
-                      { step: 2, title: 'طرد البلغم المزعج وإذابته', desc: 'تشتغل الزيوت الطيارة على تذويب البلغم الكثيف وتوسيع الشعب، عشان تتخلص من الكحة الصباحية وتطرد الوصخ بسهولة.' },
-                      { step: 3, title: 'صدر خفيف ونفس عميق كأنك انولدت من جديد', desc: 'يبني لك طبقة حماية تبرد الصدر الملتهب وتمنع جفافه، وترجع لك إحساس الخفة، صدقني بتحس بفرق من أول أسبوع!' }
-                    ]
-                  : [
-                      { step: 1, title: 'الاستخلاص النقي', desc: 'تتغلغل المكونات العشبية بلطف في الممرات التنفسية لتبدأ عملية التنظيف الفوري.' },
-                      { step: 2, title: 'تفكيك الترسبات', desc: 'تساعد في تذويب العوالق الناتجة عن الغبار ودخان البخور المتراكم يومياً.' },
-                      { step: 3, title: 'انتعاش وراحة تدوم', desc: 'تترك طبقة منعشة تحمي وتهدئ جهازك التنفسي، لترجع تتنفس براحة تامة طوال اليوم.' }
-                    ]
-                ).map((item, idx) => (
+                {sections.mechanismSteps.map((item) => (
                   <div key={item.step} className="relative flex gap-6 justify-start group">
                     {/* Glowing Step Number */}
                     <div className="relative flex-shrink-0 z-10">
@@ -332,8 +307,8 @@ export default function ProductPageContent({
               <div className="w-full lg:w-5/12 order-1 lg:order-2">
                 <div className="relative aspect-[3/4] rounded-[2.5rem] overflow-hidden bg-white border border-sage/20 shadow-2xl group">
                   <img 
-                    src={product.slug === 'herbal-lung-spray' ? '/images/main-ingredients-lung-spray.png' : 'https://placehold.co/800x1000/0f766e/ffffff?text=Main+Ingredients+Image'} 
-                    alt={product.slug === 'herbal-lung-spray' ? 'مكونات بخاخ تنظيف الرئة العشبي الطبيعية' : 'مكونات طبيعية'} 
+                    src={sections.ingredientsMainImage} 
+                    alt={sections.ingredientsMainImageAlt} 
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-charcoal/50 to-transparent opacity-60" />
@@ -382,7 +357,7 @@ export default function ProductPageContent({
       )}
 
       {/* ── 4.75 How to Use Section ── */}
-      {product.slug === 'herbal-lung-spray' && (
+      {hasFullProductPage(product.slug) && (
         <section className="py-16 md:py-24 bg-white relative overflow-hidden">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div className="text-center mb-12">
@@ -399,11 +374,7 @@ export default function ProductPageContent({
             </div>
 
             <div className="grid grid-cols-1 gap-6 md:grid-cols-3 md:gap-8">
-              {[
-                { step: 1, title: 'رج العبوة جيداً', desc: 'قبل كل استخدام، رج العبوة عشان تتجانس المستخلصات العشبية الطبيعية.', image: '/images/howto-step-1-shake.png' },
-                { step: 2, title: 'بخ داخل الفم', desc: 'وجه البخاخ داخل الفم واضغط من 2 إلى 3 بخات لتغطية الممرات التنفسية.', image: '/images/howto-step-2-spray.png' },
-                { step: 3, title: 'مرتين يومياً', desc: 'استخدمه في الصباح لطرد البلغم، وقبل النوم لتنفس عميق ونوم مريح.', image: '/images/howto-step-3-routine.png' },
-              ].map((item) => (
+              {sections.howToUseSteps.map((item) => (
                 <HowToUseStep key={item.step} {...item} />
               ))}
             </div>
@@ -437,22 +408,7 @@ export default function ProductPageContent({
             </div>
 
             {/* Table Rows */}
-            {(product.slug === 'herbal-lung-spray'
-              ? [
-                  { feature: 'المكونات', us: 'خلاصة أعشاب طبيعية 100%', them: 'مركبات كيميائية ومواد مجهولة' },
-                  { feature: 'الترخيص والأمان', us: 'مطابق لمواصفات الغذاء والدواء (SFDA)', them: 'غالباً مصادر غير معتمدة' },
-                  { feature: 'الفعالية والنتيجة', us: 'تذويب البلغم وتنظيف عميق للرئة', them: 'تسكين مؤقت وترجع لك الكتمة' },
-                  { feature: 'الاستخدام اليومي', us: 'تستخدمه يومياً وأنت متطمن', them: 'كثرة استخدامها تسبب جفاف وتعود' },
-                  { feature: 'ضمان النتيجة', us: 'ارتاح أو نرجع لك فلوسك (30 يوم)', them: 'تدفع فلوسك وتخاطر بدون ضمان' },
-                ]
-              : [
-                  { feature: 'المكونات', us: 'طبيعية عشبية 100%', them: 'مواد كيميائية' },
-                  { feature: 'الترخيص', us: 'مُصرح وآمن (مطابق لهيئة الغذاء والدواء)', them: 'غير معروف المصدر' },
-                  { feature: 'النتيجة', us: 'راحة وانتعاش فوري', them: 'راحة مؤقتة وجفاف' },
-                  { feature: 'الآثار الجانبية', us: 'آمن للاستخدام اليومي', them: 'قد يسبب التعود أو الجفاف' },
-                  { feature: 'الضمان', us: 'ضمان ذهبي 30 يوم واسترجاع', them: 'لا يوجد ضمان' },
-                ]
-            ).map((row, i) => (
+            {sections.comparisonRows.map((row, i) => (
               <div key={i} className={`grid grid-cols-3 text-sm md:text-base border-b border-sage/10 transition-colors hover:bg-mist/50 ${i % 2 === 0 ? 'bg-white' : 'bg-mist/20'}`}>
                 <div className="p-4 md:p-6 text-center border-l border-sage/20 font-extrabold text-charcoal/80 flex items-center justify-center">
                   {row.feature}
@@ -533,10 +489,7 @@ export default function ProductPageContent({
             
             {/* Reviews Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 text-right">
-              {(product.slug === 'herbal-lung-spray'
-                ? HERBAL_LUNG_SPRAY_REVIEWS
-                : DEFAULT_PRODUCT_REVIEWS
-              ).map((review, i) => (
+              {productReviews.map((review, i) => (
                 <div key={i} className="bg-gray-800 rounded-2xl overflow-hidden border border-white/10 group shadow-lg">
                   {/* Image Placeholder */}
                   <div className="relative aspect-[4/5] bg-gray-900 overflow-hidden">
