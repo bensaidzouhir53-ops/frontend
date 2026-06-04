@@ -292,8 +292,8 @@ export default function ProductPageContent({
             <div className="w-full lg:w-1/2 order-1 lg:order-2">
               <div className="relative aspect-[4/5] md:aspect-square lg:aspect-[4/5] rounded-[2.5rem] overflow-hidden bg-gradient-to-b from-slate-100 to-slate-200 border border-sage/20 shadow-2xl">
                 <img
-                  src="/images/mechanism-breathing.gif"
-                  alt="شرح آلية العمل — حركة التنفس والرئتين"
+                  src={sections.mechanismImage}
+                  alt={sections.mechanismImageAlt}
                   className="w-full h-full object-cover"
                   loading="lazy"
                   decoding="async"

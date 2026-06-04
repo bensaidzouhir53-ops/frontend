@@ -67,6 +67,8 @@ export interface ProductPageSections {
   solutionFeatures: SolutionFeature[]
   mechanismTitle: string
   mechanismSteps: MechanismStep[]
+  mechanismImage: string
+  mechanismImageAlt: string
   ingredientsMainImage: string
   ingredientsMainImageAlt: string
   howToUseSteps: HowToUseStep[]
@@ -200,6 +202,8 @@ const HERBAL_LUNG_SPRAY_SECTIONS: ProductPageSections = {
       desc: 'يبني لك طبقة حماية تبرد الصدر الملتهب وتمنع جفافه، وترجع لك إحساس الخفة، صدقني بتحس بفرق من أول أسبوع!',
     },
   ],
+  mechanismImage: '/images/mechanism-breathing.gif',
+  mechanismImageAlt: 'شرح آلية العمل — حركة التنفس والرئتين',
   ingredientsMainImage: '/images/main-ingredients-lung-spray.png',
   ingredientsMainImageAlt: 'مكونات بخاخ تنظيف الرئة العشبي الطبيعية',
   howToUseSteps: [
@@ -288,6 +292,8 @@ const MOLIEN_DROPS_SECTIONS: ProductPageSections = {
       desc: 'مع الاستمرار، بتحس إن حلقك نظيف وصدرك أخف، وتصحى بدون بلغم ناشب أو غثيان يخرب بداية يومك!',
     },
   ],
+  mechanismImage: '/images/molien-mechanism.png',
+  mechanismImageAlt: 'امتصاص قطرة المولين وتأثيرها على الرئة والجهاز الهضمي',
   ingredientsMainImage: '/images/mullein-lung-drops.jpg',
   ingredientsMainImageAlt: 'مكونات قطرة المولين العشبية الطبيعية',
   howToUseSteps: [
