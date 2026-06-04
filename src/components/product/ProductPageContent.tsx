@@ -9,6 +9,7 @@ import {
 import type { Product } from '@/types'
 import { getDefaultOffer } from '@/lib/products'
 import OfferSelector from '@/components/product/OfferSelector'
+import ProductDayProcessSection from '@/components/product/ProductDayProcessSection'
 import HowToUseStep from '@/components/product/HowToUseStep'
 import ProductReviewsGrid from '@/components/product/ProductReviewsGrid'
 import TrustBadges from '@/components/shared/TrustBadges'
@@ -358,6 +359,11 @@ export default function ProductPageContent({
             </div>
           </div>
         </section>
+      )}
+
+      {/* ── 4.6 Twenty-Eight Day Process ── */}
+      {hasFullProductPage(product.slug) && (
+        <ProductDayProcessSection content={sections.dayProcess} />
       )}
 
       {/* ── 4.75 How to Use Section ── */}

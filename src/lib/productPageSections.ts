@@ -25,6 +25,21 @@ export interface ComparisonRow {
   them: string
 }
 
+export interface DayProcessPhase {
+  period: string
+  title: string
+  benefits: string[]
+  stat: string
+}
+
+export interface DayProcessContent {
+  image: string
+  imageAlt: string
+  overlayTitle: string
+  overlayDesc: string
+  phases: DayProcessPhase[]
+}
+
 export interface ProductPageSections {
   painAlert: string
   painTitle: string
@@ -45,8 +60,87 @@ export interface ProductPageSections {
   ingredientsMainImageAlt: string
   howToUseSteps: HowToUseStep[]
   comparisonRows: ComparisonRow[]
+  dayProcess: DayProcessContent
   reviewsKey: 'herbal-lung-spray' | 'molien-drops'
 }
+
+const SHARED_DAY_PROCESS_PHASES: DayProcessPhase[] = [
+  {
+    period: 'اليوم 1-3',
+    title: 'بداية الراحة',
+    benefits: [
+      'تحس إن صدرك صار أخف والكتمة خفت حيل',
+      'أول نفس عميق ومريح تأخذه من فترة طويلة',
+    ],
+    stat: '93% من عملائنا لاحظوا تنفس أسهل بأول 3 أيام',
+  },
+  {
+    period: 'اليوم 4-7',
+    title: 'راح تلاحظ الفرق',
+    benefits: [
+      'بلغم الصبح يبدأ يطلع ويتنظف',
+      'الكحة المزعجة تقل بشكل واضح',
+    ],
+    stat: '89% من عملائنا لاحظوا إن البلغم خف ومجاري التنفس تفتحت باليوم السابع',
+  },
+  {
+    period: 'اليوم 7-14',
+    title: 'تنفس براحتك',
+    benefits: [
+      'تحس إن شعبك الهوائية انفتحت ونضفت',
+      'لا صفير بصدرك ولا ثقل يضايقك',
+    ],
+    stat: '91% من عملائنا حسوا بتنفس صافي ومريح بالأسبوع الثاني',
+  },
+  {
+    period: 'اليوم 14-28',
+    title: 'طاقة ونشاط',
+    benefits: [
+      'نومة أعمق ومريحة طوال الليل',
+      'لياقتك تتحسن وتقدر تنجز يومك بدون تعب',
+    ],
+    stat: '87% من عملائنا حسوا بنشاط وطاقة أعلى مع الاستمرار حتى اليوم 28',
+  },
+]
+
+const MOLIEN_DAY_PROCESS_PHASES: DayProcessPhase[] = [
+  {
+    period: 'اليوم 1-3',
+    title: 'بداية الراحة',
+    benefits: [
+      'البلغم المتحجر يبدأ يلين ويطلع بسهولة',
+      'الغثيان الصباحي يخف من أول أيام',
+    ],
+    stat: '93% من عملائنا لاحظوا حلق أخف وتنفس أسهل بأول 3 أيام',
+  },
+  {
+    period: 'اليوم 4-7',
+    title: 'راح تلاحظ الفرق',
+    benefits: [
+      'بلغم الصبح يبدأ يطلع ويتنظف',
+      'الكحة المزعجة تقل بشكل واضح',
+    ],
+    stat: '89% من عملائنا لاحظوا إن البلغم خف ومجاري التنفس تفتحت باليوم السابع',
+  },
+  {
+    period: 'اليوم 7-14',
+    title: 'تنفس براحتك',
+    benefits: [
+      'تحس إن شعبك الهوائية انفتحت ونضفت',
+      'لا صفير بصدرك ولا ثقل يضايقك',
+    ],
+    stat: '91% من عملائنا حسوا بتنفس صافي ومريح بالأسبوع الثاني',
+  },
+  {
+    period: 'اليوم 14-28',
+    title: 'طاقة ونشاط',
+    benefits: [
+      'نومة أعمق ومريحة طوال الليل',
+      'لياقتك تتحسن وتقدر تنجز يومك بدون تعب',
+    ],
+    stat: '87% من عملائنا حسوا بنشاط وطاقة أعلى مع الاستمرار حتى اليوم 28',
+  },
+]
 
 const HERBAL_LUNG_SPRAY_SECTIONS: ProductPageSections = {
   painAlert: 'رسالة مهمة لكل مدخن: لا تتجاهل هذي العلامات 🚨',
@@ -120,6 +214,15 @@ const HERBAL_LUNG_SPRAY_SECTIONS: ProductPageSections = {
     { feature: 'الاستخدام اليومي', us: 'تستخدمه يومياً وأنت متطمن', them: 'كثرة استخدامها تسبب جفاف وتعود' },
     { feature: 'ضمان النتيجة', us: 'ارتاح أو نرجع لك فلوسك (30 يوم)', them: 'تدفع فلوسك وتخاطر بدون ضمان' },
   ],
+  dayProcess: {
+    image: '/images/solution-lung-spray.png',
+    imageAlt: 'رجل يستخدم بخاخ نسمة العشبي لتنفس مريح',
+    overlayTitle:
+      'ينفع لكل اللي يعانون من مشاكل التنفس، خصوصاً المدخنين واللي قطعوا التدخين',
+    overlayDesc:
+      'راح تحب شعور التنفس العميق من جديد، وودع كتمة الصدر للأبد.',
+    phases: SHARED_DAY_PROCESS_PHASES,
+  },
   reviewsKey: 'herbal-lung-spray',
 }
 
@@ -195,6 +298,15 @@ const MOLIEN_DROPS_SECTIONS: ProductPageSections = {
     { feature: 'الاستخدام اليومي', us: 'قطرات سهلة وآمنة يومياً', them: 'أقراص تسبب غثيان وجفاف' },
     { feature: 'ضمان النتيجة', us: 'ارتاح أو نرجع لك فلوسك (30 يوم)', them: 'تدفع فلوسك وتخاطر بدون ضمان' },
   ],
+  dayProcess: {
+    image: '/images/mullein-lung-drops.jpg',
+    imageAlt: 'قطرة المولين لإذابة البلغم المتحجر',
+    overlayTitle:
+      'ينفع لكل اللي يصحى على بلغم ناشب أو غثيان صباحي في الحلق',
+    overlayDesc:
+      'راح تحب شعور الحلق النظيف والصباح الخفيف — ودع البلغم المتحجر للأبد.',
+    phases: MOLIEN_DAY_PROCESS_PHASES,
+  },
   reviewsKey: 'molien-drops',
 }
 
