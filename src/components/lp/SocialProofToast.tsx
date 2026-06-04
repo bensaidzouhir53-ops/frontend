@@ -61,7 +61,7 @@ export default function SocialProofToast() {
       className="fixed bottom-6 left-4 z-50 max-w-sm md:left-6"
       dir="rtl"
     >
-      <div className="flex items-start gap-3 rounded-2xl border border-sage/30 bg-white/95 p-4 shadow-2xl backdrop-blur-md">
+      <div className="flex items-start gap-3 rounded-2xl border border-sage/30 bg-white p-4 shadow-2xl">
         <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-teal/10 text-teal">
           <PackageCheck className="h-5 w-5" />
         </div>

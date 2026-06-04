@@ -202,11 +202,11 @@ export default function ThankYouView({
     <div className="min-h-screen bg-gradient-to-b from-teal/5 via-ivory to-mist/30 pb-20" dir="rtl">
       {/* HERO */}
       <section className="relative overflow-hidden bg-gradient-to-br from-teal-dark to-teal pb-28 pt-12 text-white md:pt-16">
-        <div className="absolute -right-20 top-10 h-72 w-72 rounded-full bg-gold/25 blur-3xl" />
-        <div className="absolute -left-20 bottom-0 h-72 w-72 rounded-full bg-white/10 blur-3xl" />
+        <div className="absolute -right-20 top-10 h-72 w-72 rounded-full bg-gold/15" />
+        <div className="absolute -left-20 bottom-0 h-72 w-72 rounded-full bg-white/10" />
         <div className="relative mx-auto max-w-3xl px-4 text-center">
           <div
-            className="mx-auto mb-6 flex h-24 w-24 items-center justify-center rounded-full bg-white/15 ring-8 ring-white/10 backdrop-blur-md"
+            className="mx-auto mb-6 flex h-24 w-24 items-center justify-center rounded-full bg-white/15 ring-8 ring-white/10"
           >
             <CheckCircle2 className="h-14 w-14 text-white drop-shadow" strokeWidth={2.5} />
           </div>
@@ -224,7 +224,7 @@ export default function ThankYouView({
           </p>
 
           {orderNumber && (
-            <div className="mx-auto mt-7 flex w-fit items-center gap-3 rounded-2xl border border-white/20 bg-white/10 px-5 py-3 backdrop-blur">
+            <div className="mx-auto mt-7 flex w-fit items-center gap-3 rounded-2xl border border-white/20 bg-white/10 px-5 py-3">
               <div className="text-right">
                 <p className="text-xs font-bold text-white/70">رقم الطلب</p>
                 <p className="ltr text-lg font-extrabold tracking-wide text-gold">
@@ -250,11 +250,11 @@ export default function ThankYouView({
       <div className="relative -mt-20 mx-auto max-w-3xl px-4">
         {/* CALL BANNER — the star */}
         <div className="relative overflow-hidden rounded-[2rem] border border-teal/30 bg-white p-6 shadow-2xl md:p-8">
-          <div className="absolute -right-10 -top-10 h-40 w-40 rounded-full bg-teal/15 blur-3xl" />
+          <div className="absolute -right-10 -top-10 h-40 w-40 rounded-full bg-teal/15" />
           <div className="relative flex flex-col gap-4 md:flex-row md:items-center">
             <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-teal text-white shadow-lg shadow-teal/30">
               {callStatus.mode === 'inside' ? (
-                <Phone className="h-7 w-7 animate-pulse" />
+                <Phone className="h-7 w-7" />
               ) : (
                 <Sun className="h-7 w-7" />
               )}

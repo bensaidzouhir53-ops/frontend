@@ -23,7 +23,7 @@ export default function Header() {
 
   return (
     <header
-      className="sticky top-0 z-30 w-full border-b border-sage/30 bg-ivory/90 backdrop-blur-md"
+      className="sticky top-0 z-30 w-full border-b border-sage/30 bg-ivory"
       dir="rtl"
     >
       <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">

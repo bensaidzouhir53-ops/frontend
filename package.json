@@ -21,7 +21,8 @@
     "clsx": "^2.1.1",
     "tailwind-merge": "^2.6.0",
     "lucide-react": "^0.469.0",
-    "vaul": "^1.1.2"
+    "vaul": "^1.1.2",
+    "sharp": "^0.33.5"
   },
   "devDependencies": {
     "typescript": "^5",

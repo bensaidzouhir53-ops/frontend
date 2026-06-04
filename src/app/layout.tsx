@@ -2,21 +2,18 @@ import type { Metadata } from 'next'
 import { Tajawal } from 'next/font/google'
 import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
-import CartDrawer from '@/components/cart/CartDrawer'
-import UpsellModal from '@/components/upsell/UpsellModal'
+import ClientLazyModals from '@/components/layout/ClientLazyModals'
 import PixelInit from '@/components/shared/PixelInit'
 import PixelScripts from '@/components/shared/PixelScripts'
 import { fetchTrackingConfigFromBackend } from '@/lib/pixel-config.server'
 import './globals.css'
 
-// Always load pixel config at request time (never bake empty config at Docker build)
-export const dynamic = 'force-dynamic'
-
 const tajawal = Tajawal({
   subsets: ['arabic', 'latin'],
-  weight: ['300', '400', '500', '700', '800', '900'],
+  weight: ['400', '700', '800'],
   variable: '--font-tajawal',
   display: 'swap',
+  preload: true,
 })
 
 export const metadata: Metadata = {
@@ -73,10 +70,7 @@ export default async function RootLayout({
         <Header />
         <main>{children}</main>
         <Footer />
-        {/* Cart drawer mounts CheckoutModal internally */}
-        <CartDrawer />
-        {/* Upsell modal — always mounted, controlled by store */}
-        <UpsellModal />
+        <ClientLazyModals />
         <PixelInit config={pixelConfig} />
       </body>
     </html>

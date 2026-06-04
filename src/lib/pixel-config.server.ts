@@ -60,13 +60,16 @@ export function getEnvPixelFallback(): ServerPixelConfig {
   })
 }
 
-/** Fetch pixel IDs from backend at request time (Easypanel env). */
+/** Fetch pixel IDs — env first (fast), then backend with short cache. */
 export async function fetchTrackingConfigFromBackend(): Promise<ServerPixelConfig> {
+  const envFallback = getEnvPixelFallback()
+  if (envFallback.enabled) return envFallback
+
   for (const baseUrl of getBackendCandidates()) {
     try {
       const response = await fetch(`${baseUrl}/api/tracking/config`, {
-        cache: 'no-store',
-        signal: AbortSignal.timeout(5_000),
+        next: { revalidate: 300 },
+        signal: AbortSignal.timeout(3_000),
       })
       if (response.ok) {
         const config = normalizePixelConfig(
@@ -79,6 +82,5 @@ export async function fetchTrackingConfigFromBackend(): Promise<ServerPixelConfi
     }
   }
 
-  const fallback = getEnvPixelFallback()
-  return fallback.enabled ? fallback : EMPTY
+  return envFallback.enabled ? envFallback : EMPTY
 }

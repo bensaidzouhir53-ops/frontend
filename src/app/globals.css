@@ -2,8 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800&display=swap');
-
 :root {
   --color-teal: #0F766E;
   --color-teal-dark: #0B4F4A;
@@ -21,11 +19,11 @@
 }
 
 html {
-  scroll-behavior: smooth;
+  text-size-adjust: 100%;
 }
 
 body {
-  font-family: 'Cairo', var(--font-cairo, 'Cairo'), sans-serif;
+  font-family: var(--font-tajawal), 'Tajawal', sans-serif;
   background-color: var(--color-ivory);
   color: var(--color-charcoal);
   direction: rtl;
@@ -42,12 +40,33 @@ body {
   direction: rtl;
 }
 
-/* Smooth transitions for interactive elements */
-button,
-a {
-  transition-property: color, background-color, border-color, transform, box-shadow, opacity;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  transition-duration: 150ms;
+/* Smooth transitions for interactive elements — skip during scroll for perf */
+@media (prefers-reduced-motion: no-preference) {
+  button,
+  a {
+    transition-property: color, background-color, border-color, transform, box-shadow, opacity;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 150ms;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Defer off-screen section paint until near viewport */
+@layer utilities {
+  .perf-section {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 720px;
+  }
 }
 
 /* Hide scrollbar while keeping functionality */
@@ -117,13 +136,22 @@ img {
   -webkit-line-clamp: 2;
 }
 
-/* Marquee Animation */
+/* Marquee — paused by default; enable only when in view via JS class */
 @keyframes marquee-rtl {
   0% { transform: translateX(0%); }
   100% { transform: translateX(50%); }
 }
 
 .animate-marquee-rtl {
-  animation: marquee-rtl 20s linear infinite;
+  animation: marquee-rtl 28s linear infinite;
 }
 
+.animate-marquee-rtl.is-paused {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-marquee-rtl {
+    animation: none;
+  }
+}

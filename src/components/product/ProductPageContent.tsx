@@ -4,12 +4,13 @@ import Link from 'next/link'
 import { 
   ShieldCheck, Star, CheckCircle2, ChevronLeft, ArrowLeft, 
   Leaf, Zap, AlertTriangle, Wind, HeartPulse, XCircle, Wallet,
-  Flame, BellRing, Users, Clock
+  BellRing, Users, Clock
 } from 'lucide-react'
 import type { Product } from '@/types'
 import { getDefaultOffer } from '@/lib/products'
 import OfferSelector from '@/components/product/OfferSelector'
 import HowToUseStep from '@/components/product/HowToUseStep'
+import ProductReviewsGrid from '@/components/product/ProductReviewsGrid'
 import TrustBadges from '@/components/shared/TrustBadges'
 import FAQAccordion from '@/components/shared/FAQAccordion'
 import { DEFAULT_PRODUCT_REVIEWS, HERBAL_LUNG_SPRAY_REVIEWS, MOLIEN_DROPS_REVIEWS } from '@/lib/productReviews'
@@ -40,9 +41,9 @@ export default function ProductPageContent({
         : DEFAULT_PRODUCT_REVIEWS
 
   return (
-    <main dir="rtl" className="bg-ivory min-h-screen pb-24 lg:pb-0 scroll-smooth">
+    <main dir="rtl" className="bg-ivory min-h-screen pb-24 lg:pb-0">
       {/* ── Breadcrumb ── */}
-      <div className="bg-white/80 backdrop-blur-md border-b border-sage/20 py-3 sticky top-[60px] lg:top-[72px] z-40">
+      <div className="bg-white border-b border-sage/20 py-3 sticky top-[60px] lg:top-[72px] z-40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <nav className="flex items-center gap-2 text-xs md:text-sm text-charcoal/60 font-medium">
             <Link href="/" className="hover:text-teal transition-colors">الرئيسية</Link>
@@ -56,17 +57,20 @@ export default function ProductPageContent({
 
       {/* ── 1. Hero Section (The Buy Box) ── */}
       <section className="pt-6 pb-12 md:py-16 bg-gradient-to-b from-mist/50 to-ivory relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-teal/5 rounded-full blur-[80px] -translate-y-1/2 translate-x-1/3" />
+        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-teal/5 rounded-full opacity-60 -translate-y-1/2 translate-x-1/3" />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="flex flex-col lg:flex-row gap-8 lg:gap-16 items-start">
             
             {/* Image (Left visually, Right in DOM for RTL) */}
             <div className="w-full lg:w-1/2 lg:sticky lg:top-32 order-1 lg:order-2">
-              <div className="relative aspect-[4/5] rounded-[2.5rem] overflow-hidden bg-gray-100 flex items-center justify-center border-4 border-white shadow-2xl shadow-teal/10">
-                <img
+              <div className="relative aspect-[4/5] rounded-[2.5rem] overflow-hidden bg-gray-100 border-4 border-white shadow-2xl shadow-teal/10">
+                <Image
                   src={product.image}
                   alt={product.nameAr}
-                  className="w-full h-full object-cover"
+                  fill
+                  priority
+                  sizes="(max-width: 1024px) 100vw, 50vw"
+                  className="object-cover"
                 />
               </div>
             </div>
@@ -75,7 +79,7 @@ export default function ProductPageContent({
             <div className="w-full lg:w-1/2 order-2 lg:order-1 text-right">
               <div className="flex items-center flex-wrap gap-2 mb-4">
                 <div className="inline-flex items-center gap-2 bg-red-50 border border-red-100 px-4 py-2 rounded-full shadow-sm">
-                  <span className="flex h-2.5 w-2.5 rounded-full bg-red-500 animate-pulse" />
+                  <span className="flex h-2.5 w-2.5 rounded-full bg-red-500" />
                   <span className="text-xs font-bold text-red-700 tracking-wide">المنتج الأكثر طلباً في السعودية اليوم 🔥</span>
                 </div>
                 <div className="inline-flex items-center gap-2 bg-teal/10 border border-teal/20 px-4 py-2 rounded-full shadow-sm">
@@ -88,7 +92,7 @@ export default function ProductPageContent({
                 {product.nameAr}
               </h1>
 
-              <div className="flex flex-wrap items-center gap-3 justify-end mb-6 bg-white/50 backdrop-blur-sm rounded-xl p-3 border border-sage/20 w-fit ml-auto">
+              <div className="flex flex-wrap items-center gap-3 justify-end mb-6 bg-white rounded-xl p-3 border border-sage/20 w-fit ml-auto">
                 <div className="flex gap-1">
                   {[...Array(5)].map((_, i) => (
                     <Star key={i} className="w-5 h-5 text-gold fill-gold" />
@@ -153,8 +157,8 @@ export default function ProductPageContent({
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col lg:flex-row gap-12 items-center">
             <div className="w-full lg:w-1/2 text-right order-2 lg:order-1">
-              <div className="inline-flex items-center gap-3 text-white mb-5 bg-gradient-to-r from-red-600 to-red-500 px-5 py-2.5 rounded-full font-extrabold text-sm shadow-[0_4px_20px_rgba(220,38,38,0.4)] animate-pulse">
-                <BellRing className="w-5 h-5 animate-bounce" />
+              <div className="inline-flex items-center gap-3 text-white mb-5 bg-gradient-to-r from-red-600 to-red-500 px-5 py-2.5 rounded-full font-extrabold text-sm shadow-[0_4px_20px_rgba(220,38,38,0.4)]">
+                <BellRing className="w-5 h-5 " />
                 {sections.painAlert}
               </div>
               <h2 className="text-3xl md:text-4xl font-extrabold text-charcoal mb-6 leading-tight tracking-tight">
@@ -181,7 +185,7 @@ export default function ProductPageContent({
             </div>
             
             <div className="w-full lg:w-1/2 order-1 lg:order-2 relative">
-              <div className="absolute inset-0 bg-red-500/10 blur-[60px] rounded-full" />
+              <div className="absolute inset-0 bg-red-500/10 rounded-full opacity-40" />
               <div className="relative aspect-[4/5] rounded-[2.5rem] overflow-hidden bg-gray-100 border border-sage/20 shadow-2xl">
                 <img 
                   src={sections.painImage} 
@@ -250,7 +254,7 @@ export default function ProductPageContent({
 
       {/* ── 4. Mechanism / How it works (Text Right, Image Left) ── */}
       <section className="py-16 md:py-24 bg-white relative overflow-hidden">
-        <div className="absolute left-0 top-1/4 w-96 h-96 bg-teal-light/10 rounded-full blur-3xl -translate-x-1/2" />
+        <div className="absolute left-0 top-1/4 w-96 h-96 bg-teal-light/10 rounded-full opacity-50 -translate-x-1/2" />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="flex flex-col lg:flex-row gap-12 lg:gap-20 items-center">
             
@@ -429,7 +433,7 @@ export default function ProductPageContent({
 
       {/* ── 6. SFDA & Quality Guarantee ── */}
       <section className="py-16 bg-white border-y border-sage/20 overflow-hidden relative">
-        <div className="absolute right-0 top-0 w-64 h-64 bg-gold/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
+        <div className="absolute right-0 top-0 w-64 h-64 bg-gold/10 rounded-full opacity-40 -translate-y-1/2 translate-x-1/2" />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row gap-8 items-center bg-gradient-to-r from-teal-dark to-charcoal rounded-[2.5rem] p-8 md:p-12 shadow-2xl text-white relative z-10">
             <div className="w-full md:w-2/3 text-right order-2 md:order-1">
@@ -470,7 +474,7 @@ export default function ProductPageContent({
       {/* ── 7. Image Reviews / Proof Section ── */}
       {true && (
         <section id="reviews" className="py-16 md:py-24 bg-charcoal text-white relative overflow-hidden">
-          <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10" />
+          <div className="absolute inset-0 opacity-0" />
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
             <div className="flex flex-col md:flex-row justify-between items-center mb-12 gap-6">
               <div className="text-right">
@@ -488,50 +492,12 @@ export default function ProductPageContent({
             </div>
             
             {/* Reviews Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 text-right">
-              {productReviews.map((review, i) => (
-                <div key={i} className="bg-gray-800 rounded-2xl overflow-hidden border border-white/10 group shadow-lg">
-                  {/* Image Placeholder */}
-                  <div className="relative aspect-[4/5] bg-gray-900 overflow-hidden">
-                    <img 
-                      src={review.image} 
-                      alt={`صورة تقييم من ${review.name}`} 
-                      className="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity group-hover:scale-105 duration-500"
-                    />
-                    {/* Verified Buyer Badge */}
-                    <div className="absolute top-3 right-3 bg-teal/90 backdrop-blur-sm text-white text-xs font-bold px-3 py-1 rounded-full flex items-center gap-1 shadow-sm">
-                      <CheckCircle2 className="w-3 h-3" />
-                      مشتري مؤكد
-                    </div>
-                  </div>
-                  {/* Review Content */}
-                  <div className="p-5">
-                    <div className="flex gap-1 mb-3">
-                      {[1, 2, 3, 4, 5].map((s) => (
-                        <Star key={s} className="w-4 h-4 fill-gold text-gold" />
-                      ))}
-                    </div>
-                    <p className="text-white/90 text-sm leading-relaxed mb-4 font-medium min-h-[72px] line-clamp-4">
-                      "{review.text}"
-                    </p>
-                    <div className="flex items-center gap-3 border-t border-white/10 pt-4">
-                      <div className="w-8 h-8 rounded-full bg-teal-dark flex items-center justify-center font-bold text-white text-xs flex-shrink-0">
-                        {review.name.charAt(0)}
-                      </div>
-                      <div>
-                        <p className="font-bold text-sm text-white">{review.name}</p>
-                        <p className="text-xs text-white/50">{review.city}</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-            
+            <ProductReviewsGrid reviews={productReviews} />
+
             <div className="mt-12">
               <Link
                 href="#offer"
-                className="inline-flex items-center justify-center gap-3 bg-teal hover:bg-teal-dark text-white font-extrabold text-xl px-12 py-5 rounded-2xl shadow-xl shadow-teal/20 hover:scale-105 transition-all w-full md:w-auto animate-bounce"
+                className="inline-flex w-full items-center justify-center gap-3 rounded-2xl bg-teal px-12 py-5 text-xl font-extrabold text-white shadow-xl shadow-teal/20 transition-transform hover:scale-105 hover:bg-teal-dark md:w-auto"
               >
                 🚀 اطلب الآن والدفع عند الاستلام
               </Link>
@@ -609,11 +575,11 @@ export default function ProductPageContent({
       )}
 
       {/* ── Sticky Mobile CTA ── */}
-      <div className="fixed bottom-0 left-0 right-0 z-50 lg:hidden bg-white/95 backdrop-blur-xl border-t border-sage/30 p-4 shadow-[0_-10px_40px_rgba(15,118,110,0.15)]" dir="rtl">
+      <div className="fixed bottom-0 left-0 right-0 z-50 lg:hidden bg-white border-t border-sage/30 p-4 shadow-[0_-10px_40px_rgba(15,118,110,0.15)]" dir="rtl">
         <div className="max-w-md mx-auto">
           <Link
             href="#offer"
-            className="w-full bg-gradient-to-r from-teal-dark to-teal text-white font-extrabold py-3.5 px-4 rounded-xl text-center shadow-lg shadow-teal/30 flex items-center justify-center gap-2 active:scale-95 transition-transform animate-bounce"
+            className="w-full bg-gradient-to-r from-teal-dark to-teal text-white font-extrabold py-3.5 px-4 rounded-xl text-center shadow-lg shadow-teal/30 flex items-center justify-center gap-2 active:scale-95 transition-transform "
           >
             اطلب الآن والدفع عند الاستلام 📦
             <ChevronLeft className="w-4 h-4" />

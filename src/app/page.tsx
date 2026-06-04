@@ -44,15 +44,15 @@ export default function HomePage() {
       {/* ── 1. Hero Section (Emotion & Conversion) ── */}
       <section className="relative overflow-hidden bg-gradient-to-b from-mist/80 to-ivory pb-12 pt-8 md:pt-16 md:pb-20">
         {/* Background decorative elements */}
-        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-teal/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3" />
-        <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-gold/5 rounded-full blur-3xl translate-y-1/3 -translate-x-1/3" />
+        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-teal/5 rounded-full opacity-60 -translate-y-1/2 translate-x-1/3" />
+        <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-gold/5 rounded-full opacity-50 translate-y-1/3 -translate-x-1/3" />
 
         <div className="relative mx-auto flex max-w-7xl flex-col items-center gap-12 px-4 md:flex-row">
           
           {/* Hero Copy (Right) */}
           <div className="w-full md:w-1/2 text-center md:text-right z-10">
             <div className="mb-6 inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 border border-apothecary/15 shadow-sm">
-              <span className="flex h-2 w-2 rounded-full bg-apothecary animate-pulse" />
+              <span className="flex h-2 w-2 rounded-full bg-apothecary" />
               <span className="text-xs font-extrabold text-apothecary tracking-[0.18em]">صيدلية التنفس الطبيعية · مطابق SFDA</span>
             </div>
 
@@ -76,8 +76,11 @@ export default function HomePage() {
               <div className="flex items-center gap-3">
                 <div className="flex -space-x-2 space-x-reverse">
                   {[1, 2, 3, 4].map((i) => (
-                    <div key={i} className="w-10 h-10 rounded-full border-2 border-ivory bg-mist overflow-hidden relative">
-                      <img src="https://placehold.co/400x400/e2e8f0/475569?text=Brand+Story" alt="Customer" className="object-cover opacity-50 w-full h-full" />
+                    <div
+                      key={i}
+                      className="relative flex h-10 w-10 items-center justify-center overflow-hidden rounded-full border-2 border-ivory bg-teal/10 text-xs font-bold text-teal"
+                    >
+                      ★
                     </div>
                   ))}
                 </div>
@@ -100,7 +103,7 @@ export default function HomePage() {
           {/* Hero Image (Left) */}
           <div className="w-full md:w-1/2 relative z-10">
             <div className="relative mx-auto w-full aspect-[3/4] md:aspect-[4/5] max-w-[520px]">
-              <div className="absolute inset-0 bg-gradient-to-tr from-teal to-gold rounded-[2.5rem] blur-[60px] opacity-20 transform rotate-3" />
+              <div className="absolute inset-0 rounded-[2.5rem] bg-gradient-to-tr from-teal/20 to-gold/20 opacity-30" />
               <div className="relative h-full w-full rounded-[2.5rem] overflow-hidden shadow-2xl bg-mist border-4 border-white">
                 <Image
                   src="/images/hero-main.png"
@@ -193,17 +196,17 @@ export default function HomePage() {
             <div className="w-full lg:w-1/2">
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-4 pt-8">
-                  <div className="bg-white/5 border border-white/10 p-6 rounded-3xl backdrop-blur-sm text-center">
+                  <div className="rounded-3xl border border-white/10 bg-white/5 p-6 text-center">
                     <HeartPulse className="w-10 h-10 text-teal-light mx-auto mb-3" />
                     <p className="font-bold">روتين تنفسي يومي</p>
                   </div>
-                  <div className="bg-white/5 border border-white/10 p-6 rounded-3xl backdrop-blur-sm text-center">
+                  <div className="rounded-3xl border border-white/10 bg-white/5 p-6 text-center">
                     <ShieldCheck className="w-10 h-10 text-gold mx-auto mb-3" />
                     <p className="font-bold">تغليف آمن ومحكم</p>
                   </div>
                 </div>
                 <div className="space-y-4">
-                  <div className="bg-white/5 border border-white/10 p-6 rounded-3xl backdrop-blur-sm text-center">
+                  <div className="rounded-3xl border border-white/10 bg-white/5 p-6 text-center">
                     <Wind className="w-10 h-10 text-mist mx-auto mb-3" />
                     <p className="font-bold">استخلاص نقي</p>
                   </div>
@@ -253,7 +256,7 @@ export default function HomePage() {
 
       {/* ── 6. 30-Day Guarantee Banner ── */}
       <section className="py-20 bg-gradient-to-br from-apothecary-dark via-apothecary to-teal-dark relative overflow-hidden">
-        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10" />
+        <div className="absolute inset-0 bg-charcoal/20" />
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
           <ShieldCheck className="w-20 h-20 text-gold mx-auto mb-6" />
           <p className="text-gold/90 font-bold tracking-[0.3em] text-sm mb-3">ضمان الصيدلية</p>

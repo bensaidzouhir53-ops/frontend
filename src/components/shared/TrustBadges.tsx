@@ -1,3 +1,6 @@
+'use client'
+
+import { useEffect, useRef } from 'react'
 import { Shield, Truck, Phone, RotateCcw, Leaf, CheckCircle2 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
@@ -51,40 +54,62 @@ const BADGES = [
   },
 ]
 
+function BadgeItem({ badge }: { badge: (typeof BADGES)[number] }) {
+  return (
+    <div className="flex items-center gap-3 whitespace-nowrap">
+      <div className={cn('flex h-12 w-12 shrink-0 items-center justify-center rounded-full', badge.bg)}>
+        <badge.icon className={cn('h-6 w-6', badge.color)} />
+      </div>
+      <div className="text-right">
+        <p className="text-base font-extrabold text-charcoal">{badge.title}</p>
+        <p className="text-sm font-medium text-charcoal/60">{badge.desc}</p>
+      </div>
+    </div>
+  )
+}
+
 export default function TrustBadges({ variant = 'row', className }: TrustBadgesProps) {
+  const marqueeRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (variant !== 'row') return
+    const el = marqueeRef.current
+    if (!el) return
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        el.classList.toggle('is-paused', !entry.isIntersecting)
+      },
+      { rootMargin: '100px' },
+    )
+    observer.observe(el)
+    return () => observer.disconnect()
+  }, [variant])
+
   if (variant === 'row') {
     return (
-      <div className={cn('w-full overflow-hidden bg-white py-6 border-y border-sage/20 relative', className)} dir="rtl">
-        {/* Fading edges for premium look */}
-        <div className="absolute top-0 bottom-0 right-0 w-16 bg-gradient-to-l from-white to-transparent z-10" />
-        <div className="absolute top-0 bottom-0 left-0 w-16 bg-gradient-to-r from-white to-transparent z-10" />
-        
-        {/* Marquee Container */}
-        <div className="flex w-max animate-marquee-rtl items-center">
-          {/* We duplicate the items 2 times to ensure a seamless infinite loop with 50% translation */}
+      <div
+        className={cn(
+          'relative w-full overflow-hidden border-y border-sage/20 bg-white py-6',
+          className,
+        )}
+        dir="rtl"
+      >
+        <div className="pointer-events-none absolute bottom-0 right-0 top-0 z-10 w-16 bg-gradient-to-l from-white to-transparent" />
+        <div className="pointer-events-none absolute bottom-0 left-0 top-0 z-10 w-16 bg-gradient-to-r from-white to-transparent" />
+
+        <div ref={marqueeRef} className="animate-marquee-rtl is-paused flex w-max items-center">
           {[...Array(2)].map((_, i) => (
-            <div key={i} className="flex gap-12 px-6 items-center">
+            <div key={i} className="flex items-center gap-12 px-6">
               {BADGES.map((badge, j) => (
-                <div key={`${i}-${j}`} className="flex items-center gap-3 whitespace-nowrap group">
-                  <div className={cn('flex shrink-0 items-center justify-center rounded-full h-12 w-12 transition-transform group-hover:scale-110', badge.bg)}>
-                    <badge.icon className={cn('h-6 w-6', badge.color)} />
-                  </div>
-                  <div className="text-right">
-                    <p className="font-extrabold text-charcoal text-base">
-                      {badge.title}
-                    </p>
-                    <p className="text-sm font-medium text-charcoal/60">
-                      {badge.desc}
-                    </p>
-                  </div>
-                  {/* Separator dot */}
+                <div key={`${i}-${j}`} className="flex items-center gap-3">
+                  <BadgeItem badge={badge} />
                   {j < BADGES.length - 1 && (
-                    <div className="w-1.5 h-1.5 rounded-full bg-sage/40 ml-6 mr-3" />
+                    <div className="ml-6 mr-3 h-1.5 w-1.5 rounded-full bg-sage/40" />
                   )}
                 </div>
               ))}
-              {/* Extra Separator dot at the end of each duplicate set */}
-              <div className="w-1.5 h-1.5 rounded-full bg-sage/40 ml-6 mr-3" />
+              <div className="ml-6 mr-3 h-1.5 w-1.5 rounded-full bg-sage/40" />
             </div>
           ))}
         </div>
@@ -94,28 +119,19 @@ export default function TrustBadges({ variant = 'row', className }: TrustBadgesP
 
   return (
     <div
-      className={cn(
-        'grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5',
-        className,
-      )}
+      className={cn('grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5', className)}
       dir="rtl"
     >
       {BADGES.map((badge) => (
         <div
           key={badge.title}
-          className={cn(
-            'flex items-center gap-2 rounded-xl px-3 py-2',
-            badge.bg,
-            'flex-col items-start p-4',
-          )}
+          className={cn('flex flex-col items-start gap-2 rounded-xl p-4', badge.bg)}
         >
-          <div className="flex shrink-0 items-center justify-center rounded-lg h-10 w-10 bg-white shadow-sm">
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-white shadow-sm">
             <badge.icon className={cn('h-4 w-4', badge.color)} />
           </div>
           <div>
-            <p className="font-semibold leading-tight text-sm">
-              {badge.title}
-            </p>
+            <p className="text-sm font-semibold leading-tight">{badge.title}</p>
             <p className="mt-0.5 text-xs text-charcoal/60">{badge.desc}</p>
           </div>
         </div>

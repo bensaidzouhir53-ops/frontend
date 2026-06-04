@@ -146,7 +146,7 @@ export default function OfferSelector({ product, className }: OfferSelectorProps
 
       <button
         onClick={handleAddToCart}
-        className="mt-1 flex w-full items-center justify-center gap-2 rounded-2xl bg-teal px-4 py-3.5 text-base font-extrabold text-white shadow-lg shadow-teal/30 transition-all hover:animate-none hover:bg-teal-dark active:scale-[0.98] sm:gap-3 sm:py-4 sm:text-lg md:py-5 animate-bounce"
+        className="mt-1 flex w-full items-center justify-center gap-2 rounded-2xl bg-teal px-4 py-3.5 text-base font-extrabold text-white shadow-lg shadow-teal/30 transition-all hover:bg-teal-dark active:scale-[0.98] sm:gap-3 sm:py-4 sm:text-lg md:py-5"
       >
         <ShoppingCart className="h-5 w-5 shrink-0 sm:h-6 sm:w-6" />
         <span className="leading-snug">أكمل الطلب الآن — الدفع عند الاستلام</span>

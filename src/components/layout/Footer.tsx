@@ -19,14 +19,13 @@ export default function Footer() {
   return (
     <footer className="relative overflow-hidden border-t-[6px] border-teal bg-charcoal pt-20 text-mist" dir="rtl">
       <div
-        className="absolute right-0 top-0 h-[800px] w-[800px] animate-pulse rounded-full bg-teal-dark/20 opacity-70 blur-[120px]"
-        style={{ animationDuration: '7s' }}
+        className="pointer-events-none absolute right-0 top-0 h-96 w-96 rounded-full bg-teal-dark/15"
+        aria-hidden
       />
       <div
-        className="absolute bottom-0 left-0 h-[600px] w-[600px] animate-pulse rounded-full bg-gold/10 opacity-40 blur-[100px]"
-        style={{ animationDuration: '10s' }}
+        className="pointer-events-none absolute bottom-0 left-0 h-80 w-80 rounded-full bg-gold/10"
+        aria-hidden
       />
-      <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-[0.05] mix-blend-overlay" />
 
       <div className="relative z-10 mx-auto max-w-7xl px-4 pb-10 sm:px-6 lg:px-8">
         <div className="mb-16 flex flex-col gap-16 md:flex-row md:items-start md:justify-between">

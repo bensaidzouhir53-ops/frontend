@@ -51,12 +51,12 @@ export default function LandingPage() {
       <SocialProofToast />
 
       <section className="relative overflow-hidden bg-gradient-to-b from-mist/80 to-ivory pb-16 pt-10 md:pt-16">
-        <div className="absolute top-0 right-0 h-[420px] w-[420px] -translate-y-1/2 translate-x-1/3 rounded-full bg-teal/5 blur-3xl" />
-        <div className="absolute bottom-0 left-0 h-[320px] w-[320px] translate-y-1/3 -translate-x-1/3 rounded-full bg-gold/5 blur-3xl" />
+        <div className="absolute top-0 right-0 h-[420px] w-[420px] -translate-y-1/2 translate-x-1/3 rounded-full bg-teal/5 opacity-60" />
+        <div className="absolute bottom-0 left-0 h-[320px] w-[320px] translate-y-1/3 -translate-x-1/3 rounded-full bg-gold/5 opacity-50" />
 
         <div className="relative mx-auto max-w-5xl px-4 text-center">
           <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-apothecary/15 bg-white px-4 py-2 shadow-sm">
-            <span className="h-2 w-2 animate-pulse rounded-full bg-teal" />
+            <span className="h-2 w-2 rounded-full bg-teal" />
             <span className="text-xs font-extrabold tracking-[0.18em] text-apothecary">
               متجر إلكتروني سعودي
             </span>
