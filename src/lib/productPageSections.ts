@@ -40,6 +40,17 @@ export interface DayProcessContent {
   phases: DayProcessPhase[]
 }
 
+export interface BeforeAfterContent {
+  title: string
+  subtitle: string
+  beforeImage: string
+  afterImage: string
+  beforeLabel: string
+  afterLabel: string
+  beforeAlt: string
+  afterAlt: string
+}
+
 export interface ProductPageSections {
   painAlert: string
   painTitle: string
@@ -63,6 +74,7 @@ export interface ProductPageSections {
   howToUseSubtitle: string
   comparisonRows: ComparisonRow[]
   dayProcess: DayProcessContent
+  beforeAfterComparison?: BeforeAfterContent
   showImageReviews: boolean
   reviewsKey: 'herbal-lung-spray' | 'molien-drops'
 }
@@ -310,6 +322,17 @@ const MOLIEN_DROPS_SECTIONS: ProductPageSections = {
     overlayDesc:
       'راح تحب شعور الحلق النظيف والصباح الخفيف — ودع البلغم المتحجر للأبد.',
     phases: MOLIEN_DAY_PROCESS_PHASES,
+  },
+  beforeAfterComparison: {
+    title: 'شوف الفرق بنفسك — قبل وبعد قطرة المولين',
+    subtitle:
+      'حرّك الخط في منتصف الصورة لليمين أو اليسار لمقارنة حالة الرئة والبلغم قبل الاستخدام وبعده.',
+    beforeImage: '/images/molien-before.png',
+    afterImage: '/images/molien-after.png',
+    beforeLabel: 'قبل',
+    afterLabel: 'بعد',
+    beforeAlt: 'حالة الرئة قبل استخدام قطرة المولين — بلغم متحجر وانسداد',
+    afterAlt: 'حالة الرئة بعد استخدام قطرة المولين — رئتين نظيفتين وتنفس مريح',
   },
   showImageReviews: false,
   reviewsKey: 'molien-drops',

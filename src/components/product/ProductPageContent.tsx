@@ -10,6 +10,7 @@ import type { Product } from '@/types'
 import { getDefaultOffer } from '@/lib/products'
 import OfferSelector from '@/components/product/OfferSelector'
 import ProductDayProcessSection from '@/components/product/ProductDayProcessSection'
+import ProductBeforeAfterSection from '@/components/product/ProductBeforeAfterSection'
 import HowToUseStep from '@/components/product/HowToUseStep'
 import ProductReviewsGrid from '@/components/product/ProductReviewsGrid'
 import TrustBadges from '@/components/shared/TrustBadges'
@@ -303,6 +304,11 @@ export default function ProductPageContent({
           </div>
         </div>
       </section>
+
+      {/* ── 4.25 Before / After Comparison ── */}
+      {sections.beforeAfterComparison && (
+        <ProductBeforeAfterSection content={sections.beforeAfterComparison} />
+      )}
 
       {/* ── 4.5 Ingredients Section ── */}
       {product.detailedIngredients && product.detailedIngredients.length > 0 && (
