@@ -59,6 +59,8 @@ export interface ProductPageSections {
   ingredientsMainImage: string
   ingredientsMainImageAlt: string
   howToUseSteps: HowToUseStep[]
+  howToUseTitle: string
+  howToUseSubtitle: string
   comparisonRows: ComparisonRow[]
   dayProcess: DayProcessContent
   showImageReviews: boolean
@@ -208,6 +210,9 @@ const HERBAL_LUNG_SPRAY_SECTIONS: ProductPageSections = {
       image: '/images/howto-step-3-routine.png',
     },
   ],
+  howToUseTitle: '3 خطوات بسيطة لراحة تدوم',
+  howToUseSubtitle:
+    'روتين يومي سهل وسريع يضمن لك أفضل نتيجة لتنظيف الصدر وتوسيع الشعب الهوائية.',
   comparisonRows: [
     { feature: 'المكونات', us: 'خلاصة أعشاب طبيعية 100%', them: 'مركبات كيميائية ومواد مجهولة' },
     { feature: 'الترخيص والأمان', us: 'مطابق لمواصفات الغذاء والدواء (SFDA)', them: 'غالباً مصادر غير معتمدة' },
@@ -276,23 +281,20 @@ const MOLIEN_DROPS_SECTIONS: ProductPageSections = {
   howToUseSteps: [
     {
       step: 1,
-      title: 'رج الزجاجة جيداً',
-      desc: 'قبل كل استخدام، رج الزجاجة عشان تتجانس مستخلصات المولين العشبية.',
-      image: '/images/howto-step-1-shake.png',
+      title: 'تحت اللسان مباشرة',
+      desc: 'ضع من 15 إلى 20 قطرة تحت اللسان واتركها تمتص — الطريقة الأسرع لامتصاص مستخلصات المولين.',
+      image: '/images/molien-howto-under-tongue.svg',
     },
     {
       step: 2,
-      title: '15-20 قطرة يومياً',
-      desc: 'ضع من 15 إلى 20 قطرة تحت اللسان أو في كوب ماء دافئ، واتركها تمتص.',
-      image: '/images/howto-step-2-spray.png',
-    },
-    {
-      step: 3,
-      title: 'مرتين يومياً',
-      desc: 'استخدمها صباحاً لإذابة البلغم الصباحي، ومساءً قبل النوم لحلق مريح ونوم هادئ.',
-      image: '/images/howto-step-3-routine.png',
+      title: 'مع كوب ماء دافئ',
+      desc: 'أضف من 15 إلى 20 قطرة في كوب ماء دافئ واشربها — مناسبة إذا تفضل طريقة أخف على الحلق.',
+      image: '/images/molien-howto-glass-water.svg',
     },
   ],
+  howToUseTitle: 'طريقتين سهلتين للاستخدام',
+  howToUseSubtitle:
+    'استخدم قطرة المولين تحت اللسان أو مع كوب ماء دافئ — مرتين يومياً صباحاً ومساءً لإذابة البلغم المتحجر.',
   comparisonRows: [
     { feature: 'المكونات', us: 'مستخلص مولين عشبي طبيعي 100%', them: 'مركبات كيميائية ومواد مجهولة' },
     { feature: 'الترخيص والأمان', us: 'مطابق لمواصفات الغذاء والدواء (SFDA)', them: 'غالباً مصادر غير معتمدة' },

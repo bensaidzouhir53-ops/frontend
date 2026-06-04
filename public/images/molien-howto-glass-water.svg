@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" fill="none">
+  <rect width="800" height="600" fill="#EEF7F4"/>
+  <circle cx="640" cy="130" r="95" fill="#0F766E" opacity="0.08"/>
+  <circle cx="120" cy="470" r="105" fill="#D7A85C" opacity="0.12"/>
+  <rect x="80" y="70" width="640" height="460" rx="36" fill="#fff" stroke="#A7C4B5" stroke-width="3"/>
+  <path d="M310 420V220c0-18 14-32 32-32h116c18 0 32 14 32 32v200" stroke="#0B4F4A" stroke-width="10" stroke-linecap="round"/>
+  <path d="M280 420h240" stroke="#0B4F4A" stroke-width="10" stroke-linecap="round"/>
+  <path d="M350 420V250c0-10 8-18 18-18h64c10 0 18 8 18 18v170" fill="#B8E4DE" opacity="0.55"/>
+  <rect x="520" y="170" width="44" height="110" rx="12" fill="#0B4F4A"/>
+  <rect x="532" y="150" width="20" height="26" rx="8" fill="#D7A85C"/>
+  <circle cx="542" cy="205" r="4" fill="#D7A85C"/>
+  <circle cx="542" cy="228" r="4" fill="#D7A85C"/>
+  <circle cx="542" cy="251" r="4" fill="#D7A85C"/>
+  <path d="M500 220c-24 18-24 46 0 64" stroke="#0F766E" stroke-width="4" stroke-linecap="round" stroke-dasharray="6 8"/>
+  <path d="M360 300h80M360 340h80" stroke="#0F766E" stroke-width="3" opacity="0.25"/>
+  <text x="400" y="500" text-anchor="middle" font-family="Arial,sans-serif" font-size="28" font-weight="700" fill="#0B4F4A">#H AJ CH( E'! /'A&</text>
+</svg>

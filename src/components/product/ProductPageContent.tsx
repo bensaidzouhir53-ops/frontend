@@ -378,14 +378,18 @@ export default function ProductPageContent({
                 طريقة الاستخدام
               </div>
               <h2 className="text-3xl md:text-4xl font-extrabold text-charcoal mb-4 tracking-tight">
-                3 خطوات بسيطة لراحة تدوم
+                {sections.howToUseTitle}
               </h2>
               <p className="text-lg text-charcoal/70 font-medium max-w-2xl mx-auto">
-                روتين يومي سهل وسريع يضمن لك أفضل نتيجة لتنظيف الصدر وتوسيع الشعب الهوائية.
+                {sections.howToUseSubtitle}
               </p>
             </div>
 
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-3 md:gap-8">
+            <div
+              className={`grid grid-cols-1 gap-6 md:gap-8 ${
+                sections.howToUseSteps.length === 2 ? 'md:grid-cols-2 max-w-4xl mx-auto' : 'md:grid-cols-3'
+              }`}
+            >
               {sections.howToUseSteps.map((item) => (
                 <HowToUseStep key={item.step} {...item} />
               ))}

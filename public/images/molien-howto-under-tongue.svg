@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" fill="none">
+  <rect width="800" height="600" fill="#EEF7F4"/>
+  <circle cx="620" cy="120" r="90" fill="#0F766E" opacity="0.08"/>
+  <circle cx="140" cy="480" r="110" fill="#D7A85C" opacity="0.12"/>
+  <rect x="80" y="70" width="640" height="460" rx="36" fill="#fff" stroke="#A7C4B5" stroke-width="3"/>
+  <ellipse cx="400" cy="300" rx="170" ry="130" fill="#FAF7F0" stroke="#0F766E" stroke-width="4"/>
+  <path d="M290 250c20-40 60-60 110-60s90 20 110 60" stroke="#0B4F4A" stroke-width="8" stroke-linecap="round"/>
+  <circle cx="400" cy="310" r="28" fill="#0F766E"/>
+  <path d="M400 338v36" stroke="#0F766E" stroke-width="6" stroke-linecap="round"/>
+  <path d="M382 352c8 10 28 10 36 0" stroke="#0F766E" stroke-width="5" stroke-linecap="round"/>
+  <rect x="500" y="150" width="48" height="120" rx="12" fill="#0B4F4A"/>
+  <rect x="512" y="130" width="24" height="28" rx="8" fill="#D7A85C"/>
+  <circle cx="524" cy="190" r="5" fill="#D7A85C"/>
+  <circle cx="524" cy="215" r="5" fill="#D7A85C"/>
+  <circle cx="524" cy="240" r="5" fill="#D7A85C"/>
+  <path d="M470 205c18-8 36-8 54 0" stroke="#0F766E" stroke-width="4" stroke-linecap="round" stroke-dasharray="6 8"/>
+  <text x="400" y="500" text-anchor="middle" font-family="Arial,sans-serif" font-size="28" font-weight="700" fill="#0B4F4A">15-20 B71) *-* 'DD3'F</text>
+</svg>
