@@ -294,8 +294,8 @@ const MOLIEN_DROPS_SECTIONS: ProductPageSections = {
   ],
   mechanismImage: '/images/molien-mechanism.png',
   mechanismImageAlt: 'امتصاص قطرة المولين وتأثيرها على الرئة والجهاز الهضمي',
-  ingredientsMainImage: '/images/mullein-lung-drops.jpg',
-  ingredientsMainImageAlt: 'مكونات قطرة المولين العشبية الطبيعية',
+  ingredientsMainImage: '/images/molien-ingredients.png',
+  ingredientsMainImageAlt: 'مكونات قطرة المولين العشبية — أوراق المولين والأعشاب الطبيعية',
   howToUseSteps: [
     {
       step: 1,
