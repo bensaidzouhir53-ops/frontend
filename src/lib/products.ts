@@ -99,17 +99,17 @@ export const PRODUCTS: Product[] = [
       {
         name: 'مستخلص أوراق المولين (1400 ملغ)',
         desc: 'عشبة طبيعية معروفة كمذيب للبلغم — تليّن المخاط المتحجر في الحلق والصدر وتسهّل طرده، وتغلّف بطانة الممرات التنفسية لتخفيف التهيج والكحة.',
-        image: '/images/ingredient-eucalyptus.png',
+        image: '/images/ingredient-mullein-leaves.png',
       },
       {
         name: 'مستخلص جذور الخطمي (100 ملغ)',
         desc: 'غني بالمادة الهلامية اللي تغلّف الحلق والمعدة بطبقة مريحة — يهدّي التهيج في الحلق ويريّح الكحة الجافة والبلغم الناشب بدون ما يسبب جفاف.',
-        image: '/images/ingredient-hydrastis.png',
+        image: '/images/ingredient-marshmallow-root.png',
       },
       {
         name: 'مستخلص البريلا (80 ملغ)',
         desc: 'يخفّف الالتهاب في الممرات التنفسية ويقلّل إفراز المخاط الزائد — يساعد على فتح التنفس ويحمي الرئة من تهيج الغبار والحساسية.',
-        image: '/images/ingredient-gongjing-grass.png',
+        image: '/images/ingredient-perilla.png',
       },
       {
         name: 'مستخلص الآذريون (60 ملغ)',
