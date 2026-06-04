@@ -3,7 +3,7 @@ import Link from 'next/link'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'من نحن — صيدلية التنفس الطبيعية',
+  title: 'من نحن — بيت الأعشاب',
   description:
     'نسمة هي أول صيدلية سعودية متخصصة في العناية بالجهاز التنفسي بمنتجات عشبية بمعايير صيدلانية. تعرّف على قصتنا، معاييرنا، وفلسفتنا في صناعة منتجات SFDA-aligned.',
 }
@@ -57,7 +57,7 @@ export default function AboutPage() {
           <div className="absolute bottom-0 left-20 w-48 h-48 rounded-full bg-gold" />
         </div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative text-right">
-          <p className="text-gold font-bold text-sm tracking-[0.3em] mb-4">صيدلية التنفس الطبيعية</p>
+          <p className="text-gold font-bold text-sm tracking-[0.3em] mb-4">بيت الأعشاب</p>
           <h1 className="text-4xl md:text-6xl font-extrabold text-white mb-6">نسمة — رفيق رئتك في السعودية</h1>
           <p className="text-white/85 text-xl max-w-2xl leading-relaxed">
             أول دار سعودية متخصصة فقط في العناية بالجهاز التنفسي. بخاخات وقطرات عشبية بمعايير صيدلانية، مصممة لتحدي الغبار، المكيفات، والشيشة في حياتك اليومية.

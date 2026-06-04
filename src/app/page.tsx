@@ -38,7 +38,7 @@ export default function HomePage() {
       
       {/* ── Top Announcement Bar ── */}
       <div className="bg-apothecary text-white text-center py-2 px-4 text-xs font-bold tracking-wide">
-        <span className="text-gold">⊕</span> صيدلية التنفس الطبيعية في السعودية — مطابق لمعايير SFDA · الدفع عند الاستلام · توصيل لكل المناطق
+        <span className="text-gold">⊕</span> بيت الأعشاب في السعودية — مطابق لمعايير SFDA · الدفع عند الاستلام · توصيل لكل المناطق
       </div>
 
       {/* ── 1. Hero Section (Emotion & Conversion) ── */}
@@ -53,7 +53,7 @@ export default function HomePage() {
           <div className="w-full md:w-1/2 text-center md:text-right z-10">
             <div className="mb-6 inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 border border-apothecary/15 shadow-sm">
               <span className="flex h-2 w-2 rounded-full bg-apothecary" />
-              <span className="text-xs font-extrabold text-apothecary tracking-[0.18em]">صيدلية التنفس الطبيعية · مطابق SFDA</span>
+              <span className="text-xs font-extrabold text-apothecary tracking-[0.18em]">بيت الأعشاب · مطابق SFDA</span>
             </div>
 
             <h1 className="mb-6 text-4xl md:text-5xl lg:text-6xl font-extrabold leading-[1.2] text-charcoal tracking-tight">

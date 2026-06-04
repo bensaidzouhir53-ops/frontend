@@ -39,7 +39,7 @@ export default function Footer() {
                   نسمة
                 </span>
                 <span className="mt-2 text-xs font-bold tracking-[0.25em] text-gold opacity-90 drop-shadow-sm">
-                  {isSafePage ? 'متجر إلكتروني سعودي' : 'صيدلية التنفس الطبيعية'}
+                  {isSafePage ? 'متجر إلكتروني سعودي' : 'بيت الأعشاب'}
                 </span>
               </div>
             </div>

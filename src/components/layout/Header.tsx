@@ -37,7 +37,7 @@ export default function Header() {
               نسمة
             </span>
             <span className="text-[10px] font-bold tracking-widest text-teal/80 mt-0.5">
-              {isSafePage ? 'متجر إلكتروني سعودي' : 'صيدلية التنفس الطبيعية'}
+              {isSafePage ? 'متجر إلكتروني سعودي' : 'بيت الأعشاب'}
             </span>
           </div>
         </Link>
