@@ -448,7 +448,7 @@ const MOLIEN_DROPS_SECTIONS: ProductPageSections = {
     subtitle:
       'عملاء من الرياض وجدة والدمام وغيرها جربوا قطرة المولين وارتاحوا من الكتمة والغثيان. لا تأخذ كلامنا — اسمع منهم بلهجتهم.',
   },
-  showImageReviews: true,
+  showImageReviews: false,
   reviewsKey: 'molien-drops',
 }
 
