@@ -69,6 +69,23 @@ export interface TrustOriginContent {
   points: TrustOriginPoint[]
 }
 
+export interface StatsSectionStat {
+  value: string
+  suffix?: string
+  desc: string
+}
+
+export interface StatsSectionContent {
+  badge: string
+  title: string
+  subtitle?: string
+  stats: StatsSectionStat[]
+  image: string
+  imageAlt: string
+  imageCaption?: string
+  footnote?: string
+}
+
 export interface ProductPageSections {
   painAlert: string
   painTitle: string
@@ -95,6 +112,7 @@ export interface ProductPageSections {
   comparisonRows: ComparisonRow[]
   dayProcess: DayProcessContent
   beforeAfterComparison?: BeforeAfterContent
+  statsSection?: StatsSectionContent
   trustOrigin?: TrustOriginContent
   showImageReviews: boolean
   reviewsKey: 'herbal-lung-spray' | 'molien-drops'
@@ -313,6 +331,33 @@ const MOLIEN_DROPS_SECTIONS: ProductPageSections = {
   ],
   mechanismImage: '/images/molien-mechanism.png',
   mechanismImageAlt: 'امتصاص قطرة المولين وتأثيرها على الرئة والجهاز الهضمي',
+  statsSection: {
+    badge: 'نتائج حقيقية من عملائنا',
+    title: 'وقف العذاب • وابدأ تتنفس براحة',
+    subtitle:
+      'آلاف السعوديين جربوا قطرة المولين — وهذي أبرز النتائج اللي لاحظوها مع الاستمرار، مو كلام فاضي.',
+    stats: [
+      {
+        value: '93',
+        suffix: '%',
+        desc: 'من عملائنا حسّوا حلق أخف وبلغم أقل من أول 3 أيام — الصباح صار أسهل بكثير.',
+      },
+      {
+        value: '90',
+        suffix: '%',
+        desc: 'لاحظوا إن البلغم المتحجر يذوب ويطلع بسهولة خلال أسبوع — بدون كحة تفضحك.',
+      },
+      {
+        value: '87',
+        suffix: '%',
+        desc: 'مع الاستمرار شهر كامل حسّوا صدر أنظف وتنفس أعمق — وكأنهم رجعوا يتنفسون من جديد.',
+      },
+    ],
+    image: '/images/molien-breathe-stats.png',
+    imageAlt: 'امرأة سعودية تشعر بالراحة بعد استخدام قطرة المولين العشبية',
+    imageCaption: '«أخيراً صرت أصحى بدون بلغم ناشب — قطرة المولين غيّرت صباحي»',
+    footnote: '* بناءً على تقييمات واستبيانات عملاء نسمة — النتائج تختلف حسب الالتزام بالروتين اليومي.',
+  },
   ingredientsMainImage: '/images/molien-ingredients.png',
   ingredientsMainImageAlt: 'مكونات قطرة المولين العشبية — أوراق المولين والأعشاب الطبيعية',
   howToUseSteps: [

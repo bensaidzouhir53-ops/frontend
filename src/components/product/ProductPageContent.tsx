@@ -11,6 +11,7 @@ import { getDefaultOffer } from '@/lib/products'
 import OfferSelector from '@/components/product/OfferSelector'
 import ProductDayProcessSection from '@/components/product/ProductDayProcessSection'
 import ProductBeforeAfterSection from '@/components/product/ProductBeforeAfterSection'
+import ProductStatsSection from '@/components/product/ProductStatsSection'
 import ProductTrustOriginSection from '@/components/product/ProductTrustOriginSection'
 import HowToUseStep from '@/components/product/HowToUseStep'
 import ProductReviewsGrid from '@/components/product/ProductReviewsGrid'
@@ -305,6 +306,11 @@ export default function ProductPageContent({
           </div>
         </div>
       </section>
+
+      {/* ── 4.1 Results / Stats (molien) ── */}
+      {sections.statsSection && (
+        <ProductStatsSection content={sections.statsSection} />
+      )}
 
       {/* ── 4.25 Before / After Comparison ── */}
       {sections.beforeAfterComparison && (
