@@ -3,7 +3,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { Wind, Star, ShieldCheck, HeartPulse, CheckCircle2, ArrowLeft, PackageCheck } from 'lucide-react'
 import { PRODUCTS } from '@/lib/products'
-import ProductCard from '@/components/product/ProductCard'
+import HomeProductCard from '@/components/home/HomeProductCard'
 import PainPointCard from '@/components/home/PainPointCard'
 import TrustBadges from '@/components/shared/TrustBadges'
 import FAQAccordion from '@/components/shared/FAQAccordion'
@@ -151,9 +151,9 @@ export default function HomePage() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
+          <div className="mx-auto grid max-w-5xl grid-cols-1 gap-8 md:gap-10">
             {PRODUCTS.map((product) => (
-              <ProductCard key={product.slug} product={product} />
+              <HomeProductCard key={product.slug} product={product} />
             ))}
           </div>
         </div>

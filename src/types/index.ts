@@ -14,6 +14,8 @@ export interface Product {
   sku: string
   nameAr: string
   nameEn: string
+  /** Shorter title for cards and grids (falls back to nameAr) */
+  cardTitleAr?: string
   shortDescAr: string
   descAr: string
   image: string
