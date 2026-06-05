@@ -58,6 +58,7 @@ declare global {
       params?: Record<string, unknown>,
     ) => void
     TiktokAnalyticsObject?: string
+    __nasamaMetaReady?: boolean
   }
 }
 
@@ -73,6 +74,8 @@ const _ttqQueue: TtqEntry[] = []
 const _snapQueue: SnapEntry[] = []
 
 let _metaReady = false
+let _metaPageViewTracked = false
+const _metaInitializedIds = new Set<string>()
 let _ttqReady = false
 let _snapReady = false
 
@@ -211,53 +214,83 @@ export function captureAttribution(): AttributionData {
 // Pixel loaders
 // ---------------------------------------------------------------------------
 
+function isValidPixelId(value: string | null | undefined): value is string {
+  if (!value) return false
+  const id = value.trim()
+  if (!id) return false
+  const lower = id.toLowerCase()
+  if (lower === 'your_id' || lower === 'your_token' || lower.startsWith('your_')) {
+    return false
+  }
+  return /^[A-Za-z0-9_-]+$/.test(id)
+}
+
 function flushMetaQueue(): void {
   _metaQueue.forEach(([action, event, params]) => window.fbq?.(action, event, params))
   _metaQueue.length = 0
 }
 
-function loadMetaPixel(pixelId: string): void {
-  if (!pixelId || typeof window === 'undefined') return
-  if (_metaReady) {
-    flushMetaQueue()
+function ensureMetaPixelScript(onReady: () => void): void {
+  if (typeof window === 'undefined') return
+
+  if (window.fbq) {
+    onReady()
     return
   }
-  if (window.fbq) {
+
+  const fbq = function (...args: unknown[]) {
+    if (fbq.callMethod) {
+      fbq.callMethod(...args)
+    } else {
+      fbq.queue!.push(args)
+    }
+  } as NonNullable<Window['fbq']>
+
+  fbq.push = fbq
+  fbq.loaded = true
+  fbq.version = '2.0'
+  fbq.queue = []
+  window.fbq = fbq
+  window._fbq = fbq
+
+  const script = document.createElement('script')
+  script.async = true
+  script.src = 'https://connect.facebook.net/en_US/fbevents.js'
+  script.onload = onReady
+  document.head.appendChild(script)
+}
+
+function loadMetaPixels(pixelIds: string[]): void {
+  const ids = pixelIds.filter((id) => isValidPixelId(id))
+  if (!ids.length || typeof window === 'undefined') return
+
+  const initAll = () => {
+    for (const id of ids) {
+      if (!_metaInitializedIds.has(id)) {
+        window.fbq?.('init', id)
+        _metaInitializedIds.add(id)
+      }
+    }
+    if (!_metaPageViewTracked && !window.__nasamaMetaReady) {
+      window.fbq?.('track', 'PageView')
+      _metaPageViewTracked = true
+    } else if (window.__nasamaMetaReady) {
+      _metaPageViewTracked = true
+    }
     _metaReady = true
     flushMetaQueue()
+  }
+
+  if (window.fbq) {
+    initAll()
     return
   }
 
-  if (!window.fbq) {
-    const fbq = function (...args: unknown[]) {
-      if (fbq.callMethod) {
-        fbq.callMethod(...args)
-      } else {
-        fbq.queue!.push(args)
-      }
-    } as NonNullable<Window['fbq']>
+  ensureMetaPixelScript(initAll)
+}
 
-    fbq.push = fbq
-    fbq.loaded = true
-    fbq.version = '2.0'
-    fbq.queue = []
-    window.fbq = fbq
-    window._fbq = fbq
-
-    const script = document.createElement('script')
-    script.async = true
-    script.src = 'https://connect.facebook.net/en_US/fbevents.js'
-    script.onload = () => {
-      _metaReady = true
-      flushMetaQueue()
-    }
-    document.head.appendChild(script)
-  }
-
-  window.fbq('init', pixelId)
-  window.fbq('track', 'PageView')
-  _metaReady = true
-  flushMetaQueue()
+function loadMetaPixel(pixelId: string): void {
+  loadMetaPixels([pixelId])
 }
 
 function loadTikTokPixel(pixelId: string): void {
@@ -346,53 +379,68 @@ function loadSnapPixel(pixelId: string): void {
 interface PixelConfig {
   enabled: boolean
   meta_pixel_id: string
+  meta_pixel_ids: string[]
   tiktok_pixel_id: string
   snap_pixel_id: string
+}
+
+function collectMetaIdsFromEnv(): string[] {
+  const ids: string[] = []
+  const add = (value: string | undefined) => {
+    if (isValidPixelId(value)) {
+      const trimmed = value.trim()
+      if (!ids.includes(trimmed)) ids.push(trimmed)
+    }
+  }
+  add(process.env.NEXT_PUBLIC_META_PIXEL_ID)
+  add(process.env.NEXT_PUBLIC_META_PIXEL_ID_2)
+  return ids
 }
 
 function configFromEnv(): PixelConfig | null {
   if (process.env.NEXT_PUBLIC_ENABLE_PIXELS !== 'true') return null
 
-  const meta = process.env.NEXT_PUBLIC_META_PIXEL_ID?.trim() ?? ''
+  const metaIds = collectMetaIdsFromEnv()
   const tiktok = process.env.NEXT_PUBLIC_TIKTOK_PIXEL_ID?.trim() ?? ''
   const snap = process.env.NEXT_PUBLIC_SNAP_PIXEL_ID?.trim() ?? ''
-  if (!meta && !tiktok && !snap) return null
+  if (!metaIds.length && !tiktok && !snap) return null
 
   return {
     enabled: true,
-    meta_pixel_id: meta,
+    meta_pixel_id: metaIds[0] ?? '',
+    meta_pixel_ids: metaIds,
     tiktok_pixel_id: tiktok,
     snap_pixel_id: snap,
   }
 }
 
-function isValidPixelId(value: string | null | undefined): string | null {
-  if (!value) return null
-  const id = value.trim()
-  if (!id) return null
-  const lower = id.toLowerCase()
-  if (lower === 'your_id' || lower === 'your_token' || lower.startsWith('your_')) {
-    return null
-  }
-  return /^[A-Za-z0-9_-]+$/.test(id) ? id : null
-}
-
 function parsePixelConfigResponse(data: {
   enabled?: boolean
   meta_pixel_id?: string | null
+  meta_pixel_ids?: string[] | null
   tiktok_pixel_id?: string | null
   snap_pixel_id?: string | null
 }): PixelConfig | null {
   if (!data.enabled) return null
 
-  const meta = isValidPixelId(data.meta_pixel_id) ?? ''
-  const tiktok = isValidPixelId(data.tiktok_pixel_id) ?? ''
-  const snap = isValidPixelId(data.snap_pixel_id) ?? ''
-  if (!meta && !tiktok && !snap) return null
+  const metaIds: string[] = []
+  const addMeta = (value: string | null | undefined) => {
+    if (isValidPixelId(value)) {
+      const trimmed = value.trim()
+      if (!metaIds.includes(trimmed)) metaIds.push(trimmed)
+    }
+  }
+  addMeta(data.meta_pixel_id)
+  for (const id of data.meta_pixel_ids ?? []) addMeta(id)
+
+  const tiktok = isValidPixelId(data.tiktok_pixel_id) ? data.tiktok_pixel_id!.trim() : ''
+  const snap = isValidPixelId(data.snap_pixel_id) ? data.snap_pixel_id!.trim() : ''
+  if (!metaIds.length && !tiktok && !snap) return null
 
   return {
     enabled: true,
-    meta_pixel_id: meta,
+    meta_pixel_id: metaIds[0] ?? '',
+    meta_pixel_ids: metaIds,
     tiktok_pixel_id: tiktok,
     snap_pixel_id: snap,
   }
@@ -425,7 +473,13 @@ async function fetchPixelConfig(): Promise<PixelConfig | null> {
 }
 
 function applyPixelConfig(config: PixelConfig): void {
-  if (config.meta_pixel_id) loadMetaPixel(config.meta_pixel_id)
+  const metaIds =
+    config.meta_pixel_ids.length > 0
+      ? config.meta_pixel_ids
+      : config.meta_pixel_id
+        ? [config.meta_pixel_id]
+        : []
+  if (metaIds.length) loadMetaPixels(metaIds)
   if (config.tiktok_pixel_id) loadTikTokPixel(config.tiktok_pixel_id)
   if (config.snap_pixel_id) loadSnapPixel(config.snap_pixel_id)
 }
@@ -433,6 +487,7 @@ function applyPixelConfig(config: PixelConfig): void {
 export interface ServerPixelConfigInput {
   enabled: boolean
   meta_pixel_id: string | null
+  meta_pixel_ids?: string[]
   tiktok_pixel_id: string | null
   snap_pixel_id: string | null
 }
@@ -441,28 +496,21 @@ export interface ServerPixelConfigInput {
 export function initPixelsFromServerConfig(config: ServerPixelConfigInput): void {
   if (typeof window === 'undefined' || !config.enabled) return
 
-  const meta = isValidPixelId(config.meta_pixel_id)
+  const metaIds =
+    config.meta_pixel_ids && config.meta_pixel_ids.length > 0
+      ? config.meta_pixel_ids.filter((id) => isValidPixelId(id))
+      : isValidPixelId(config.meta_pixel_id)
+        ? [config.meta_pixel_id.trim()]
+        : []
   const tiktok = isValidPixelId(config.tiktok_pixel_id)
-  const snap = isValidPixelId(config.snap_pixel_id)
-
-  if (meta && window.fbq) {
-    _metaReady = true
-    flushMetaQueue()
-  }
-  if (tiktok && window.ttq?.track) {
-    _ttqReady = true
-    _ttqQueue.forEach(([event, params]) => window.ttq?.track?.(event, params))
-    _ttqQueue.length = 0
-  }
-  if (snap && window.snaptr) {
-    _snapReady = true
-    _snapQueue.forEach(([action, event, params]) => window.snaptr?.(action, event, params))
-    _snapQueue.length = 0
-  }
+    ? config.tiktok_pixel_id.trim()
+    : null
+  const snap = isValidPixelId(config.snap_pixel_id) ? config.snap_pixel_id.trim() : null
 
   applyPixelConfig({
     enabled: true,
-    meta_pixel_id: meta ?? '',
+    meta_pixel_id: metaIds[0] ?? '',
+    meta_pixel_ids: metaIds,
     tiktok_pixel_id: tiktok ?? '',
     snap_pixel_id: snap ?? '',
   })

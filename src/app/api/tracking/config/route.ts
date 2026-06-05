@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import { getBackendCandidates } from '@/lib/orders.server'
-import { normalizePixelConfig } from '@/lib/pixel-config.server'
+import { mergePixelConfigs } from '@/lib/pixel-config.server'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
@@ -8,6 +8,7 @@ export const dynamic = 'force-dynamic'
 export interface PublicTrackingConfig {
   enabled: boolean
   meta_pixel_id?: string | null
+  meta_pixel_ids?: string[] | null
   tiktok_pixel_id?: string | null
   snap_pixel_id?: string | null
 }
@@ -21,9 +22,14 @@ export async function GET() {
       })
 
       if (response.ok) {
-        const body = normalizePixelConfig(
-          (await response.json()) as PublicTrackingConfig,
-        )
+        const backendRaw = (await response.json()) as PublicTrackingConfig
+        const body = mergePixelConfigs(backendRaw, {
+          enabled: process.env.ENABLE_WEB_PIXELS !== 'false',
+          meta_pixel_ids: [
+            process.env.NEXT_PUBLIC_META_PIXEL_ID,
+            process.env.NEXT_PUBLIC_META_PIXEL_ID_2,
+          ].filter(Boolean) as string[],
+        })
         return NextResponse.json(body, {
           headers: { 'Cache-Control': 'no-store' },
         })
@@ -34,7 +40,7 @@ export async function GET() {
   }
 
   return NextResponse.json(
-    { enabled: false, meta_pixel_id: null, tiktok_pixel_id: null, snap_pixel_id: null },
+    { enabled: false, meta_pixel_id: null, meta_pixel_ids: [], tiktok_pixel_id: null, snap_pixel_id: null },
     { status: 200, headers: { 'Cache-Control': 'no-store' } },
   )
 }

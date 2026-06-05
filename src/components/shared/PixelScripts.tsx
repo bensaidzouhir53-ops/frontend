@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element -- Meta noscript pixel requires a raw 1x1 img */
 import Script from 'next/script'
-import type { ServerPixelConfig } from '@/lib/pixel-config.server'
+import { getMetaPixelIds, type ServerPixelConfig } from '@/lib/pixel-config.server'
 
 interface PixelScriptsProps {
   config: ServerPixelConfig
@@ -10,35 +10,48 @@ interface PixelScriptsProps {
 export default function PixelScripts({ config }: PixelScriptsProps) {
   if (!config.enabled) return null
 
-  const { meta_pixel_id: metaId, tiktok_pixel_id: tiktokId, snap_pixel_id: snapId } =
-    config
+  const metaIds = getMetaPixelIds(config)
+  const { tiktok_pixel_id: tiktokId, snap_pixel_id: snapId } = config
+
+  const metaIdsJson = JSON.stringify(metaIds)
 
   return (
     <>
-      {metaId ? (
+      {metaIds.length > 0 ? (
         <>
-          <Script id="meta-pixel-base" strategy="lazyOnload">
+          <Script id="meta-pixel-base" strategy="afterInteractive">
             {`
-              !function(f,b,e,v,n,t,s)
-              {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-              n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-              if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-              n.queue=[];t=b.createElement(e);t.async=!0;
-              t.src=v;s=b.getElementsByTagName(e)[0];
-              s.parentNode.insertBefore(t,s)}(window,document,'script',
-              'https://connect.facebook.net/en_US/fbevents.js');
-              fbq('init', '${metaId}');
-              fbq('track', 'PageView');
+              (function(){
+                var pixelIds = ${metaIdsJson};
+                !function(f,b,e,v,n,t,s){
+                  if(f.fbq)return;
+                  n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+                  if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+                  n.queue=[];t=b.createElement(e);t.async=!0;
+                  t.src=v;s=b.getElementsByTagName(e)[0];
+                  s.parentNode.insertBefore(t,s);
+                }(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
+                function initAllMetaPixels(){
+                  if(!window.fbq){setTimeout(initAllMetaPixels,50);return;}
+                  for(var i=0;i<pixelIds.length;i++){window.fbq('init',pixelIds[i]);}
+                  window.fbq('track','PageView');
+                  window.__nasamaMetaReady = true;
+                }
+                initAllMetaPixels();
+              })();
             `}
           </Script>
           <noscript>
-            <img
-              height="1"
-              width="1"
-              style={{ display: 'none' }}
-              src={`https://www.facebook.com/tr?id=${metaId}&ev=PageView&noscript=1`}
-              alt=""
-            />
+            {metaIds.map((metaId) => (
+              <img
+                key={metaId}
+                height="1"
+                width="1"
+                style={{ display: 'none' }}
+                src={`https://www.facebook.com/tr?id=${metaId}&ev=PageView&noscript=1`}
+                alt=""
+              />
+            ))}
           </noscript>
         </>
       ) : null}
