@@ -307,7 +307,7 @@ const HERBAL_LUNG_SPRAY_SECTIONS: ProductPageSections = {
     { feature: 'الضمان', us: 'ضمان ذهبي 30 يوم (استرداد كامل)', them: 'مغامرة بفلوسك وصحتك بدون أي ضمان' },
   ],
   dayProcess: {
-    image: '/images/solution-lung-spray.png',
+    image: '/images/herbal-lung-spray-day-process.png',
     imageAlt: 'رجل يستخدم بخاخ نسمة العشبي لتنفس مريح',
     overlayTitle:
       'طوق النجاة لكل مدخن ولكل شخص انخنق من البلغم والكتمة',
