@@ -477,7 +477,47 @@ export default function ProductPageContent({
         </div>
       </section>
 
-      {/* ── 6. FAQ ── */}
+      {/* ── 6. SFDA & Quality Guarantee ── */}
+      <section className="py-16 bg-white border-y border-sage/20 overflow-hidden relative">
+        <div className="absolute right-0 top-0 w-64 h-64 bg-gold/10 rounded-full opacity-40 -translate-y-1/2 translate-x-1/2" />
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col md:flex-row gap-8 items-center bg-gradient-to-r from-teal-dark to-charcoal rounded-[2.5rem] p-8 md:p-12 shadow-2xl text-white relative z-10">
+            <div className="w-full md:w-2/3 text-right order-2 md:order-1">
+              <h2 className="text-3xl font-extrabold mb-4 text-gold">
+                أمانك خط أحمر: مطابق لمواصفات هيئة الغذاء والدواء (SFDA)
+              </h2>
+              <p className="text-white/80 text-lg leading-relaxed mb-6">
+                صحتك ما فيها مجازفة. جميع منتجات نسمة تمر باختبارات جودة صارمة لتكون مطابقة تماماً للمواصفات والمقاييس السعودية (SFDA). نحن نضمن لك منتجاً نقيّاً، فعّالاً، وخالياً من أي إضافات ضارة.
+              </p>
+              <div className="flex flex-wrap gap-4 justify-end">
+                <div className="flex items-center gap-2 bg-white/10 px-4 py-2 rounded-full border border-white/20">
+                  <ShieldCheck className="w-5 h-5 text-gold" />
+                  <span className="font-bold text-sm">مكونات معتمدة</span>
+                </div>
+                <div className="flex items-center gap-2 bg-white/10 px-4 py-2 rounded-full border border-white/20">
+                  <CheckCircle2 className="w-5 h-5 text-green-400" />
+                  <span className="font-bold text-sm">تغليف طبي آمن</span>
+                </div>
+              </div>
+            </div>
+            <div className="w-full md:w-1/3 flex justify-center order-1 md:order-2">
+              <div className="relative w-44 md:w-56 lg:w-64">
+                <div className="absolute inset-0 bg-gold/20 blur-2xl rounded-full scale-110" aria-hidden="true" />
+                <Image
+                  src="/images/sfda-approved.png"
+                  alt="معتمد من الهيئة العامة للغذاء والدواء SFDA"
+                  width={512}
+                  height={640}
+                  className="relative w-full h-auto object-contain drop-shadow-2xl"
+                  priority={false}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── 7. FAQ ── */}
       <section className="py-16 bg-white border-y border-sage/20">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
