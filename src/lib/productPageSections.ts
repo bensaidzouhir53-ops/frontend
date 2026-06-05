@@ -86,6 +86,11 @@ export interface StatsSectionContent {
   footnote?: string
 }
 
+export interface ImageReviewsSectionContent {
+  title: string
+  subtitle: string
+}
+
 export interface ProductPageSections {
   painAlert: string
   painTitle: string
@@ -114,6 +119,7 @@ export interface ProductPageSections {
   beforeAfterComparison?: BeforeAfterContent
   statsSection?: StatsSectionContent
   trustOrigin?: TrustOriginContent
+  imageReviewsSection?: ImageReviewsSectionContent
   showImageReviews: boolean
   reviewsKey: 'herbal-lung-spray' | 'molien-drops'
 }
@@ -435,6 +441,11 @@ const MOLIEN_DROPS_SECTIONS: ProductPageSections = {
         desc: 'نوصل لكل مناطق المملكة والدفع عند الاستلام — تطلب وأنت مرتاح.',
       },
     ],
+  },
+  imageReviewsSection: {
+    title: 'شف تجارب عملائنا بنفسك — صور حقيقية مو إعلان',
+    subtitle:
+      'عملاء من الرياض وجدة والدمام وغيرها جربوا قطرة المولين وصوروا المنتج لما وصلهم. لا تأخذ كلامنا — اسمع منهم بلهجتهم.',
   },
   showImageReviews: false,
   reviewsKey: 'molien-drops',

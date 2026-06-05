@@ -13,6 +13,7 @@ import ProductDayProcessSection from '@/components/product/ProductDayProcessSect
 import ProductBeforeAfterSection from '@/components/product/ProductBeforeAfterSection'
 import ProductStatsSection from '@/components/product/ProductStatsSection'
 import ProductTrustOriginSection from '@/components/product/ProductTrustOriginSection'
+import ProductImageReviewsSection from '@/components/product/ProductImageReviewsSection'
 import HowToUseStep from '@/components/product/HowToUseStep'
 import ProductReviewsGrid from '@/components/product/ProductReviewsGrid'
 import TrustBadges from '@/components/shared/TrustBadges'
@@ -45,6 +46,13 @@ export default function ProductPageContent({
           ? MOLIEN_DROPS_REVIEWS
           : DEFAULT_PRODUCT_REVIEWS
       : []
+
+  const imageReviewsAfterTrust =
+    sections.imageReviewsSection && sections.reviewsKey === 'molien-drops'
+      ? MOLIEN_DROPS_REVIEWS
+      : sections.imageReviewsSection && sections.reviewsKey === 'herbal-lung-spray'
+        ? HERBAL_LUNG_SPRAY_REVIEWS
+        : []
 
   return (
     <main dir="rtl" className="bg-ivory min-h-screen pb-24 lg:pb-0">
@@ -414,6 +422,14 @@ export default function ProductPageContent({
       {/* ── 4.8 Trust & Country of Origin ── */}
       {sections.trustOrigin && (
         <ProductTrustOriginSection content={sections.trustOrigin} />
+      )}
+
+      {/* ── 4.85 Customer image reviews (molien) ── */}
+      {sections.imageReviewsSection && imageReviewsAfterTrust.length > 0 && (
+        <ProductImageReviewsSection
+          content={sections.imageReviewsSection}
+          reviews={imageReviewsAfterTrust}
+        />
       )}
 
       {/* ── 5. Comparison Table (Us vs. Them) ── */}
