@@ -32,6 +32,8 @@ export interface Offer {
   isDefault?: boolean
   savings?: number
   desc?: string
+  volumeLabel?: string
+  qtyLabel?: string
 }
 
 export interface CartItem {

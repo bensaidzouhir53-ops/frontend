@@ -23,7 +23,7 @@ import {
   Truck,
   Volume2,
 } from 'lucide-react'
-import { PRODUCTS, getProductBySlug } from '@/lib/products'
+import { PRODUCTS, getProductBySlug, getOffersForProduct } from '@/lib/products'
 import { WHATSAPP_URL, WHATSAPP_PHONE_WA } from '@/lib/contact'
 import { cn } from '@/lib/utils'
 
@@ -520,7 +520,7 @@ export default function ThankYouView({
                       </p>
                       <div className="mt-auto flex items-center justify-between pt-2">
                         <span className="text-sm font-extrabold text-teal">
-                          من 169 ر.س
+                          من {getOffersForProduct(product.slug)[0].price} ر.س
                         </span>
                         <a
                           href={ws}

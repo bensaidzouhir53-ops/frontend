@@ -142,7 +142,7 @@ export const PRODUCTS: Product[] = [
   },
 ]
 
-export const OFFERS: Offer[] = [
+export const HERBAL_LUNG_SPRAY_OFFERS: Offer[] = [
   {
     qty: 1,
     price: 169,
@@ -170,6 +170,56 @@ export const OFFERS: Offer[] = [
   },
 ]
 
+export const MOLIEN_DROPS_OFFERS: Offer[] = [
+  {
+    qty: 1,
+    price: 189,
+    qtyLabel: 'عبوة واحدة',
+    volumeLabel: '60 مل',
+    badge: 'جرب النتيجة',
+    badgeColor: 'sage',
+    savings: 0,
+    desc: 'مناسبة لو تبي تجرب القطرات لأول مرة — عبوة 60 مل تكفيك حوالي شهر.',
+  },
+  {
+    qty: 2,
+    price: 279,
+    qtyLabel: 'عبوتين',
+    volumeLabel: '120 مل',
+    badge: 'الأكثر طلباً + شحن مجاني 🚚',
+    badgeColor: 'gold',
+    isDefault: true,
+    savings: 99,
+    desc: 'خيارك الذكي! عبوتين = 120 مل تكفيك شهرين — توفر 99 ريال وتضمن الاستمرار لين تشوف الفرق. البلغم ما يروح بعبوة وحدة!',
+  },
+  {
+    qty: 3,
+    price: 379,
+    qtyLabel: 'ثلاث عبوات',
+    volumeLabel: '180 مل',
+    badge: 'أفضل قيمة + شحن مجاني 🚚',
+    badgeColor: 'teal',
+    savings: 188,
+    desc: 'الروتين الكامل — 3 عبوات (180 مل) تغطيك 3 شهور وتوفّر 188 ريال. اللي يكمل 90 يوم يحس بفرق أكبر وما يقطع العلاج.',
+  },
+]
+
+/** @deprecated Use getOffersForProduct(slug) */
+export const OFFERS: Offer[] = HERBAL_LUNG_SPRAY_OFFERS
+
+const OFFERS_BY_PRODUCT: Record<string, Offer[]> = {
+  'herbal-lung-spray': HERBAL_LUNG_SPRAY_OFFERS,
+  'molien-drops': MOLIEN_DROPS_OFFERS,
+}
+
+export function getOffersForProduct(slug: string): Offer[] {
+  return OFFERS_BY_PRODUCT[slug] ?? HERBAL_LUNG_SPRAY_OFFERS
+}
+
+export function getOfferForProductQty(slug: string, qty: number): Offer | undefined {
+  return getOffersForProduct(slug).find((o) => o.qty === qty)
+}
+
 export function getProductBySlug(slug: string): Product | undefined {
   return PRODUCTS.find((p) => p.slug === slug)
 }
@@ -190,8 +240,9 @@ export function getCrossSellProducts(currentSlug: string): Product[] {
     .filter((p): p is Product => p !== undefined && p.slug !== currentSlug)
 }
 
-export function getDefaultOffer(): Offer {
-  return OFFERS.find((o) => o.isDefault) ?? OFFERS[1]
+export function getDefaultOffer(slug?: string): Offer {
+  const offers = slug ? getOffersForProduct(slug) : HERBAL_LUNG_SPRAY_OFFERS
+  return offers.find((o) => o.isDefault) ?? offers[1]
 }
 
 // Re-export types so components can import from one place

@@ -5,7 +5,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { ShoppingCart, Star, Eye } from 'lucide-react'
 import type { Product } from '@/types'
-import { OFFERS } from '@/lib/products'
+import { getOffersForProduct, getDefaultOffer } from '@/lib/products'
 import { useCartStore } from '@/store/cartStore'
 import { trackAddToCart, generateEventId } from '@/lib/tracking'
 import { cn } from '@/lib/utils'
@@ -15,10 +15,10 @@ interface ProductCardProps {
   className?: string
 }
 
-const basePrice = OFFERS[0].price
-const defaultOffer = OFFERS.find((o) => o.isDefault) ?? OFFERS[1]
-
 export default function ProductCard({ product, className }: ProductCardProps) {
+  const offers = getOffersForProduct(product.slug)
+  const basePrice = offers[0].price
+  const defaultOffer = getDefaultOffer(product.slug)
   const { addItem, openCart } = useCartStore()
 
   const handleAddToCart = () => {

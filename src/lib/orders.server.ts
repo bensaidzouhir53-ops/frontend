@@ -1,9 +1,11 @@
 import { randomUUID } from 'crypto'
+import { getOfferForProductQty, getOffersForProduct } from '@/lib/products'
 
-const QUANTITY_PRICES: Record<number, number> = {
-  1: 169,
-  2: 245,
-  3: 325,
+function getItemPrice(productSlug: string, quantity: number): number {
+  const offer = getOfferForProductQty(productSlug, quantity)
+  if (offer) return offer.price
+  const base = getOffersForProduct(productSlug)[0]?.price ?? 169
+  return quantity * base
 }
 
 export interface CreateOrderPayload {
@@ -33,9 +35,9 @@ export interface CreateOrderResult {
   }
 }
 
-function calculateOrderTotal(items: { quantity: number }[]): number {
+function calculateOrderTotal(items: { product_slug: string; quantity: number }[]): number {
   return items.reduce(
-    (sum, item) => sum + (QUANTITY_PRICES[item.quantity] ?? item.quantity * 169),
+    (sum, item) => sum + getItemPrice(item.product_slug, item.quantity),
     0,
   )
 }

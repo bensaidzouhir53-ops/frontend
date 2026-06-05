@@ -6,7 +6,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { X, ShoppingCart, Trash2, Shield, Truck, RotateCcw, Package } from 'lucide-react'
 import { useCartStore } from '@/store/cartStore'
-import { getProductBySlug, OFFERS } from '@/lib/products'
+import { getProductBySlug, getOfferForProductQty, getDefaultOffer } from '@/lib/products'
 import { trackAddToCart, generateEventId } from '@/lib/tracking'
 import { cn } from '@/lib/utils'
 import type { Product } from '@/types'
@@ -14,7 +14,7 @@ import CheckoutModal from '@/components/checkout/CheckoutModal'
 
 function CrossSellCard({ product }: { product: Product }) {
   const { addItem, openCheckout } = useCartStore()
-  const defaultOffer = OFFERS.find((o) => o.isDefault) ?? OFFERS[1]
+  const defaultOffer = getDefaultOffer(product.slug)
 
   const handleAdd = () => {
     addItem(product, defaultOffer.qty, defaultOffer.price)
@@ -176,7 +176,7 @@ export default function CartDrawer() {
 
                   {/* Savings callout */}
                   {items.some((i) => {
-                    const offer = OFFERS.find((o) => o.qty === i.qty)
+                    const offer = getOfferForProductQty(i.product.slug, i.qty)
                     return (offer?.savings ?? 0) > 0
                   }) && (
                     <div className="mt-4 flex items-center gap-2 rounded-xl bg-gold/10 px-4 py-3">
@@ -184,7 +184,7 @@ export default function CartDrawer() {
                       <p className="text-sm font-bold text-gold">
                         {(() => {
                           const totalSavings = items.reduce((sum, i) => {
-                            const offer = OFFERS.find((o) => o.qty === i.qty)
+                            const offer = getOfferForProductQty(i.product.slug, i.qty)
                             return sum + (offer?.savings ?? 0)
                           }, 0)
                           return `وفّرت ${totalSavings} ريال بطلبك هذا`

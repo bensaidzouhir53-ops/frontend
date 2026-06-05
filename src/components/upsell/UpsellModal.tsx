@@ -7,7 +7,7 @@ import * as Dialog from '@radix-ui/react-dialog'
 import { Clock, X, Loader2 } from 'lucide-react'
 import { useCartStore } from '@/store/cartStore'
 import { acceptUpsell } from '@/lib/api'
-import { getProductBySlug } from '@/lib/products'
+import { getProductBySlug, getOffersForProduct } from '@/lib/products'
 import { trackPurchase, generateEventId } from '@/lib/tracking'
 import { cn } from '@/lib/utils'
 
@@ -169,6 +169,10 @@ export default function UpsellModal() {
   const upsellImage = upsellProduct
     ? getProductBySlug(upsellProduct.product_slug)?.image
     : undefined
+  const upsellRegularPrice = upsellProduct
+    ? getOffersForProduct(upsellProduct.product_slug)[0]?.price ?? 169
+    : 169
+  const upsellSavings = Math.max(upsellRegularPrice - UPSELL_PRICE, 0)
 
   return (
     <Dialog.Root
@@ -239,14 +243,14 @@ export default function UpsellModal() {
 
               <div className="flex items-center justify-between rounded-xl bg-gold/10 px-4 py-3">
                 <div>
-                  <p className="text-xs text-charcoal/50 line-through">169 ريال</p>
+                  <p className="text-xs text-charcoal/50 line-through">{upsellRegularPrice} ريال</p>
                   <p className="text-2xl font-extrabold text-teal">
                     {UPSELL_PRICE} ريال فقط
                   </p>
                 </div>
                 <div className="rounded-full bg-gold px-3 py-1.5">
                   <span className="text-xs font-extrabold text-white">
-                    وفّر 70 ريال
+                    وفّر {upsellSavings} ريال
                   </span>
                 </div>
               </div>

@@ -562,7 +562,7 @@ export default function ProductPageContent({
 
             <div className="grid grid-cols-2 gap-4 md:gap-6 max-w-3xl mx-auto">
               {crossSellProducts.map((p) => {
-                const offer = getDefaultOffer()
+                const offer = getDefaultOffer(p.slug)
                 return (
                 <Link
                   key={p.slug}

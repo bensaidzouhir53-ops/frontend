@@ -1,9 +1,9 @@
 'use client'
 
 import { useState } from 'react'
-import { Check, ShoppingCart } from 'lucide-react'
+import { Check, ShoppingCart, TrendingUp } from 'lucide-react'
 import type { Product } from '@/types'
-import { OFFERS } from '@/lib/products'
+import { getOffersForProduct } from '@/lib/products'
 import { useCartStore } from '@/store/cartStore'
 import { trackAddToCart, generateEventId } from '@/lib/tracking'
 import { cn } from '@/lib/utils'
@@ -19,21 +19,19 @@ const BADGE_STYLES: Record<string, string> = {
   teal: 'bg-teal text-white',
 }
 
-const QTY_LABELS: Record<number, string> = {
+const DEFAULT_QTY_LABELS: Record<number, string> = {
   1: 'قطعة واحدة',
   2: 'قطعتان',
   3: '3 قطع',
 }
 
-const basePrice = OFFERS[0].price
-
 export default function OfferSelector({ product, className }: OfferSelectorProps) {
-  const [selectedIdx, setSelectedIdx] = useState(
-    OFFERS.findIndex((o) => o.isDefault),
-  )
+  const offers = getOffersForProduct(product.slug)
+  const basePrice = offers[0].price
+  const [selectedIdx, setSelectedIdx] = useState(offers.findIndex((o) => o.isDefault))
   const { addItem, openCart } = useCartStore()
 
-  const selected = OFFERS[selectedIdx]
+  const selected = offers[selectedIdx] ?? offers[1]
 
   const handleAddToCart = () => {
     addItem(product, selected.qty, selected.price)
@@ -47,12 +45,24 @@ export default function OfferSelector({ product, className }: OfferSelectorProps
 
   return (
     <div className={cn('flex flex-col gap-3 sm:gap-4', className)} dir="rtl">
+      {product.slug === 'molien-drops' && (
+        <div className="flex items-start gap-3 rounded-2xl border border-gold/30 bg-gradient-to-l from-gold/10 to-amber-50/80 px-4 py-3.5">
+          <TrendingUp className="mt-0.5 h-5 w-5 shrink-0 text-gold" />
+          <p className="text-sm font-bold leading-relaxed text-charcoal/80">
+            <span className="text-charcoal">ليش الأغلبية يختارون عبوتين أو أكثر؟</span>{' '}
+            البلغم المتحجر ما يروح بعبوة وحدة — الاستمرار شهرين أو أكثر يعطيك نتيجة أوضح وتوفر أكثر على
+            السعر.
+          </p>
+        </div>
+      )}
+
       <p className="text-sm font-semibold text-charcoal/70">اختر كميتك:</p>
 
       <div className="flex flex-col gap-2.5 sm:gap-3">
-        {OFFERS.map((offer, idx) => {
+        {offers.map((offer, idx) => {
           const isSelected = idx === selectedIdx
           const perUnit = Math.round(offer.price / offer.qty)
+          const qtyLabel = offer.qtyLabel ?? DEFAULT_QTY_LABELS[offer.qty]
 
           return (
             <button
@@ -81,8 +91,13 @@ export default function OfferSelector({ product, className }: OfferSelectorProps
                     <div className="min-w-0 flex-1">
                       <div className="mb-1.5 flex flex-wrap items-center gap-x-2 gap-y-1">
                         <span className="text-base font-bold text-charcoal sm:text-[17px]">
-                          {QTY_LABELS[offer.qty]}
+                          {qtyLabel}
                         </span>
+                        {offer.volumeLabel && (
+                          <span className="rounded-full bg-mist px-2 py-0.5 text-[10px] font-bold text-teal-dark sm:text-[11px]">
+                            {offer.volumeLabel}
+                          </span>
+                        )}
                         <span
                           className={cn(
                             'inline-flex max-w-full rounded-full px-2 py-0.5 text-[10px] font-bold leading-snug sm:text-[11px]',
@@ -116,7 +131,7 @@ export default function OfferSelector({ product, className }: OfferSelectorProps
 
                   <div className="flex flex-wrap items-center gap-x-2 gap-y-1.5">
                     <span className="text-[11px] text-charcoal/50 sm:text-xs">
-                      {perUnit} ريال / للقطعة
+                      {perUnit} ريال / للعبوة
                     </span>
                     {(offer.savings ?? 0) > 0 && (
                       <span className="text-[11px] font-semibold text-gold sm:text-xs">
