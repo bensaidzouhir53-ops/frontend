@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import * as Dialog from '@radix-ui/react-dialog'
 import { useForm } from 'react-hook-form'
@@ -211,15 +212,26 @@ export default function CheckoutModal() {
               {items.map((item) => (
                 <div
                   key={item.product.slug}
-                  className="flex items-center justify-between py-1.5 text-sm"
+                  className="flex items-center justify-between py-2 text-sm"
                 >
-                  <span className="line-clamp-1 flex-1 text-charcoal/80">
-                    {item.product.nameAr}
-                    <span className="mr-1 text-xs text-charcoal/50">
-                      ×{item.qty}
+                  <div className="flex items-center gap-3 flex-1 min-w-0">
+                    <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-lg bg-mist">
+                      <Image
+                        src={item.product.image}
+                        alt={item.product.nameAr}
+                        fill
+                        sizes="48px"
+                        className="object-cover"
+                      />
+                    </div>
+                    <span className="line-clamp-2 flex-1 text-charcoal/80 font-semibold leading-snug">
+                      {item.product.nameAr}
+                      <span className="mr-1 text-xs text-charcoal/50 font-normal">
+                        ×{item.qty}
+                      </span>
                     </span>
-                  </span>
-                  <span className="mr-3 font-bold text-charcoal">{item.price} ريال</span>
+                  </div>
+                  <span className="mr-3 font-bold text-charcoal shrink-0">{item.price} ريال</span>
                 </div>
               ))}
               <div className="mt-3 flex items-center justify-between border-t border-sage/30 pt-3">
