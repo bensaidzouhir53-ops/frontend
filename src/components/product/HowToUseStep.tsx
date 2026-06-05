@@ -14,14 +14,13 @@ export default function HowToUseStep({ step, title, desc, image, video }: HowToU
       <div className="relative aspect-[4/3] overflow-hidden bg-mist ring-1 ring-inset ring-sage/20">
         {video ? (
           <video
-            src={video}
-            poster={image}
+            src={`${video}#t=0.001`}
             controls
             playsInline
             muted
             loop
             preload="metadata"
-            className="h-full w-full object-cover"
+            className="h-full w-full object-cover bg-mist"
             aria-label={title}
           />
         ) : (
