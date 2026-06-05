@@ -146,7 +146,7 @@ export default function CartDrawer() {
                       >
                         <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-xl bg-mist">
                           <img
-                            src="https://placehold.co/400x400/e2e8f0/475569?text=Product"
+                            src={item.product.image}
                             alt={item.product.nameAr}
                             className="object-cover w-full h-full"
                           />
