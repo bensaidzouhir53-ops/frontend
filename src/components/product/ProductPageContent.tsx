@@ -320,11 +320,6 @@ export default function ProductPageContent({
         <ProductStatsSection content={sections.statsSection} />
       )}
 
-      {/* ── 4.25 Before / After Comparison ── */}
-      {sections.beforeAfterComparison && (
-        <ProductBeforeAfterSection content={sections.beforeAfterComparison} />
-      )}
-
       {/* ── 4.5 Ingredients Section ── */}
       {product.detailedIngredients && product.detailedIngredients.length > 0 && (
         <section className="py-16 md:py-24 bg-mist/10 relative overflow-hidden">
@@ -382,6 +377,11 @@ export default function ProductPageContent({
             </div>
           </div>
         </section>
+      )}
+
+      {/* ── 4.55 Before / After Comparison ── */}
+      {sections.beforeAfterComparison && (
+        <ProductBeforeAfterSection content={sections.beforeAfterComparison} />
       )}
 
       {/* ── 4.6 Twenty-Eight Day Process ── */}

@@ -276,6 +276,17 @@ const HERBAL_LUNG_SPRAY_SECTIONS: ProductPageSections = {
   },
   ingredientsMainImage: '/images/main-ingredients-lung-spray.png',
   ingredientsMainImageAlt: 'مكونات بخاخ تنظيف الرئة العشبي الطبيعية',
+  beforeAfterComparison: {
+    title: 'شوف الفرق بعينك — قبل وبعد بخاخ نسمة 🌿',
+    subtitle:
+      'حرّك الخط في النص يمين ويسار وقارن حالة الرئة والبلغم قبل الروتين وبعده. آلاف السعوديين صدموا لما شافوا الفرق من أول أسبوع!',
+    beforeImage: '/images/herbal-lung-spray-before.png',
+    afterImage: '/images/herbal-lung-spray-after.png',
+    beforeLabel: 'قبل',
+    afterLabel: 'بعد',
+    beforeAlt: 'حالة الرئة قبل بخاخ نسمة — بلغم متراكم وكتمة',
+    afterAlt: 'حالة الرئة بعد بخاخ نسمة — رئة أنظف وتنفس مريح',
+  },
   howToUseSteps: [
     {
       step: 1,
