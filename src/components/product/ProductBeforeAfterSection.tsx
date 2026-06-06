@@ -2,7 +2,7 @@
 
 import { useCallback, useRef, useState } from 'react'
 import Image from 'next/image'
-import { ChevronsLeftRight, Sparkles } from 'lucide-react'
+import { ChevronsLeftRight } from 'lucide-react'
 import type { BeforeAfterContent } from '@/lib/productPageSections'
 
 interface ProductBeforeAfterSectionProps {
@@ -46,10 +46,6 @@ export default function ProductBeforeAfterSection({ content }: ProductBeforeAfte
 
       <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mb-10 text-center md:mb-14">
-          <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-teal/20 bg-teal/10 px-5 py-2 text-sm font-bold text-teal-dark">
-            <Sparkles className="h-4 w-4" />
-            قبل وبعد
-          </div>
           <h2 className="text-3xl font-extrabold tracking-tight text-charcoal md:text-4xl">
             {content.title}
           </h2>
