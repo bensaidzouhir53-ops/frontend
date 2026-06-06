@@ -8,6 +8,13 @@ import PainPointCard from '@/components/home/PainPointCard'
 import TrustBadges from '@/components/shared/TrustBadges'
 import FAQAccordion from '@/components/shared/FAQAccordion'
 
+const HERO_REVIEW_AVATARS = [
+  '/images/home-review-avatars/1.png',
+  '/images/home-review-avatars/2.png',
+  '/images/home-review-avatars/3.png',
+  '/images/home-review-avatars/4.png',
+]
+
 const PAIN_POINTS = [
   {
     icon: '🌪️',
@@ -75,12 +82,18 @@ export default function HomePage() {
               </Link>
               <div className="flex items-center gap-3">
                 <div className="flex -space-x-2 space-x-reverse">
-                  {[1, 2, 3, 4].map((i) => (
+                  {HERO_REVIEW_AVATARS.map((avatar, i) => (
                     <div
-                      key={i}
-                      className="relative flex h-10 w-10 items-center justify-center overflow-hidden rounded-full border-2 border-ivory bg-teal/10 text-xs font-bold text-teal"
+                      key={avatar}
+                      className="relative h-10 w-10 overflow-hidden rounded-full border-2 border-ivory bg-mist"
                     >
-                      ★
+                      <Image
+                        src={avatar}
+                        alt={`عميل نسمة ${i + 1}`}
+                        fill
+                        sizes="40px"
+                        className="object-cover"
+                      />
                     </div>
                   ))}
                 </div>
