@@ -324,7 +324,7 @@ const HERBAL_LUNG_SPRAY_SECTIONS: ProductPageSections = {
       'تركيبتنا العشبية مرت بأدق الفحوصات المخبرية، ومصرحة رسمياً من هيئة الغذاء والدواء (SFDA). هذا يعني إنك تستخدم منتج آمن 100%، خالي من أي مواد ضارة، ومصمم خصيصاً ليناسب بيئتنا ويحل مشاكلك من الجذور. اطلب وأنت متطمن، صحتك في أيد أمينة.',
     countryLabel: 'الاعتماد',
     countryValue: 'هيئة الغذاء والدواء (SFDA) ✔️',
-    image: '/images/molien-trust-origin.png',
+    image: '/images/herbal-lung-spray-trust-origin.png',
     imageAlt: 'مكونات طبيعية في مختبر معتمد — جودة وثقة',
     points: [
       {
