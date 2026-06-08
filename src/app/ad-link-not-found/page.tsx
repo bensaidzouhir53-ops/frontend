@@ -1,6 +1,6 @@
 import Link from 'next/link'
 
-export default function AdsRedirectNotFound() {
+export default function AdLinkNotFoundPage() {
   return (
     <div className="flex min-h-[60vh] flex-col items-center justify-center px-4 text-center" dir="rtl">
       <p className="mb-2 text-sm font-bold uppercase tracking-[0.2em] text-teal">404</p>

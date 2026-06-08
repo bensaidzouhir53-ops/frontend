@@ -10,20 +10,27 @@ async function fetchFromBackend(slug: string): Promise<RedirectLink | null> {
   const normalized = slug.trim().toLowerCase()
   if (!normalized) return null
 
-  for (const base of getBackendCandidates()) {
+  const candidates = getBackendCandidates()
+
+  for (const base of candidates) {
+    const url = `${base.replace(/\/$/, '')}/api/redirects/${encodeURIComponent(normalized)}`
     try {
-      const res = await fetch(`${base.replace(/\/$/, '')}/api/redirects/${encodeURIComponent(normalized)}`, {
+      const res = await fetch(url, {
         cache: 'no-store',
-        signal: AbortSignal.timeout(5_000),
+        signal: AbortSignal.timeout(10_000),
       })
       if (res.status === 404) return null
-      if (!res.ok) continue
+      if (!res.ok) {
+        console.error(`[redirects] ${res.status} from ${url}`)
+        continue
+      }
       return (await res.json()) as RedirectLink
-    } catch {
-      // try next backend URL
+    } catch (error) {
+      console.error(`[redirects] Failed to reach ${url}:`, error)
     }
   }
 
+  console.error(`[redirects] No backend returned slug "${normalized}" (tried: ${candidates.join(', ')})`)
   return null
 }
 

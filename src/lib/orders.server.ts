@@ -131,6 +131,9 @@ function isRetryableBackendFailure(status: number, body: unknown): boolean {
   return false
 }
 
+const DEFAULT_INTERNAL_BACKEND =
+  process.env.NODE_ENV === 'production' ? 'http://nasamashop_backend:8000' : null
+
 function isInternalBackendUrl(url: string): boolean {
   try {
     const { hostname, protocol } = new URL(url)
@@ -144,12 +147,24 @@ function isInternalBackendUrl(url: string): boolean {
   }
 }
 
-/** Server-side backend URLs to try (public URLs first, then internal fallbacks) */
+function sortBackendCandidates(urls: string[], preferInternal: boolean): string[] {
+  return urls.sort((a, b) => {
+    const aInternal = isInternalBackendUrl(a)
+    const bInternal = isInternalBackendUrl(b)
+    if (aInternal === bInternal) return 0
+    if (preferInternal) return aInternal ? -1 : 1
+    return aInternal ? 1 : -1
+  })
+}
+
+/** Server-side backend URLs — internal Docker network first in production. */
 export function getBackendCandidates(): string[] {
+  const preferInternal = process.env.NODE_ENV === 'production'
   const urls = [
+    process.env.BACKEND_INTERNAL_URL,
+    DEFAULT_INTERNAL_BACKEND,
     process.env.BACKEND_URL,
     process.env.NEXT_PUBLIC_API_URL,
-    process.env.BACKEND_INTERNAL_URL,
     process.env.NODE_ENV === 'development' ? 'http://localhost:8000' : null,
     getDefaultProductionApiUrl(),
   ]
@@ -157,13 +172,7 @@ export function getBackendCandidates(): string[] {
     .map((value) => value.trim().replace(/\/$/, ''))
 
   const unique = [...new Set(urls)]
-
-  return unique.sort((a, b) => {
-    const aInternal = isInternalBackendUrl(a)
-    const bInternal = isInternalBackendUrl(b)
-    if (aInternal === bInternal) return 0
-    return aInternal ? 1 : -1
-  })
+  return sortBackendCandidates(unique, preferInternal)
 }
 
 export async function forwardOrderToBackend(
