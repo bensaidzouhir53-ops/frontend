@@ -36,10 +36,10 @@ export default function Footer() {
               </div>
               <div className="flex flex-col leading-none">
                 <span className="text-4xl font-extrabold tracking-tight text-white drop-shadow-sm">
-                  نسمة
+                  نَفَس
                 </span>
-                <span className="mt-2 text-xs font-bold tracking-[0.25em] text-gold opacity-90 drop-shadow-sm">
-                  {isSafePage ? 'متجر إلكتروني سعودي' : 'بيت الأعشاب'}
+                <span className="mt-2 max-w-[14rem] text-xs font-semibold leading-snug text-gold opacity-90 drop-shadow-sm">
+                  انتعاش مستوحى من الطبيعة
                 </span>
               </div>
             </div>
@@ -110,7 +110,7 @@ export default function Footer() {
         <div className="mt-12 flex flex-col items-center justify-between gap-6 border-t border-mist/10 pt-8 text-sm font-medium text-mist/50 md:flex-row md:text-base">
           <p className="flex items-center gap-2">
             جميع الحقوق محفوظة © {new Date().getFullYear()}
-            <span className="font-extrabold text-white">نسمة</span>
+            <span className="font-extrabold text-white">نَفَس</span>
           </p>
           <p className="text-xs font-extrabold tracking-[0.4em] text-mist/30 ltr">
             POWERED BY NASAMA SHOP

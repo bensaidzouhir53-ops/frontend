@@ -15,7 +15,7 @@ export default function LungLogo({
   return (
     <Image
       src="/images/nasama-logo.png"
-      alt="شعار نسمة"
+      alt="شعار نَفَس"
       width={256}
       height={256}
       priority={priority}

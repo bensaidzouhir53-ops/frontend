@@ -2,7 +2,6 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
 import { ShoppingCart, Menu, X } from 'lucide-react'
 import { useCartStore } from '@/store/cartStore'
 import LungLogo from '@/components/brand/LungLogo'
@@ -15,8 +14,6 @@ const NAV_LINKS = [
 ]
 
 export default function Header() {
-  const pathname = usePathname()
-  const isSafePage = pathname === '/lp'
   const [mobileOpen, setMobileOpen] = useState(false)
   const { itemCount, openCart } = useCartStore()
   const count = itemCount()
@@ -34,10 +31,10 @@ export default function Header() {
           </div>
           <div className="flex flex-col leading-none">
             <span className="text-xl font-bold tracking-tight text-apothecary">
-              نسمة
+              نَفَس
             </span>
-            <span className="text-[10px] font-bold tracking-widest text-teal/80 mt-0.5">
-              {isSafePage ? 'متجر إلكتروني سعودي' : 'بيت الأعشاب'}
+            <span className="mt-0.5 max-w-[9.5rem] text-[9px] font-semibold leading-snug text-teal/80">
+              انتعاش مستوحى من الطبيعة
             </span>
           </div>
         </Link>
