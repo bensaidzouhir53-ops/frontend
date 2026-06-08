@@ -1,4 +1,5 @@
 import { getBackendCandidates } from '@/lib/orders.server'
+import { normalizeRedirectTargetPath } from '@/lib/site-url'
 
 export interface RedirectLink {
   slug: string
@@ -34,6 +35,7 @@ export function buildRedirectDestination(
   targetPath: string,
   searchParams: Record<string, string | string[] | undefined>,
 ): string {
+  const normalizedPath = normalizeRedirectTargetPath(targetPath)
   const qs = new URLSearchParams()
 
   for (const [key, value] of Object.entries(searchParams)) {
@@ -46,5 +48,5 @@ export function buildRedirectDestination(
   }
 
   const queryString = qs.toString()
-  return queryString ? `${targetPath}?${queryString}` : targetPath
+  return queryString ? `${normalizedPath}?${queryString}` : normalizedPath
 }

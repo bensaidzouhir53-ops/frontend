@@ -15,6 +15,7 @@ import {
   Zap,
 } from 'lucide-react'
 import { REDIRECT_TARGET_OPTIONS } from '@/lib/redirects.constants'
+import { getPublicSiteUrl } from '@/lib/site-url'
 
 type RedirectRecord = {
   id: string
@@ -31,7 +32,7 @@ type Credentials = {
 
 const AUTH_KEY = 'nasama_redirect_monster_auth'
 const API_BASE = '/api/redirectmonster'
-const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || 'https://nafaas.shop').replace(/\/$/, '')
+const SITE_URL = getPublicSiteUrl()
 
 function authHeader(credentials: Credentials): string {
   return `Basic ${btoa(`${credentials.username}:${credentials.password}`)}`

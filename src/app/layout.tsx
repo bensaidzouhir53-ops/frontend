@@ -6,6 +6,7 @@ import ClientLazyModals from '@/components/layout/ClientLazyModals'
 import PixelInit from '@/components/shared/PixelInit'
 import PixelScripts from '@/components/shared/PixelScripts'
 import { fetchTrackingConfigFromBackend } from '@/lib/pixel-config.server'
+import { getPublicSiteUrl } from '@/lib/site-url'
 import './globals.css'
 
 const tajawal = Tajawal({
@@ -16,7 +17,7 @@ const tajawal = Tajawal({
   preload: true,
 })
 
-const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || 'https://nafaas.shop').replace(/\/$/, '')
+const siteUrl = getPublicSiteUrl()
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
