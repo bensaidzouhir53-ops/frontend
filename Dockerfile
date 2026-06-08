@@ -7,9 +7,9 @@ FROM node:20-alpine AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
-ARG NEXT_PUBLIC_SITE_URL=https://nasama.shop
-ARG NEXT_PUBLIC_API_URL=https://api.nasama.shop
-ARG BACKEND_URL=https://api.nasama.shop
+ARG NEXT_PUBLIC_SITE_URL=https://nafaas.shop
+ARG NEXT_PUBLIC_API_URL=https://api.nafaas.shop
+ARG BACKEND_URL=https://api.nafaas.shop
 ARG NEXT_PUBLIC_META_PIXEL_ID=576636091443534
 ARG NEXT_PUBLIC_META_PIXEL_ID_2=1404117771369307
 ARG NEXT_PUBLIC_TIKTOK_PIXEL_ID=
@@ -24,9 +24,9 @@ RUN npm run build
 FROM node:20-alpine AS runner
 WORKDIR /app
 ENV NODE_ENV=production
-ENV NEXT_PUBLIC_SITE_URL=https://nasama.shop
-ENV NEXT_PUBLIC_API_URL=https://api.nasama.shop
-ENV BACKEND_URL=https://api.nasama.shop
+ENV NEXT_PUBLIC_SITE_URL=https://nafaas.shop
+ENV NEXT_PUBLIC_API_URL=https://api.nafaas.shop
+ENV BACKEND_URL=https://api.nafaas.shop
 ARG NEXT_PUBLIC_META_PIXEL_ID=576636091443534
 ARG NEXT_PUBLIC_META_PIXEL_ID_2=1404117771369307
 ARG NEXT_PUBLIC_TIKTOK_PIXEL_ID=

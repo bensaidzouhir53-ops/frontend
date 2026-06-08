@@ -31,7 +31,7 @@ type Credentials = {
 
 const AUTH_KEY = 'nasama_redirect_monster_auth'
 const API_BASE = '/api/redirectmonster'
-const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || 'https://nasama.shop').replace(/\/$/, '')
+const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || 'https://nafaas.shop').replace(/\/$/, '')
 
 function authHeader(credentials: Credentials): string {
   return `Basic ${btoa(`${credentials.username}:${credentials.password}`)}`

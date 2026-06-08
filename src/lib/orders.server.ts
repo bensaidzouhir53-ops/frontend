@@ -110,14 +110,13 @@ function getDefaultProductionApiUrl(): string | null {
     try {
       const site = new URL(siteUrl)
       const host = site.hostname.replace(/^www\./, '')
-      if (host === 'nasama.shop') return 'https://api.nasama.shop'
       return `${site.protocol}//api.${host}`
     } catch {
       // ignore invalid site URL
     }
   }
 
-  return 'https://api.nasama.shop'
+  return 'https://api.nafaas.shop'
 }
 
 function isRetryableBackendFailure(status: number, body: unknown): boolean {
