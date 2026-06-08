@@ -13,6 +13,7 @@ async function fetchFromBackend(slug: string): Promise<RedirectLink | null> {
     try {
       const res = await fetch(`${base.replace(/\/$/, '')}/api/redirects/${encodeURIComponent(normalized)}`, {
         cache: 'no-store',
+        signal: AbortSignal.timeout(5_000),
       })
       if (res.status === 404) return null
       if (!res.ok) continue

@@ -126,9 +126,19 @@ export function getEnvPixelFallback(): ServerPixelConfig {
   })
 }
 
+function isProductionBuild(): boolean {
+  return process.env.NEXT_PHASE === 'phase-production-build'
+}
+
 /** Fetch pixel IDs from backend first, then merge env fallbacks (never skip backend). */
 export async function fetchTrackingConfigFromBackend(): Promise<ServerPixelConfig> {
   const envFallback = getEnvPixelFallback()
+
+  // Backend is unreachable during Docker/CI builds — env vars are baked in via build args.
+  if (isProductionBuild()) {
+    return envFallback.enabled ? envFallback : EMPTY
+  }
+
   let backendRaw: PixelConfigInput | null = null
 
   for (const baseUrl of getBackendCandidates()) {

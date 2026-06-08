@@ -16,7 +16,10 @@ const tajawal = Tajawal({
   preload: true,
 })
 
+const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || 'https://nafaas.shop').replace(/\/$/, '')
+
 export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
   title: {
     default: 'نسمة | بيت الأعشاب في السعودية',
     template: '%s | نسمة',
