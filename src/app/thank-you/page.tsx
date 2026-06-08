@@ -2,8 +2,8 @@ import type { Metadata } from 'next'
 import ThankYouView from './ThankYouView'
 
 export const metadata: Metadata = {
-  title: 'تم استلام طلبك بنجاح | نسمة',
-  description: 'شكراً لطلبك من نسمة. سيتم التواصل معك خلال 10 دقائق لتأكيد التوصيل.',
+  title: 'تم استلام طلبك بنجاح | نفس',
+  description: 'شكراً لطلبك من نفس. سيتم التواصل معك خلال 10 دقائق لتأكيد التوصيل.',
   robots: { index: false, follow: false },
 }
 

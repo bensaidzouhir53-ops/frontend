@@ -219,7 +219,7 @@ export default function ThankYouView({
             <span className="text-gold">نفسك الجديد بدأ من هنا.</span>
           </h1>
           <p className="mx-auto mt-4 max-w-xl text-base text-white/85 md:text-lg">
-            انضممت لأكثر من <strong className="text-gold">12,000</strong> سعودي اختار نسمة لرئة
+            انضممت لأكثر من <strong className="text-gold">12,000</strong> سعودي اختار نفس لرئة
             أنظف وتنفس أخف. خليك جنب جوالك — مكالمة التأكيد قريبة.
           </p>
 
@@ -359,7 +359,7 @@ export default function ThankYouView({
         </Section>
 
         {/* RESULTS PREVIEW */}
-        <Section title="وش بتحس فيه بالضبط؟" eyebrow="رحلتك مع نسمة">
+        <Section title="وش بتحس فيه بالضبط؟" eyebrow="رحلتك مع نفس">
           <div className="grid gap-3 md:grid-cols-3">
             <ResultCard
               day="من أول استخدام"
@@ -541,7 +541,7 @@ export default function ThankYouView({
         )}
 
         {/* SOCIAL PROOF */}
-        <Section title="رأي عملاء نسمة" eyebrow="مجرب من السعوديين">
+        <Section title="رأي عملاء نفس" eyebrow="مجرب من السعوديين">
           <div className="mb-5 flex items-center justify-between rounded-2xl bg-charcoal px-5 py-4 text-white">
             <div>
               <p className="text-xs font-bold text-white/60">تقييم العملاء</p>
@@ -604,7 +604,7 @@ export default function ThankYouView({
           <Headset className="mx-auto mb-3 h-9 w-9 text-gold" />
           <h3 className="text-2xl font-extrabold">عندك سؤال أو تبي تعدّل الطلب؟</h3>
           <p className="mx-auto mt-2 max-w-md text-sm font-bold text-white/70">
-            فريق نسمة جاهز يخدمك خلال 5 دقائق على الواتساب. عدّل العنوان، الكمية، أو
+            فريق نفس جاهز يخدمك خلال 5 دقائق على الواتساب. عدّل العنوان، الكمية، أو
             استفسر بدون أي تردد.
           </p>
           <div className="mt-5 flex flex-col items-center justify-center gap-3 md:flex-row">
@@ -615,7 +615,7 @@ export default function ThankYouView({
               className="inline-flex items-center justify-center gap-2 rounded-2xl bg-[#25D366] px-7 py-4 text-base font-extrabold text-white shadow-lg shadow-[#25D366]/30 transition hover:scale-[1.02]"
             >
               <MessageCircle className="h-5 w-5 fill-white" />
-              راسل فريق نسمة الآن
+              راسل فريق نفس الآن
             </a>
             <a
               href={`tel:+${WHATSAPP_PHONE_WA}`}
@@ -801,7 +801,7 @@ const TESTIMONIALS = [
     name: 'سارة',
     city: 'جدة',
     quote:
-      'موسم الغبار يقتلني. مع بخاخ الجيوب صار نومي أهدى وما عاد أصحى مكتومة. شكراً نسمة 💚',
+      'موسم الغبار يقتلني. مع بخاخ الجيوب صار نومي أهدى وما عاد أصحى مكتومة. شكراً نفس 💚',
   },
   {
     name: 'فهد',
