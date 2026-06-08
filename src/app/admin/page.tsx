@@ -569,7 +569,7 @@ export default function AdminDashboardPage() {
             className="w-full rounded-[2rem] border border-white/10 bg-white p-8 text-charcoal shadow-2xl"
           >
             <p className="mb-2 text-sm font-bold uppercase tracking-[0.2em] text-teal">
-              Nasama Admin
+              Nafaas Admin
             </p>
             <h1 className="mb-6 text-3xl font-extrabold">Dashboard login</h1>
             <label className="mb-4 block">
@@ -607,7 +607,7 @@ export default function AdminDashboardPage() {
             <p className="mt-4 text-center text-xs font-bold leading-relaxed text-charcoal/50">
               Username: <span className="text-charcoal">admin</span>
               <br />
-              Password: <span className="text-charcoal">Nasama@Admin2026</span> (include the @ symbol)
+              Password: <span className="text-charcoal">Nafaas@Admin2026</span> (include the @ symbol)
             </p>
           </form>
         </div>
@@ -621,7 +621,7 @@ export default function AdminDashboardPage() {
         <div className="mb-6 flex flex-col gap-4 rounded-[2rem] bg-charcoal p-6 text-white shadow-xl md:flex-row md:items-center md:justify-between">
           <div>
             <p className="text-sm font-bold uppercase tracking-[0.25em] text-sage">
-              Nasama command center
+              Nafaas command center
             </p>
             <h1 className="mt-2 text-3xl font-extrabold md:text-4xl">Admin dashboard</h1>
             <p className="mt-2 flex items-center gap-2 text-sm text-white/60">
