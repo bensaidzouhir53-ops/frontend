@@ -3,6 +3,7 @@ import {
   buildRedirectDestination,
   fetchRedirectBySlug,
 } from '@/lib/redirects.server'
+import { resolvePublicUrl } from '@/lib/site-url'
 
 export const dynamic = 'force-dynamic'
 export const runtime = 'nodejs'
@@ -15,7 +16,7 @@ export async function GET(
   const redirectLink = await fetchRedirectBySlug(slug)
 
   if (!redirectLink) {
-    return NextResponse.redirect(new URL('/ad-link-not-found', request.url))
+    return NextResponse.redirect(resolvePublicUrl('/ad-link-not-found', request))
   }
 
   const query: Record<string, string | string[] | undefined> = {}
@@ -31,5 +32,5 @@ export async function GET(
   }
 
   const destination = buildRedirectDestination(redirectLink.target_path, query)
-  return NextResponse.redirect(new URL(destination, request.url), 307)
+  return NextResponse.redirect(resolvePublicUrl(destination, request), 307)
 }
