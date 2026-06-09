@@ -92,6 +92,23 @@ export interface ImageReviewsSectionContent {
   subtitle: string
 }
 
+export interface FacebookSocialProofItem {
+  image: string
+  alt: string
+  caption?: string
+  platform?: string
+}
+
+export interface FacebookSocialProofSectionContent {
+  badge: string
+  title: string
+  subtitle: string
+  stats: { value: string; label: string }[]
+  items: FacebookSocialProofItem[]
+  footerText: string
+  ctaLabel: string
+}
+
 export interface ProductPageSections {
   painAlert: string
   painTitle: string
@@ -122,6 +139,7 @@ export interface ProductPageSections {
   statsSection?: StatsSectionContent
   trustOrigin?: TrustOriginContent
   imageReviewsSection?: ImageReviewsSectionContent
+  facebookSocialProof?: FacebookSocialProofSectionContent
   showImageReviews: boolean
   reviewsKey: 'herbal-lung-spray' | 'molien-drops'
 }
@@ -364,6 +382,52 @@ const HERBAL_LUNG_SPRAY_SECTIONS: ProductPageSections = {
     title: 'قصص نجاح حقيقية.. من الكتمة لقمة النشاط! 💬',
     subtitle:
       'ما نبي نمدح منتجنا.. خلنا نسمع من آلاف العملاء اللي كانوا يعانون من البلغم والكتمة وكيف تغيرت حياتهم مع بخاخ نفس.',
+  },
+  facebookSocialProof: {
+    badge: 'تفاعل حقيقي من السعوديين 🇸🇦',
+    title: 'شوف الناس وش قاعدين يقولون — تعليقات وتجارب حقيقية!',
+    subtitle:
+      'مو إعلاناتنا.. هذي لقطات حقيقية من تفاعل السعوديين: يسألون، يجربون، ويشهدون إن بخاخ نَفَس فعلاً يريح الصدر ويخفف الكتمة والبلغم.',
+    stats: [
+      { value: '+900', label: 'تفاعل وإعجاب على المنشورات' },
+      { value: '100%', label: 'يقولون: «منتج فعّال»' },
+      { value: '+111', label: 'تعليق يسأل ويطلب التجربة' },
+    ],
+    items: [
+      {
+        image: '/images/social-proof/herbal-lung-spray-social-4.png',
+        alt: 'منشور بخاخ الرئة — 905 إعجاب وتعليق: ممتاز عن تجربة قبل سنة',
+        caption: '«من بعد فضل الله.. هذا العلاج ممتاز عن تجربة قبل سنة»',
+        platform: '905+ إعجاب',
+      },
+      {
+        image: '/images/social-proof/herbal-lung-spray-social-2.png',
+        alt: '939 إعجاب — «والله ممتاز» من تجربة حقيقية',
+        caption: '«والله ممتاز» — رد على سؤال: مين جرب واستفاد؟',
+        platform: '939+ إعجاب',
+      },
+      {
+        image: '/images/social-proof/herbal-lung-spray-social-3.png',
+        alt: 'تعليق: عن تجربة شخصية منتج ممتاز جداً',
+        caption: '«عن تجربه شخصيه.. منتج من الآخر ممتاز جداً»',
+        platform: 'تعليق مؤكد',
+      },
+      {
+        image: '/images/social-proof/herbal-lung-spray-social-1.png',
+        alt: 'تعليقات: منتج فعال 100% واستفسارات شراء',
+        caption: '«ما شاء الله منتج فعال 100%» — وناس تسأل: بكام؟',
+        platform: 'تعليقات حية',
+      },
+      {
+        image: '/images/social-proof/herbal-lung-spray-social-5.png',
+        alt: 'رسالة عميل: فرق كبير في التنفس وطرد البلغم',
+        caption:
+          '«التنفس عندي صار فيه فرق كبير.. والبلغم يطلع بطريقة رهيبة» — تجربة بعد الاستخدام',
+        platform: 'رسالة عميل',
+      },
+    ],
+    footerText: 'انضم للسعوديين اللي جربوا وارتاحوا — اطلب الحين والدفع عند الاستلام',
+    ctaLabel: 'أكمل طلبك — الدفع عند الاستلام 📦',
   },
   showImageReviews: true,
   reviewsKey: 'herbal-lung-spray',

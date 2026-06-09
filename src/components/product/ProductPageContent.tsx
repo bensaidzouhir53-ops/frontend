@@ -13,6 +13,7 @@ import ProductDayProcessSection from '@/components/product/ProductDayProcessSect
 import ProductBeforeAfterSection from '@/components/product/ProductBeforeAfterSection'
 import ProductStatsSection from '@/components/product/ProductStatsSection'
 import ProductTrustOriginSection from '@/components/product/ProductTrustOriginSection'
+import ProductFacebookSocialProofSection from '@/components/product/ProductFacebookSocialProofSection'
 import ProductImageReviewsSection from '@/components/product/ProductImageReviewsSection'
 import HowToUseStep from '@/components/product/HowToUseStep'
 import ProductReviewsGrid from '@/components/product/ProductReviewsGrid'
@@ -165,6 +166,10 @@ export default function ProductPageContent({
           </div>
         </div>
       </section>
+
+      {sections.facebookSocialProof && (
+        <ProductFacebookSocialProofSection content={sections.facebookSocialProof} />
+      )}
 
       {/* ── 2. Pain Agitation Section (Text Right, Image Left) ── */}
       <section className="py-16 md:py-24 bg-white overflow-hidden">
