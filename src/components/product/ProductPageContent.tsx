@@ -167,10 +167,6 @@ export default function ProductPageContent({
         </div>
       </section>
 
-      {sections.facebookSocialProof && (
-        <ProductFacebookSocialProofSection content={sections.facebookSocialProof} />
-      )}
-
       {/* ── 2. Pain Agitation Section (Text Right, Image Left) ── */}
       <section className="py-16 md:py-24 bg-white overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -399,6 +395,10 @@ export default function ProductPageContent({
       )}
 
       {/* ── 4.55 Before / After Comparison ── */}
+      {sections.facebookSocialProof && (
+        <ProductFacebookSocialProofSection content={sections.facebookSocialProof} />
+      )}
+
       {sections.beforeAfterComparison && (
         <ProductBeforeAfterSection content={sections.beforeAfterComparison} />
       )}
