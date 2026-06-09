@@ -11,6 +11,7 @@ import {
   Copy,
   Download,
   Eye,
+  FlaskConical,
   LogOut,
   Lock,
   MessageCircle,
@@ -141,8 +142,9 @@ type OrdersResponse = {
   offset: number
 }
 
-const statusOptions = ['pending', 'confirmed', 'shipped', 'delivered', 'cancelled', 'returned']
+const statusOptions = ['test', 'pending', 'confirmed', 'shipped', 'delivered', 'cancelled', 'returned']
 const statusIcons: Record<string, LucideIcon> = {
+  test: FlaskConical,
   pending: Clock,
   confirmed: CheckCircle2,
   shipped: Truck,
@@ -1258,7 +1260,9 @@ function StatusPill({ status }: { status: string }) {
       ? 'bg-green-100 text-green-700'
       : status === 'cancelled' || status === 'returned'
         ? 'bg-red-100 text-red-700'
-        : status === 'shipped'
+        : status === 'test'
+          ? 'bg-purple-100 text-purple-700'
+          : status === 'shipped'
           ? 'bg-blue-100 text-blue-700'
           : status === 'confirmed'
             ? 'bg-teal/15 text-teal'
