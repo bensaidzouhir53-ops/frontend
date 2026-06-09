@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { WHATSAPP_URL } from '@/lib/contact'
+import { buildGeneralWhatsAppUrl } from '@/lib/contact'
 
 export const metadata: Metadata = {
   title: 'نسمة | الشحن والإرجاع',
@@ -182,7 +182,7 @@ export default function ShippingReturnsPage() {
             <p className="text-white/75 text-sm mb-5">فريقنا جاهز لمساعدتك في أسرع وقت</p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <a
-                href={WHATSAPP_URL}
+                href={buildGeneralWhatsAppUrl()}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center justify-center gap-2 bg-white text-teal font-bold px-6 py-3 rounded-xl hover:bg-ivory transition-colors shadow-lg"

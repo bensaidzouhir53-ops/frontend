@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { WHATSAPP_PHONE_DISPLAY, WHATSAPP_URL } from '@/lib/contact'
+import { WHATSAPP_PHONE_DISPLAY, buildGeneralWhatsAppUrl } from '@/lib/contact'
 
 export default function ContactPage() {
   const [form, setForm] = useState({ name: '', email: '', message: '' })
@@ -49,7 +49,7 @@ export default function ContactPage() {
                   title: 'واتساب',
                   value: WHATSAPP_PHONE_DISPLAY,
                   sub: 'متاح ٩ص – ٩م (السبت–الخميس)',
-                  href: WHATSAPP_URL,
+                  href: buildGeneralWhatsAppUrl(),
                 },
                 {
                   icon: (

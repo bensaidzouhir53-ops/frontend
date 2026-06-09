@@ -215,7 +215,7 @@ function authHeader(username: string, password: string): string {
 function whatsappLink(phoneE164: string, orderNumber: string): string {
   const cleaned = phoneE164.replace(/[^\d]/g, '')
   const text = encodeURIComponent(
-    `مرحبا، نتواصل معك من نسمة بخصوص طلبك رقم ${orderNumber}. هل تأكيد الطلب والعنوان؟`,
+    `مرحبا، نتواصل معك من نَفَس بخصوص طلبك رقم ${orderNumber}. هل تأكيد الطلب والعنوان؟`,
   )
   return `https://wa.me/${cleaned}?text=${text}`
 }

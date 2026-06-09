@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import LungLogo from '@/components/brand/LungLogo'
-import { WHATSAPP_URL } from '@/lib/contact'
+import { buildGeneralWhatsAppUrl } from '@/lib/contact'
 
 const FOOTER_LINKS = [
   { href: '/shipping-returns', label: 'الشحن والإرجاع' },
@@ -85,7 +85,7 @@ export default function Footer() {
               نحن هنا لخدمتك
             </p>
             <a
-              href={WHATSAPP_URL}
+              href={buildGeneralWhatsAppUrl()}
               className="group relative inline-flex items-center gap-3 rounded-[1.25rem] bg-gradient-to-r from-green-500 to-green-600 p-[3px] shadow-[0_10px_30px_rgba(34,197,94,0.2)] transition-all duration-500 hover:scale-105 hover:shadow-[0_10px_40px_rgba(34,197,94,0.4)]"
               target="_blank"
               rel="noopener noreferrer"

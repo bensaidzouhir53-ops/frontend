@@ -24,7 +24,12 @@ import {
   Volume2,
 } from 'lucide-react'
 import { PRODUCTS, getProductBySlug, getOffersForProduct } from '@/lib/products'
-import { WHATSAPP_URL, WHATSAPP_PHONE_WA } from '@/lib/contact'
+import {
+  WHATSAPP_PHONE_WA,
+  buildGeneralWhatsAppUrl,
+  buildOutboundWelcomePreview,
+  buildWhatsAppUrl,
+} from '@/lib/contact'
 import { cn } from '@/lib/utils'
 
 type StoredOrderItem = {
@@ -181,12 +186,15 @@ export default function ThankYouView({
     return PRODUCTS.filter((product) => !cartSlugs.has(product.slug)).slice(0, 2)
   }, [cartSlugs])
 
-  const whatsappAddressLink = useMemo(() => {
-    const message = encodeURIComponent(
-      `السلام عليكم 👋، رقم طلبي ${orderNumber || ''}.\nأبي أأكد عنوان التوصيل أو أعدل تفاصيل الطلب.`,
-    )
-    return `${WHATSAPP_URL}?text=${message}`
-  }, [orderNumber])
+  const whatsappSupportLink = useMemo(() => buildGeneralWhatsAppUrl(), [])
+
+  const welcomeMessagePreview = useMemo(() => {
+    return buildOutboundWelcomePreview({
+      orderNumber: orderNumber || undefined,
+      customerName: order?.customer_name,
+      total: orderTotal > 0 ? orderTotal : undefined,
+    })
+  }, [order?.customer_name, orderNumber, orderTotal])
 
   function copy(value: string, field: string) {
     if (!value || typeof navigator === 'undefined' || !navigator.clipboard) return
@@ -243,6 +251,19 @@ export default function ThankYouView({
               )}
             </div>
           )}
+
+          <div className="mx-auto mt-6 max-w-lg rounded-2xl border border-white/20 bg-white/10 p-4 text-right backdrop-blur-sm">
+            <p className="mb-2 text-xs font-extrabold uppercase tracking-[0.2em] text-gold">
+              رسالة ترحيب من نَفَس على واتساب
+            </p>
+            <p className="whitespace-pre-line text-sm font-bold leading-relaxed text-white/90">
+              {welcomeMessagePreview}
+            </p>
+            <p className="mt-3 text-xs font-bold text-white/65">
+              راح توصلك هالرسالة على جوالك خلال ثواني — خليك قريب من الواتساب عشان نكمل تأكيد طلبك
+              بأسرع وقت 📲
+            </p>
+          </div>
         </div>
       </section>
 
@@ -295,7 +316,7 @@ export default function ThankYouView({
                 </div>
               </div>
               <a
-                href={whatsappAddressLink}
+                href={whatsappSupportLink}
                 target="_blank"
                 rel="noreferrer"
                 className="flex items-center justify-center gap-2 rounded-xl bg-charcoal px-4 py-2.5 text-xs font-extrabold text-white transition hover:bg-charcoal/90"
@@ -494,9 +515,9 @@ export default function ThankYouView({
           >
             <div className="grid gap-4 md:grid-cols-2">
               {crossSells.map((product) => {
-                const ws = `${WHATSAPP_URL}?text=${encodeURIComponent(
+                const ws = buildWhatsAppUrl(
                   `السلام عليكم، رقم طلبي ${orderNumber}. أبي أضيف ${product.nameAr} لنفس الطلب 🙌`,
-                )}`
+                )
                 return (
                   <div
                     key={product.slug}
@@ -609,13 +630,13 @@ export default function ThankYouView({
           </p>
           <div className="mt-5 flex flex-col items-center justify-center gap-3 md:flex-row">
             <a
-              href={whatsappAddressLink}
+              href={whatsappSupportLink}
               target="_blank"
               rel="noreferrer"
               className="inline-flex items-center justify-center gap-2 rounded-2xl bg-[#25D366] px-7 py-4 text-base font-extrabold text-white shadow-lg shadow-[#25D366]/30 transition hover:scale-[1.02]"
             >
               <MessageCircle className="h-5 w-5 fill-white" />
-              راسل فريق نفس الآن
+              راسل فريق نَفَس على واتساب
             </a>
             <a
               href={`tel:+${WHATSAPP_PHONE_WA}`}
