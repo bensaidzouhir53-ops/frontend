@@ -451,7 +451,7 @@ export default function ProductPageContent({
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="inline-flex items-center gap-2 text-teal mb-4 bg-teal/10 px-5 py-2 rounded-full font-bold text-sm border border-teal/20 shadow-sm">
             <ShieldCheck className="w-4 h-4" />
-            ليش نسمة هي خيارك الصح؟
+            ليش نفس هي خيارك الصح؟
           </div>
           <h2 className="text-3xl md:text-4xl font-extrabold text-charcoal mb-10 tracking-tight">
             مقارنة سريعة توضح لك الفرق
@@ -463,7 +463,7 @@ export default function ProductPageContent({
               <div className="p-4 md:p-6 text-center border-l border-white/10 flex items-center justify-center">وجه المقارنة</div>
               <div className="p-4 md:p-6 text-center border-l border-white/10 bg-gradient-to-b from-teal-dark to-teal text-white flex flex-col items-center justify-center gap-1 shadow-inner">
                 <span className="text-xl md:text-2xl mb-1">🌿</span>
-                <span>روتين نسمة</span>
+                <span>روتين نفس</span>
               </div>
               <div className="p-4 md:p-6 text-center text-white/60 flex flex-col items-center justify-center gap-1 bg-gray-900">
                 <span className="text-xl md:text-2xl mb-1 grayscale opacity-50">💊</span>
@@ -501,7 +501,7 @@ export default function ProductPageContent({
                 أمانك خط أحمر: مطابق لمواصفات هيئة الغذاء والدواء (SFDA)
               </h2>
               <p className="text-white/80 text-lg leading-relaxed mb-6">
-                صحتك ما فيها مجازفة. جميع منتجات نسمة تمر باختبارات جودة صارمة لتكون مطابقة تماماً للمواصفات والمقاييس السعودية (SFDA). نحن نضمن لك منتجاً نقيّاً، فعّالاً، وخالياً من أي إضافات ضارة.
+                صحتك ما فيها مجازفة. جميع منتجات نفس تمر باختبارات جودة صارمة لتكون مطابقة تماماً للمواصفات والمقاييس السعودية (SFDA). نحن نضمن لك منتجاً نقيّاً، فعّالاً، وخالياً من أي إضافات ضارة.
               </p>
               <div className="flex flex-wrap gap-4 justify-end">
                 <div className="flex items-center gap-2 bg-white/10 px-4 py-2 rounded-full border border-white/20">

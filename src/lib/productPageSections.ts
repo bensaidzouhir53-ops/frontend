@@ -254,7 +254,7 @@ const HERBAL_LUNG_SPRAY_SECTIONS: ProductPageSections = {
     badge: 'نتائج حقيقية لعملاء جربوا وارتاحوا',
     title: 'توقف عن المعاناة • وابدأ تتنفس الحياة',
     subtitle:
-      'آلاف السعوديين كانوا يعانون من الكتمة والبلغم مثل وضعك بالضبط.. وهذي النتائج اللي صدمتهم بعد استخدام بخاخ نسمة!',
+      'آلاف السعوديين كانوا يعانون من الكتمة والبلغم مثل وضعك بالضبط.. وهذي النتائج اللي صدمتهم بعد استخدام بخاخ نفس!',
     stats: [
       {
         value: '95',
@@ -273,23 +273,23 @@ const HERBAL_LUNG_SPRAY_SECTIONS: ProductPageSections = {
       },
     ],
     image: '/images/solution-lung-spray.png',
-    imageAlt: 'بخاخ نسمة العشبي يمنحك راحة التنفس',
+    imageAlt: 'بخاخ نفس العشبي يمنحك راحة التنفس',
     video: '/videos/herbal-lung-spray-results-animated.mp4',
     imageCaption: '«كنت أصحى مخنوق من البلغم.. البخاخ هذا حرفياً رجع لي أنفاسي!»',
-    footnote: '* بناءً على استبيان رضا عملاء نسمة للملتزمين بالروتين اليومي.',
+    footnote: '* بناءً على استبيان رضا عملاء نفس للملتزمين بالروتين اليومي.',
   },
   ingredientsMainImage: '/images/main-ingredients-lung-spray.png',
   ingredientsMainImageAlt: 'مكونات بخاخ تنظيف الرئة العشبي الطبيعية',
   beforeAfterComparison: {
-    title: 'شوف الفرق بعينك — قبل وبعد بخاخ نسمة',
+    title: 'شوف الفرق بعينك — قبل وبعد بخاخ نفس',
     subtitle:
       'حرّك الخط في النص يمين ويسار وقارن حالة الرئة والبلغم قبل الروتين وبعده. آلاف السعوديين صدموا لما شافوا الفرق من أول أسبوع!',
     beforeImage: '/images/herbal-lung-spray-before.png',
     afterImage: '/images/herbal-lung-spray-after.png',
     beforeLabel: 'قبل',
     afterLabel: 'بعد',
-    beforeAlt: 'حالة الرئة قبل بخاخ نسمة — بلغم متراكم وكتمة',
-    afterAlt: 'حالة الرئة بعد بخاخ نسمة — رئة أنظف وتنفس مريح',
+    beforeAlt: 'حالة الرئة قبل بخاخ نفس — بلغم متراكم وكتمة',
+    afterAlt: 'حالة الرئة بعد بخاخ نفس — رئة أنظف وتنفس مريح',
   },
   howToUseSteps: [
     {
@@ -323,7 +323,7 @@ const HERBAL_LUNG_SPRAY_SECTIONS: ProductPageSections = {
   ],
   dayProcess: {
     image: '/images/herbal-lung-spray-day-process.png',
-    imageAlt: 'رجل يستخدم بخاخ نسمة العشبي لتنفس مريح',
+    imageAlt: 'رجل يستخدم بخاخ نفس العشبي لتنفس مريح',
     overlayTitle:
       'طوق النجاة لكل مدخن ولكل شخص انخنق من البلغم والكتمة',
     overlayDesc:
@@ -363,7 +363,7 @@ const HERBAL_LUNG_SPRAY_SECTIONS: ProductPageSections = {
   imageReviewsSection: {
     title: 'قصص نجاح حقيقية.. من الكتمة لقمة النشاط! 💬',
     subtitle:
-      'ما نبي نمدح منتجنا.. خلنا نسمع من آلاف العملاء اللي كانوا يعانون من البلغم والكتمة وكيف تغيرت حياتهم مع بخاخ نسمة.',
+      'ما نبي نمدح منتجنا.. خلنا نسمع من آلاف العملاء اللي كانوا يعانون من البلغم والكتمة وكيف تغيرت حياتهم مع بخاخ نفس.',
   },
   showImageReviews: true,
   reviewsKey: 'herbal-lung-spray',
@@ -384,7 +384,7 @@ const MOLIEN_DROPS_SECTIONS: ProductPageSections = {
   painImageAlt: 'شخص يعاني من بلغم صباحي وغثيان',
   painOverlay: 'لا تخلي الكتمة تسيطر على يومك',
   solutionBadge: 'الحل اللي تدور عليه 💧',
-  solutionTitle: 'قطرة المولين من نسمة: "غسيل طبيعي" لرئتيك!',
+  solutionTitle: 'قطرة المولين من نفس: "غسيل طبيعي" لرئتيك!',
   solutionBody:
     'جبنا لك خلاصة الطبيعة بتركيز عالي جداً. قطرة المولين مو مسكن مؤقت، هذي تركيبة عشبية سريعة الامتصاص تنزل مباشرة على البلغم الكثيف والمتحجر.. تفككه، تذيبه، وتطلعه بدون كحة تجرح حلقك. تريحك من الغثيان والكحة الصباحية بدون أي كيماويات.',
   solutionImage: '/images/molien-solution.png',
@@ -440,7 +440,7 @@ const MOLIEN_DROPS_SECTIONS: ProductPageSections = {
     image: '/images/molien-breathe-stats.png',
     imageAlt: 'امرأة سعودية تشعر بالراحة بعد استخدام قطرة المولين العشبية',
     imageCaption: '«أخيراً صرت أصحى بدون بلغم ناشب — قطرة المولين غيّرت صباحي»',
-    footnote: '* بناءً على تقييمات واستبيانات عملاء نسمة — النتائج تختلف حسب الالتزام بالروتين اليومي.',
+    footnote: '* بناءً على تقييمات واستبيانات عملاء نفس — النتائج تختلف حسب الالتزام بالروتين اليومي.',
   },
   ingredientsMainImage: '/images/molien-ingredients.png',
   ingredientsMainImageAlt: 'مكونات قطرة المولين العشبية — أوراق المولين والأعشاب الطبيعية',
