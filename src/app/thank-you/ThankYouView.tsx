@@ -27,7 +27,6 @@ import { PRODUCTS, getProductBySlug, getOffersForProduct } from '@/lib/products'
 import {
   WHATSAPP_PHONE_WA,
   buildGeneralWhatsAppUrl,
-  buildOutboundWelcomePreview,
   buildWhatsAppUrl,
 } from '@/lib/contact'
 import { cn } from '@/lib/utils'
@@ -188,14 +187,6 @@ export default function ThankYouView({
 
   const whatsappSupportLink = useMemo(() => buildGeneralWhatsAppUrl(), [])
 
-  const welcomeMessagePreview = useMemo(() => {
-    return buildOutboundWelcomePreview({
-      orderNumber: orderNumber || undefined,
-      customerName: order?.customer_name,
-      total: orderTotal > 0 ? orderTotal : undefined,
-    })
-  }, [order?.customer_name, orderNumber, orderTotal])
-
   function copy(value: string, field: string) {
     if (!value || typeof navigator === 'undefined' || !navigator.clipboard) return
     void navigator.clipboard.writeText(value).then(() => {
@@ -252,18 +243,6 @@ export default function ThankYouView({
             </div>
           )}
 
-          <div className="mx-auto mt-6 max-w-lg rounded-2xl border border-white/20 bg-white/10 p-4 text-right backdrop-blur-sm">
-            <p className="mb-2 text-xs font-extrabold uppercase tracking-[0.2em] text-gold">
-              رسالة ترحيب من نَفَس على واتساب
-            </p>
-            <p className="whitespace-pre-line text-sm font-bold leading-relaxed text-white/90">
-              {welcomeMessagePreview}
-            </p>
-            <p className="mt-3 text-xs font-bold text-white/65">
-              راح توصلك هالرسالة على جوالك خلال ثواني — خليك قريب من الواتساب عشان نكمل تأكيد طلبك
-              بأسرع وقت 📲
-            </p>
-          </div>
         </div>
       </section>
 
