@@ -395,12 +395,12 @@ export default function ProductPageContent({
       )}
 
       {/* ── 4.55 Before / After Comparison ── */}
-      {sections.facebookSocialProof && (
-        <ProductFacebookSocialProofSection content={sections.facebookSocialProof} />
-      )}
-
       {sections.beforeAfterComparison && (
         <ProductBeforeAfterSection content={sections.beforeAfterComparison} />
+      )}
+
+      {sections.facebookSocialProof && (
+        <ProductFacebookSocialProofSection content={sections.facebookSocialProof} />
       )}
 
       {/* ── 4.6 Twenty-Eight Day Process ── */}
