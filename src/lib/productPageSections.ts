@@ -99,6 +99,7 @@ export interface ProductPageSections {
   painPoints: PainPoint[]
   painImage: string
   painImageAlt: string
+  painVideo?: string
   painOverlay: string
   solutionBadge: string
   solutionTitle: string
@@ -215,6 +216,7 @@ const HERBAL_LUNG_SPRAY_SECTIONS: ProductPageSections = {
   ],
   painImage: '/images/pain-point-lung.png',
   painImageAlt: 'شخص يعاني من كتمة في الصدر وصعوبة بالتنفس',
+  painVideo: '/videos/herbal-lung-spray-pain-animated.mp4',
   painOverlay: 'لا تخلي الكتمة تسرق أجمل لحظاتك',
   solutionBadge: 'الفرصة اللي بتغير حياتك 🌿',
   solutionTitle: 'تخيل تصحى بكرة وتتنفس بعمق كأنك مولود من جديد.. بدون كحة ولا بلغم!',

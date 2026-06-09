@@ -201,11 +201,25 @@ export default function ProductPageContent({
             <div className="w-full lg:w-1/2 order-1 lg:order-2 relative">
               <div className="absolute inset-0 bg-red-500/10 rounded-full opacity-40" />
               <div className="relative aspect-[4/5] rounded-[2.5rem] overflow-hidden bg-gray-100 border border-sage/20 shadow-2xl">
-                <img 
-                  src={sections.painImage} 
-                  alt={sections.painImageAlt} 
-                  className="w-full h-full object-cover grayscale-[30%] contrast-125"
-                />
+                {sections.painVideo ? (
+                  <video
+                    src={`${sections.painVideo}#t=0.001`}
+                    autoPlay
+                    playsInline
+                    muted
+                    loop
+                    preload="metadata"
+                    poster={sections.painImage}
+                    className="h-full w-full object-cover grayscale-[30%] contrast-125"
+                    aria-label={sections.painImageAlt}
+                  />
+                ) : (
+                  <img
+                    src={sections.painImage}
+                    alt={sections.painImageAlt}
+                    className="w-full h-full object-cover grayscale-[30%] contrast-125"
+                  />
+                )}
                 {/* Overlay gradient for dramatic effect */}
                 <div className="absolute inset-0 bg-gradient-to-t from-charcoal/80 via-transparent to-transparent" />
                 <div className="absolute bottom-6 right-6 left-6 text-right">
