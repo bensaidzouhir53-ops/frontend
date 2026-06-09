@@ -70,14 +70,28 @@ export default function ProductStatsSection({ content }: ProductStatsSectionProp
           {/* Lifestyle image — left visually in RTL */}
           <div className="order-1 w-full lg:order-2 lg:w-1/2">
             <div className="relative mx-auto aspect-[4/5] max-w-md overflow-hidden rounded-[2rem] border border-teal/15 bg-white shadow-2xl shadow-teal-dark/10 lg:max-w-none">
-              <Image
-                src={content.image}
-                alt={content.imageAlt}
-                fill
-                sizes="(max-width: 1024px) 100vw, 560px"
-                loading="lazy"
-                className="object-cover object-top"
-              />
+              {content.video ? (
+                <video
+                  src={`${content.video}#t=0.001`}
+                  autoPlay
+                  playsInline
+                  muted
+                  loop
+                  preload="metadata"
+                  poster={content.image}
+                  className="h-full w-full object-cover object-top"
+                  aria-label={content.imageAlt}
+                />
+              ) : (
+                <Image
+                  src={content.image}
+                  alt={content.imageAlt}
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 560px"
+                  loading="lazy"
+                  className="object-cover object-top"
+                />
+              )}
               <div className="absolute inset-0 bg-gradient-to-t from-teal-dark/25 via-transparent to-transparent" />
               {content.imageCaption && (
                 <div className="absolute bottom-0 right-0 left-0 border-t border-gold/25 bg-teal-dark/80 p-5 text-right backdrop-blur-sm">

@@ -82,6 +82,7 @@ export interface StatsSectionContent {
   stats: StatsSectionStat[]
   image: string
   imageAlt: string
+  video?: string
   imageCaption?: string
   footnote?: string
 }
@@ -271,6 +272,7 @@ const HERBAL_LUNG_SPRAY_SECTIONS: ProductPageSections = {
     ],
     image: '/images/solution-lung-spray.png',
     imageAlt: 'بخاخ نسمة العشبي يمنحك راحة التنفس',
+    video: '/videos/herbal-lung-spray-results-animated.mp4',
     imageCaption: '«كنت أصحى مخنوق من البلغم.. البخاخ هذا حرفياً رجع لي أنفاسي!»',
     footnote: '* بناءً على استبيان رضا عملاء نسمة للملتزمين بالروتين اليومي.',
   },
