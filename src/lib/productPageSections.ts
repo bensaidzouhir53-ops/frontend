@@ -446,6 +446,7 @@ const MOLIEN_DROPS_SECTIONS: ProductPageSections = {
   ],
   painImage: '/images/pain-point-lung.png',
   painImageAlt: 'شخص يعاني من بلغم صباحي وغثيان',
+  painVideo: '/videos/molien-drops-pain-animated.mp4',
   painOverlay: 'لا تخلي الكتمة تسيطر على يومك',
   solutionBadge: 'الحل اللي تدور عليه 💧',
   solutionTitle: 'قطرة المولين من نفس: "غسيل طبيعي" لرئتيك!',
