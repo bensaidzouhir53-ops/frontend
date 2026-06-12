@@ -4,7 +4,7 @@ import { getOfferForProductQty, getOffersForProduct } from '@/lib/products'
 function getItemPrice(productSlug: string, quantity: number): number {
   const offer = getOfferForProductQty(productSlug, quantity)
   if (offer) return offer.price
-  const base = getOffersForProduct(productSlug)[0]?.price ?? 145
+  const base = getOffersForProduct(productSlug)[0]?.price ?? 169
   return quantity * base
 }
 
