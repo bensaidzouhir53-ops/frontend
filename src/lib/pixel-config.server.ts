@@ -114,6 +114,7 @@ export function getEnvPixelFallback(): ServerPixelConfig {
       extra: [
         process.env.NEXT_PUBLIC_META_PIXEL_ID ?? process.env.META_PIXEL_ID,
         process.env.NEXT_PUBLIC_META_PIXEL_ID_2 ?? process.env.META_PIXEL_ID_2,
+        process.env.NEXT_PUBLIC_META_PIXEL_ID_3 ?? process.env.META_PIXEL_ID_3,
       ],
     }),
     tiktok_pixel_id:
