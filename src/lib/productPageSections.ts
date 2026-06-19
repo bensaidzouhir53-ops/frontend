@@ -118,9 +118,11 @@ export interface AgitationSectionContent {
   title: string
   body: string
   points: AgitationPoint[]
-  /** Animated GIF — rendered with native img (not Next/Image) so frames play */
+  /** Animated GIF — native img only (Next/Image breaks animation) */
   gif: string
   gifAlt: string
+  /** Optional MP4 loop — used when GIF is missing or as smoother fallback */
+  gifVideo?: string
   overlay: string
 }
 
@@ -269,6 +271,7 @@ const HERBAL_LUNG_SPRAY_SECTIONS: ProductPageSections = {
       },
     ],
     gif: '/images/herbal-lung-spray-agitation.gif',
+    gifVideo: '/videos/herbal-lung-spray-agitation.mp4',
     gifAlt: 'مدخن كبير بالسن مع أنبوب أكسجين — عواقب تجاهل الكتمة والتدخين',
     overlay: 'وقتك ينفذ.. والرئة ما تعطيك فرصة ثانية',
   },

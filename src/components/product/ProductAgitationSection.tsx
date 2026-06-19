@@ -6,8 +6,16 @@ interface ProductAgitationSectionProps {
   content: AgitationSectionContent
 }
 
+function isGifPath(path: string): boolean {
+  return path.trim().toLowerCase().endsWith('.gif')
+}
+
 export default function ProductAgitationSection({ content }: ProductAgitationSectionProps) {
-  const hasGif = Boolean(content.gif?.trim())
+  const gifSrc = content.gif?.trim() ?? ''
+  const videoSrc = content.gifVideo?.trim() ?? ''
+  const hasGif = Boolean(gifSrc)
+  const hasVideo = Boolean(videoSrc)
+  const hasMedia = hasGif || hasVideo
 
   return (
     <section className="relative overflow-hidden bg-gradient-to-b from-charcoal via-charcoal to-charcoal/95 py-16 md:py-24">
@@ -16,20 +24,44 @@ export default function ProductAgitationSection({ content }: ProductAgitationSec
 
       <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col items-center gap-12 lg:flex-row">
-          {/* GIF — left visually in RTL; native img keeps GIF animation (Next/Image would not) */}
+          {/* Animated media — GIF via native img; MP4 loop as fallback only if no GIF */}
           <div className="relative order-1 w-full lg:w-1/2">
             <div className="absolute inset-0 rounded-full bg-red-500/10 opacity-60 blur-3xl" />
             <div className="relative aspect-[4/5] overflow-hidden rounded-[2.5rem] border border-red-500/20 bg-charcoal/80 shadow-2xl shadow-black/40">
-              {hasGif ? (
+              {hasMedia ? (
                 <>
-                  <img
-                    src={content.gif}
-                    alt={content.gifAlt}
-                    className="h-full w-full object-cover contrast-125"
-                    loading="eager"
-                    decoding="async"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-charcoal via-charcoal/20 to-transparent" />
+                  {hasGif && isGifPath(gifSrc) ? (
+                    <img
+                      key={gifSrc}
+                      src={gifSrc}
+                      alt={content.gifAlt}
+                      className="h-full w-full object-cover contrast-125"
+                      loading="eager"
+                      decoding="async"
+                    />
+                  ) : hasVideo ? (
+                    <video
+                      key={videoSrc}
+                      src={`${videoSrc}#t=0.001`}
+                      autoPlay
+                      playsInline
+                      muted
+                      loop
+                      preload="auto"
+                      poster={hasGif ? gifSrc : undefined}
+                      className="h-full w-full object-cover contrast-125"
+                      aria-label={content.gifAlt}
+                    />
+                  ) : (
+                    <img
+                      src={gifSrc}
+                      alt={content.gifAlt}
+                      className="h-full w-full object-cover contrast-125"
+                      loading="eager"
+                      decoding="async"
+                    />
+                  )}
+                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-charcoal via-charcoal/20 to-transparent" />
                   {content.overlay && (
                     <div className="absolute bottom-6 right-6 left-6 text-right">
                       <p className="text-xl font-extrabold text-white drop-shadow-md">
