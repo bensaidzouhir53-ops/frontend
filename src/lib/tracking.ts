@@ -90,6 +90,29 @@ function getMetaPixelRegistry(): string[] {
   return window.__nasamaInitializedPixelIds
 }
 
+/** Called by MetaPixel after init — enables trackSingle routing for all pixels. */
+export function registerMetaPixelIds(ids: string[]): void {
+  const registry = getMetaPixelRegistry()
+  for (const id of ids) {
+    if (!registry.includes(id)) registry.push(id)
+    _metaInitializedIds.add(id)
+  }
+  _metaReady = true
+  flushMetaQueue()
+}
+
+function fireFbqTrack(event: string, params?: Record<string, unknown>): void {
+  if (typeof window === 'undefined' || !window.fbq) return
+  const ids = getMetaPixelRegistry()
+  if (ids.length === 0) {
+    window.fbq('track', event, params)
+    return
+  }
+  for (const id of ids) {
+    window.fbq('trackSingle', id, event, params)
+  }
+}
+
 function initMetaPixelId(id: string): void {
   const registry = getMetaPixelRegistry()
   if (registry.includes(id) || _metaInitializedIds.has(id)) return
@@ -245,7 +268,13 @@ function isValidPixelId(value: string | null | undefined): value is string {
 }
 
 function flushMetaQueue(): void {
-  _metaQueue.forEach(([action, event, params]) => window.fbq?.(action, event, params))
+  _metaQueue.forEach(([action, event, params]) => {
+    if (action === 'track') {
+      fireFbqTrack(event, params)
+    } else {
+      window.fbq?.(action, event, params)
+    }
+  })
   _metaQueue.length = 0
 }
 
@@ -575,7 +604,11 @@ export async function initPixels(): Promise<void> {
 function safeFbq(action: string, event: string, params?: Record<string, unknown>): void {
   syncMetaReadyState()
   if (typeof window !== 'undefined' && window.fbq) {
-    window.fbq(action, event, params)
+    if (action === 'track') {
+      fireFbqTrack(event, params)
+    } else {
+      window.fbq(action, event, params)
+    }
     return
   }
   _metaQueue.push([action, event, params])

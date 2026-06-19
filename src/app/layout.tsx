@@ -5,10 +5,12 @@ import Footer from '@/components/layout/Footer'
 import ClientLazyModals from '@/components/layout/ClientLazyModals'
 import PixelInit from '@/components/shared/PixelInit'
 import PixelScripts from '@/components/shared/PixelScripts'
-import MetaPixelHeadScripts from '@/components/shared/MetaPixelHeadScripts'
+import MetaPixel from '@/components/shared/MetaPixel'
 import { fetchTrackingConfigFromBackend, getMetaPixelIds } from '@/lib/pixel-config.server'
 import { getPublicSiteUrl } from '@/lib/site-url'
 import './globals.css'
+
+export const dynamic = 'force-dynamic'
 
 const tajawal = Tajawal({
   subsets: ['arabic', 'latin'],
@@ -71,10 +73,8 @@ export default async function RootLayout({
 
   return (
     <html lang="ar" dir="rtl" className={tajawal.variable}>
-      <head>
-        <MetaPixelHeadScripts enabled={pixelConfig.enabled} pixelIds={metaPixelIds} />
-      </head>
       <body className="font-arabic bg-ivory text-charcoal antialiased">
+        <MetaPixel enabled={pixelConfig.enabled} pixelIds={metaPixelIds} />
         <PixelScripts config={pixelConfig} />
         <Header />
         <main>{children}</main>
