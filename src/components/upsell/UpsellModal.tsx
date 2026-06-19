@@ -170,8 +170,8 @@ export default function UpsellModal() {
     ? getProductBySlug(upsellProduct.product_slug)?.image
     : undefined
   const upsellRegularPrice = upsellProduct
-    ? getOffersForProduct(upsellProduct.product_slug)[0]?.price ?? 169
-    : 169
+    ? getOffersForProduct(upsellProduct.product_slug)[0]?.price ?? 179
+    : 179
   const upsellSavings = Math.max(upsellRegularPrice - UPSELL_PRICE, 0)
 
   return (
