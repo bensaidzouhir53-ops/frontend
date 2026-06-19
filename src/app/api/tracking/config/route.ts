@@ -29,6 +29,7 @@ export async function GET() {
             process.env.NEXT_PUBLIC_META_PIXEL_ID,
             process.env.NEXT_PUBLIC_META_PIXEL_ID_2,
             process.env.NEXT_PUBLIC_META_PIXEL_ID_3,
+            process.env.NEXT_PUBLIC_META_PIXEL_ID_4,
           ].filter(Boolean) as string[],
         })
         return NextResponse.json(body, {

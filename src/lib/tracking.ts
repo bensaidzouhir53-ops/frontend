@@ -411,6 +411,7 @@ function collectMetaIdsFromEnv(): string[] {
   add(process.env.NEXT_PUBLIC_META_PIXEL_ID)
   add(process.env.NEXT_PUBLIC_META_PIXEL_ID_2)
   add(process.env.NEXT_PUBLIC_META_PIXEL_ID_3)
+  add(process.env.NEXT_PUBLIC_META_PIXEL_ID_4)
   return ids
 }
 
