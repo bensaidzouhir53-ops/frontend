@@ -14,6 +14,7 @@ import ProductBeforeAfterSection from '@/components/product/ProductBeforeAfterSe
 import ProductStatsSection from '@/components/product/ProductStatsSection'
 import ProductTrustOriginSection from '@/components/product/ProductTrustOriginSection'
 import ProductFacebookSocialProofSection from '@/components/product/ProductFacebookSocialProofSection'
+import ProductAgitationSection from '@/components/product/ProductAgitationSection'
 import ProductImageReviewsSection from '@/components/product/ProductImageReviewsSection'
 import HowToUseStep from '@/components/product/HowToUseStep'
 import ProductReviewsGrid from '@/components/product/ProductReviewsGrid'
@@ -233,6 +234,8 @@ export default function ProductPageContent({
           </div>
         </div>
       </section>
+
+      {sections.agitation && <ProductAgitationSection content={sections.agitation} />}
 
       {/* ── 3. Solution / Epiphany (Image Right, Text Left) ── */}
       <section className="py-16 md:py-24 bg-mist/30">

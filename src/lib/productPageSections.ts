@@ -109,6 +109,21 @@ export interface FacebookSocialProofSectionContent {
   ctaLabel: string
 }
 
+export interface AgitationPoint {
+  text: string
+}
+
+export interface AgitationSectionContent {
+  alert: string
+  title: string
+  body: string
+  points: AgitationPoint[]
+  /** Leave empty until image is provided — section shows a placeholder */
+  image: string
+  imageAlt: string
+  overlay: string
+}
+
 export interface ProductPageSections {
   painAlert: string
   painTitle: string
@@ -118,6 +133,7 @@ export interface ProductPageSections {
   painImageAlt: string
   painVideo?: string
   painOverlay: string
+  agitation?: AgitationSectionContent
   solutionBadge: string
   solutionTitle: string
   solutionBody: string
@@ -236,6 +252,26 @@ const HERBAL_LUNG_SPRAY_SECTIONS: ProductPageSections = {
   painImageAlt: 'شخص يعاني من كتمة في الصدر وصعوبة بالتنفس',
   painVideo: '/videos/herbal-lung-spray-pain-animated.mp4',
   painOverlay: 'لا تخلي الكتمة تسرق أجمل لحظاتك',
+  agitation: {
+    alert: 'كل يوم تمر.. ترسبات السنين تزيد وتخنقك أكثر! ⏳',
+    title: 'تتخيل لو استمررت على هذا الحال سنة؟ رئتك ما راح تنتظرك!',
+    body:
+      'الكتمة اللي تتجاهلها اليوم.. بكرة تصير "طبيعة" وتاخذها كأنها جزء من عمرك. ترسبات النيكوتين والبلغم المتحجر ما يوقفون — كل أسبوع يزيدون، كل شهر يسدون مجاري أوسع من رئتك. تبدأ تتجنب الرياضة، تصير تهن من كلام الناس، زوجتك تلاحظ إنك تصحى متهال.. وأطفالك يسمعون كحتك بالليل.',
+    points: [
+      {
+        text: 'بعد 6 شهور: الكحة ما تختفي.. وتصير "شريكك الدائم" في كل مجلس واجتماع.',
+      },
+      {
+        text: 'بعد سنة: طاقتك تنحسر، تلهث من درجة واحدة، وتبدأ تفكر "ليش أنا كذا؟"',
+      },
+      {
+        text: 'بعد سنتين: مجاري التنفس تنقفل أكثر — والعلاج يصير أصعب وأغلى من اليوم.',
+      },
+    ],
+    image: '',
+    imageAlt: 'صورة توضيحية لعواقب تجاهل الكتمة والبلغم',
+    overlay: 'وقتك ينفذ.. والرئة ما تعطيك فرصة ثانية',
+  },
   solutionBadge: 'الفرصة اللي بتغير حياتك 🌿',
   solutionTitle: 'تخيل تصحى بكرة وتتنفس بعمق كأنك مولود من جديد.. بدون كحة ولا بلغم!',
   solutionBody:
