@@ -506,15 +506,11 @@ async function fetchPixelConfig(): Promise<PixelConfig | null> {
 }
 
 function applyPixelConfig(config: PixelConfig): void {
-  const metaIds =
-    config.meta_pixel_ids.length > 0
-      ? config.meta_pixel_ids
-      : config.meta_pixel_id
-        ? [config.meta_pixel_id]
-        : []
-  if (metaIds.length) loadMetaPixels(metaIds)
-  if (config.tiktok_pixel_id) loadTikTokPixel(config.tiktok_pixel_id)
-  if (config.snap_pixel_id) loadSnapPixel(config.snap_pixel_id)
+  const tiktok = config.tiktok_pixel_id?.trim()
+  const snap = config.snap_pixel_id?.trim()
+  if (tiktok) loadTikTokPixel(tiktok)
+  if (snap) loadSnapPixel(snap)
+  syncMetaReadyState()
 }
 
 export interface ServerPixelConfigInput {
@@ -578,15 +574,11 @@ export async function initPixels(): Promise<void> {
 
 function safeFbq(action: string, event: string, params?: Record<string, unknown>): void {
   syncMetaReadyState()
-  const fbqReady =
-    typeof window !== 'undefined' &&
-    window.fbq &&
-    (_metaReady || window.__nasamaMetaReady)
-  if (fbqReady) {
-    window.fbq!(action, event, params)
-  } else {
-    _metaQueue.push([action, event, params])
+  if (typeof window !== 'undefined' && window.fbq) {
+    window.fbq(action, event, params)
+    return
   }
+  _metaQueue.push([action, event, params])
 }
 
 function safeTtq(event: string, params?: Record<string, unknown>): void {

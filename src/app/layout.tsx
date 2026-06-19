@@ -5,7 +5,8 @@ import Footer from '@/components/layout/Footer'
 import ClientLazyModals from '@/components/layout/ClientLazyModals'
 import PixelInit from '@/components/shared/PixelInit'
 import PixelScripts from '@/components/shared/PixelScripts'
-import { fetchTrackingConfigFromBackend } from '@/lib/pixel-config.server'
+import MetaPixelHeadScripts from '@/components/shared/MetaPixelHeadScripts'
+import { fetchTrackingConfigFromBackend, getMetaPixelIds } from '@/lib/pixel-config.server'
 import { getPublicSiteUrl } from '@/lib/site-url'
 import './globals.css'
 
@@ -66,9 +67,13 @@ export default async function RootLayout({
   children: React.ReactNode
 }) {
   const pixelConfig = await fetchTrackingConfigFromBackend()
+  const metaPixelIds = getMetaPixelIds(pixelConfig)
 
   return (
     <html lang="ar" dir="rtl" className={tajawal.variable}>
+      <head>
+        <MetaPixelHeadScripts enabled={pixelConfig.enabled} pixelIds={metaPixelIds} />
+      </head>
       <body className="font-arabic bg-ivory text-charcoal antialiased">
         <PixelScripts config={pixelConfig} />
         <Header />

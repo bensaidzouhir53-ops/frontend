@@ -1,71 +1,19 @@
-/* eslint-disable @next/next/no-img-element -- Meta noscript pixel requires a raw 1x1 img */
+/* eslint-disable @next/next/no-img-element -- Snap noscript may use raw img */
 import Script from 'next/script'
-import { getMetaPixelIds, type ServerPixelConfig } from '@/lib/pixel-config.server'
+import type { ServerPixelConfig } from '@/lib/pixel-config.server'
 
 interface PixelScriptsProps {
   config: ServerPixelConfig
 }
 
-/** Inject Meta / TikTok / Snap base pixels after page is idle. */
+/** TikTok / Snap base pixels (Meta loads from MetaPixelHeadScripts in layout head). */
 export default function PixelScripts({ config }: PixelScriptsProps) {
   if (!config.enabled) return null
 
-  const metaIds = getMetaPixelIds(config)
   const { tiktok_pixel_id: tiktokId, snap_pixel_id: snapId } = config
-
-  const metaIdsJson = JSON.stringify(metaIds)
 
   return (
     <>
-      {metaIds.length > 0 ? (
-        <>
-          <Script id="meta-pixel-base" strategy="afterInteractive">
-            {`
-              (function(){
-                var pixelIds = ${metaIdsJson};
-                !function(f,b,e,v,n,t,s){
-                  if(f.fbq)return;
-                  n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-                  if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-                  n.queue=[];t=b.createElement(e);t.async=!0;
-                  t.src=v;s=b.getElementsByTagName(e)[0];
-                  s.parentNode.insertBefore(t,s);
-                }(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
-                function initAllMetaPixels(){
-                  if(!window.fbq){setTimeout(initAllMetaPixels,50);return;}
-                  window.__nasamaInitializedPixelIds = window.__nasamaInitializedPixelIds || [];
-                  for(var i=0;i<pixelIds.length;i++){
-                    if(window.__nasamaInitializedPixelIds.indexOf(pixelIds[i]) < 0){
-                      window.fbq('init', pixelIds[i]);
-                      window.__nasamaInitializedPixelIds.push(pixelIds[i]);
-                    }
-                  }
-                  if(!window.__nasamaPageViewTracked){
-                    window.fbq('track','PageView');
-                    window.__nasamaPageViewTracked = true;
-                  }
-                  window.__nasamaMetaReady = true;
-                  if(window.__nasamaSyncMetaReady){window.__nasamaSyncMetaReady();}
-                }
-                initAllMetaPixels();
-              })();
-            `}
-          </Script>
-          <noscript>
-            {metaIds.map((metaId) => (
-              <img
-                key={metaId}
-                height="1"
-                width="1"
-                style={{ display: 'none' }}
-                src={`https://www.facebook.com/tr?id=${metaId}&ev=PageView&noscript=1`}
-                alt=""
-              />
-            ))}
-          </noscript>
-        </>
-      ) : null}
-
       {tiktokId ? (
         <Script id="tiktok-pixel-stub" strategy="lazyOnload">
           {`
