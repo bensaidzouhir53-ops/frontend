@@ -146,6 +146,8 @@ export interface ProductPageSections {
   painPoints: PainPoint[]
   painImage: string
   painImageAlt: string
+  /** Animated GIF for pain section — native img only */
+  painGif?: string
   painVideo?: string
   painOverlay: string
   agitation?: AgitationSectionContent
@@ -304,8 +306,8 @@ const HERBAL_LUNG_SPRAY_SECTIONS: ProductPageSections = {
     { text: 'إحراج مستمر ونوم متقطع: كحتك تفضحك بالمجالس، وصوت التصفير بصدرك يطير نومك.' },
   ],
   painImage: '/images/pain-point-lung.png',
-  painImageAlt: 'شخص يعاني من كتمة في الصدر وصعوبة بالتنفس',
-  painVideo: '/videos/herbal-lung-spray-pain-animated.mp4',
+  painImageAlt: 'رجل سعودي يتعب ويتلهث من كتمة الصدر أثناء نزول الدرج',
+  painGif: '/images/herbal-lung-spray-pain.gif',
   painOverlay: 'لا تخلي الكتمة تسرق أجمل لحظاتك',
   agitation: {
     alert: 'كل يوم تمر.. ترسبات السنين تزيد وتخنقك أكثر! ⏳',

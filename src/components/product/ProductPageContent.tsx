@@ -29,6 +29,10 @@ interface ProductPageContentProps {
   crossSellProducts: Product[]
 }
 
+function isGifPath(path: string): boolean {
+  return path.trim().toLowerCase().endsWith('.gif')
+}
+
 export default function ProductPageContent({
   product,
   crossSellProducts,
@@ -204,7 +208,16 @@ export default function ProductPageContent({
             <div className="w-full lg:w-1/2 order-1 lg:order-2 relative">
               <div className="absolute inset-0 bg-red-500/10 rounded-full opacity-40" />
               <div className="relative aspect-[4/5] rounded-[2.5rem] overflow-hidden bg-gray-100 border border-sage/20 shadow-2xl">
-                {sections.painVideo ? (
+                {sections.painGif && isGifPath(sections.painGif) ? (
+                  <img
+                    key={sections.painGif}
+                    src={sections.painGif}
+                    alt={sections.painImageAlt}
+                    className="h-full w-full object-cover grayscale-[30%] contrast-125"
+                    loading="eager"
+                    decoding="async"
+                  />
+                ) : sections.painVideo ? (
                   <video
                     src={`${sections.painVideo}#t=0.001`}
                     autoPlay
