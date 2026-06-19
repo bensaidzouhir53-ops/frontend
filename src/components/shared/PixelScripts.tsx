@@ -33,8 +33,17 @@ export default function PixelScripts({ config }: PixelScriptsProps) {
                 }(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
                 function initAllMetaPixels(){
                   if(!window.fbq){setTimeout(initAllMetaPixels,50);return;}
-                  for(var i=0;i<pixelIds.length;i++){window.fbq('init',pixelIds[i]);}
-                  window.fbq('track','PageView');
+                  window.__nasamaInitializedPixelIds = window.__nasamaInitializedPixelIds || [];
+                  for(var i=0;i<pixelIds.length;i++){
+                    if(window.__nasamaInitializedPixelIds.indexOf(pixelIds[i]) < 0){
+                      window.fbq('init', pixelIds[i]);
+                      window.__nasamaInitializedPixelIds.push(pixelIds[i]);
+                    }
+                  }
+                  if(!window.__nasamaPageViewTracked){
+                    window.fbq('track','PageView');
+                    window.__nasamaPageViewTracked = true;
+                  }
                   window.__nasamaMetaReady = true;
                   if(window.__nasamaSyncMetaReady){window.__nasamaSyncMetaReady();}
                 }

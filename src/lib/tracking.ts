@@ -60,6 +60,8 @@ declare global {
     TiktokAnalyticsObject?: string
     __nasamaMetaReady?: boolean
     __nasamaSyncMetaReady?: () => void
+    __nasamaInitializedPixelIds?: string[]
+    __nasamaPageViewTracked?: boolean
   }
 }
 
@@ -79,6 +81,22 @@ let _metaPageViewTracked = false
 const _metaInitializedIds = new Set<string>()
 let _ttqReady = false
 let _snapReady = false
+
+function getMetaPixelRegistry(): string[] {
+  if (typeof window === 'undefined') return []
+  if (!window.__nasamaInitializedPixelIds) {
+    window.__nasamaInitializedPixelIds = []
+  }
+  return window.__nasamaInitializedPixelIds
+}
+
+function initMetaPixelId(id: string): void {
+  const registry = getMetaPixelRegistry()
+  if (registry.includes(id) || _metaInitializedIds.has(id)) return
+  window.fbq?.('init', id)
+  registry.push(id)
+  _metaInitializedIds.add(id)
+}
 
 // ---------------------------------------------------------------------------
 // Utility
@@ -282,15 +300,12 @@ function loadMetaPixels(pixelIds: string[]): void {
 
   const initAll = () => {
     for (const id of ids) {
-      if (!_metaInitializedIds.has(id)) {
-        window.fbq?.('init', id)
-        _metaInitializedIds.add(id)
-      }
+      initMetaPixelId(id)
     }
-    if (!_metaPageViewTracked && !window.__nasamaMetaReady) {
+    if (!_metaPageViewTracked && !window.__nasamaMetaReady && !window.__nasamaPageViewTracked) {
       window.fbq?.('track', 'PageView')
       _metaPageViewTracked = true
-    } else if (window.__nasamaMetaReady) {
+    } else if (window.__nasamaMetaReady || window.__nasamaPageViewTracked) {
       _metaPageViewTracked = true
     }
     _metaReady = true
