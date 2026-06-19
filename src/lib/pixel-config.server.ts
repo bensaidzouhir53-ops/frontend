@@ -145,7 +145,7 @@ export async function fetchTrackingConfigFromBackend(): Promise<ServerPixelConfi
   for (const baseUrl of getBackendCandidates()) {
     try {
       const response = await fetch(`${baseUrl}/api/tracking/config`, {
-        next: { revalidate: 60 },
+        cache: 'no-store',
         signal: AbortSignal.timeout(5_000),
       })
       if (response.ok) {

@@ -36,6 +36,7 @@ export default function PixelScripts({ config }: PixelScriptsProps) {
                   for(var i=0;i<pixelIds.length;i++){window.fbq('init',pixelIds[i]);}
                   window.fbq('track','PageView');
                   window.__nasamaMetaReady = true;
+                  if(window.__nasamaSyncMetaReady){window.__nasamaSyncMetaReady();}
                 }
                 initAllMetaPixels();
               })();

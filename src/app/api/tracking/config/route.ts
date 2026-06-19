@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import { getBackendCandidates } from '@/lib/orders.server'
-import { mergePixelConfigs } from '@/lib/pixel-config.server'
+import { getEnvPixelFallback, mergePixelConfigs } from '@/lib/pixel-config.server'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
@@ -28,6 +28,7 @@ export async function GET() {
           meta_pixel_ids: [
             process.env.NEXT_PUBLIC_META_PIXEL_ID,
             process.env.NEXT_PUBLIC_META_PIXEL_ID_2,
+            process.env.NEXT_PUBLIC_META_PIXEL_ID_3,
           ].filter(Boolean) as string[],
         })
         return NextResponse.json(body, {
@@ -39,8 +40,8 @@ export async function GET() {
     }
   }
 
-  return NextResponse.json(
-    { enabled: false, meta_pixel_id: null, meta_pixel_ids: [], tiktok_pixel_id: null, snap_pixel_id: null },
-    { status: 200, headers: { 'Cache-Control': 'no-store' } },
-  )
+  return NextResponse.json(getEnvPixelFallback(), {
+    status: 200,
+    headers: { 'Cache-Control': 'no-store' },
+  })
 }

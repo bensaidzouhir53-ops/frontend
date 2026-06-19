@@ -59,6 +59,7 @@ declare global {
     ) => void
     TiktokAnalyticsObject?: string
     __nasamaMetaReady?: boolean
+    __nasamaSyncMetaReady?: () => void
   }
 }
 
@@ -230,6 +231,21 @@ function flushMetaQueue(): void {
   _metaQueue.length = 0
 }
 
+/** Sync with PixelScripts when it inits fbq before tracking.ts sets _metaReady. */
+export function syncMetaReadyState(): void {
+  if (typeof window === 'undefined' || !window.fbq) return
+  if (!window.__nasamaMetaReady && !_metaReady) return
+  if (!_metaReady) {
+    _metaReady = true
+    if (window.__nasamaMetaReady) _metaPageViewTracked = true
+    flushMetaQueue()
+  }
+}
+
+if (typeof window !== 'undefined') {
+  window.__nasamaSyncMetaReady = syncMetaReadyState
+}
+
 function ensureMetaPixelScript(onReady: () => void): void {
   if (typeof window === 'undefined') return
 
@@ -394,6 +410,7 @@ function collectMetaIdsFromEnv(): string[] {
   }
   add(process.env.NEXT_PUBLIC_META_PIXEL_ID)
   add(process.env.NEXT_PUBLIC_META_PIXEL_ID_2)
+  add(process.env.NEXT_PUBLIC_META_PIXEL_ID_3)
   return ids
 }
 
@@ -544,6 +561,7 @@ export async function initPixels(): Promise<void> {
 // ---------------------------------------------------------------------------
 
 function safeFbq(action: string, event: string, params?: Record<string, unknown>): void {
+  syncMetaReadyState()
   if (typeof window !== 'undefined' && window.fbq && _metaReady) {
     window.fbq(action, event, params)
   } else {
