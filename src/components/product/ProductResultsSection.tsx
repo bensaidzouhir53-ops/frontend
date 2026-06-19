@@ -1,5 +1,4 @@
 /* eslint-disable @next/next/no-img-element */
-import Image from 'next/image'
 import { CheckCircle2, ImageIcon, TrendingUp } from 'lucide-react'
 import type { ResultsSectionContent } from '@/lib/productPageSections'
 
@@ -7,8 +6,16 @@ interface ProductResultsSectionProps {
   content: ResultsSectionContent
 }
 
+function isGifPath(path: string): boolean {
+  return path.trim().toLowerCase().endsWith('.gif')
+}
+
 export default function ProductResultsSection({ content }: ProductResultsSectionProps) {
-  const hasImage = Boolean(content.image?.trim())
+  const gifSrc = content.gif?.trim() ?? ''
+  const videoSrc = content.gifVideo?.trim() ?? ''
+  const hasGif = Boolean(gifSrc)
+  const hasVideo = Boolean(videoSrc)
+  const hasMedia = hasGif || hasVideo
 
   return (
     <section className="perf-section relative overflow-hidden bg-gradient-to-br from-teal-dark via-apothecary-dark to-charcoal py-16 md:py-24">
@@ -36,20 +43,42 @@ export default function ProductResultsSection({ content }: ProductResultsSection
         </div>
 
         <div className="flex flex-col items-stretch gap-12 lg:flex-row lg:gap-16">
-          {/* Image — left visually in RTL (flipped vs day process) */}
+          {/* GIF — left visually in RTL; native img keeps animation */}
           <div className="order-1 w-full lg:w-1/2">
             <div className="relative mx-auto aspect-[3/4] max-w-md overflow-hidden rounded-[2rem] border border-white/10 shadow-2xl lg:max-w-none lg:aspect-[4/5]">
-              {hasImage ? (
+              {hasMedia ? (
                 <>
-                  <Image
-                    src={content.image}
-                    alt={content.imageAlt}
-                    fill
-                    sizes="(max-width: 1024px) 100vw, 480px"
-                    loading="lazy"
-                    className="object-cover"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-charcoal via-charcoal/40 to-transparent" />
+                  {hasGif && isGifPath(gifSrc) ? (
+                    <img
+                      key={gifSrc}
+                      src={gifSrc}
+                      alt={content.gifAlt}
+                      className="h-full w-full object-cover"
+                      loading="eager"
+                      decoding="async"
+                    />
+                  ) : hasVideo ? (
+                    <video
+                      key={videoSrc}
+                      src={`${videoSrc}#t=0.001`}
+                      autoPlay
+                      playsInline
+                      muted
+                      loop
+                      preload="auto"
+                      className="h-full w-full object-cover"
+                      aria-label={content.gifAlt}
+                    />
+                  ) : (
+                    <img
+                      src={gifSrc}
+                      alt={content.gifAlt}
+                      className="h-full w-full object-cover"
+                      loading="eager"
+                      decoding="async"
+                    />
+                  )}
+                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-charcoal via-charcoal/40 to-transparent" />
                   <div className="absolute bottom-0 right-0 left-0 p-6 text-right md:p-8">
                     <p className="mb-3 text-xl font-extrabold leading-snug text-white md:text-2xl">
                       {content.overlayTitle}
@@ -64,7 +93,7 @@ export default function ProductResultsSection({ content }: ProductResultsSection
                   <div className="flex h-20 w-20 items-center justify-center rounded-2xl border-2 border-dashed border-white/25 bg-white/5">
                     <ImageIcon className="h-10 w-10 text-white/40" />
                   </div>
-                  <p className="text-sm font-bold text-white/45">صورة قريباً</p>
+                  <p className="text-sm font-bold text-white/45">GIF قريباً</p>
                   <div className="max-w-xs text-right">
                     <p className="mb-2 text-lg font-extrabold leading-snug text-white/90">
                       {content.overlayTitle}

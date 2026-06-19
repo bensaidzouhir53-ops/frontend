@@ -45,8 +45,10 @@ export interface ResultsSectionContent {
   badge: string
   title: string
   subtitle: string
-  image: string
-  imageAlt: string
+  /** Animated GIF — native img only (Next/Image breaks animation) */
+  gif: string
+  gifAlt: string
+  gifVideo?: string
   overlayTitle: string
   overlayDesc: string
   phases: DayProcessPhase[]
@@ -443,8 +445,9 @@ const HERBAL_LUNG_SPRAY_SECTIONS: ProductPageSections = {
     title: 'وش ينتظرك بعد ما تستخدم بخاخ نفس؟',
     subtitle:
       'مو وعود إعلانية.. هذي النتائج اللي حس فيها آلاف السعوديين بعد روتين بخاخ نفس العشبي — تنفس مريح وصدر منشرح.',
-    image: '',
-    imageAlt: 'نتائج تنفس مريح بعد استخدام بخاخ نفس العشبي',
+    gif: '/images/herbal-lung-spray-results.gif',
+    gifVideo: '/videos/herbal-lung-spray-results.mp4',
+    gifAlt: 'رجل يتنفس بعمق على قمة جبل — نتيجة تنفس مريح بعد بخاخ نفس',
     overlayTitle: 'النتيجة اللي تستحقها — تنفس مريح وصدر منشرح',
     overlayDesc:
       'استخدم بخاخ نفس وشوف ليش آلاف السعوديين ما رجعوا للكتمة والبلغم مرة ثانية.',
