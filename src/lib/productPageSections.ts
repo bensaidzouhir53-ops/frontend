@@ -118,9 +118,9 @@ export interface AgitationSectionContent {
   title: string
   body: string
   points: AgitationPoint[]
-  /** Leave empty until image is provided — section shows a placeholder */
-  image: string
-  imageAlt: string
+  /** Animated GIF — rendered with native img (not Next/Image) so frames play */
+  gif: string
+  gifAlt: string
   overlay: string
 }
 
@@ -268,8 +268,8 @@ const HERBAL_LUNG_SPRAY_SECTIONS: ProductPageSections = {
         text: 'بعد سنتين: مجاري التنفس تنقفل أكثر — والعلاج يصير أصعب وأغلى من اليوم.',
       },
     ],
-    image: '',
-    imageAlt: 'صورة توضيحية لعواقب تجاهل الكتمة والبلغم',
+    gif: '/images/herbal-lung-spray-agitation.gif',
+    gifAlt: 'مدخن كبير بالسن مع أنبوب أكسجين — عواقب تجاهل الكتمة والتدخين',
     overlay: 'وقتك ينفذ.. والرئة ما تعطيك فرصة ثانية',
   },
   solutionBadge: 'الفرصة اللي بتغير حياتك 🌿',

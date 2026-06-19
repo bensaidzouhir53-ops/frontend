@@ -7,7 +7,7 @@ interface ProductAgitationSectionProps {
 }
 
 export default function ProductAgitationSection({ content }: ProductAgitationSectionProps) {
-  const hasImage = Boolean(content.image?.trim())
+  const hasGif = Boolean(content.gif?.trim())
 
   return (
     <section className="relative overflow-hidden bg-gradient-to-b from-charcoal via-charcoal to-charcoal/95 py-16 md:py-24">
@@ -16,16 +16,18 @@ export default function ProductAgitationSection({ content }: ProductAgitationSec
 
       <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col items-center gap-12 lg:flex-row">
-          {/* Image — left visually in RTL */}
+          {/* GIF — left visually in RTL; native img keeps GIF animation (Next/Image would not) */}
           <div className="relative order-1 w-full lg:w-1/2">
             <div className="absolute inset-0 rounded-full bg-red-500/10 opacity-60 blur-3xl" />
             <div className="relative aspect-[4/5] overflow-hidden rounded-[2.5rem] border border-red-500/20 bg-charcoal/80 shadow-2xl shadow-black/40">
-              {hasImage ? (
+              {hasGif ? (
                 <>
                   <img
-                    src={content.image}
-                    alt={content.imageAlt}
+                    src={content.gif}
+                    alt={content.gifAlt}
                     className="h-full w-full object-cover contrast-125"
+                    loading="eager"
+                    decoding="async"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-charcoal via-charcoal/20 to-transparent" />
                   {content.overlay && (
@@ -41,7 +43,7 @@ export default function ProductAgitationSection({ content }: ProductAgitationSec
                   <div className="flex h-20 w-20 items-center justify-center rounded-2xl border-2 border-dashed border-red-400/40 bg-red-500/10">
                     <ImageIcon className="h-10 w-10 text-red-400/60" />
                   </div>
-                  <p className="text-sm font-bold text-white/50">صورة قريباً</p>
+                  <p className="text-sm font-bold text-white/50">GIF قريباً</p>
                   {content.overlay && (
                     <p className="max-w-xs text-base font-extrabold leading-relaxed text-red-200/90">
                       {content.overlay}
