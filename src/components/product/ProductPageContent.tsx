@@ -10,6 +10,7 @@ import type { Product } from '@/types'
 import { getDefaultOffer } from '@/lib/products'
 import OfferSelector from '@/components/product/OfferSelector'
 import ProductDayProcessSection from '@/components/product/ProductDayProcessSection'
+import ProductResultsSection from '@/components/product/ProductResultsSection'
 import ProductBeforeAfterSection from '@/components/product/ProductBeforeAfterSection'
 import ProductStatsSection from '@/components/product/ProductStatsSection'
 import ProductTrustOriginSection from '@/components/product/ProductTrustOriginSection'
@@ -410,6 +411,8 @@ export default function ProductPageContent({
       {hasFullProductPage(product.slug) && (
         <ProductDayProcessSection content={sections.dayProcess} />
       )}
+
+      {sections.results && <ProductResultsSection content={sections.results} />}
 
       {/* ── 4.75 How to Use Section ── */}
       {hasFullProductPage(product.slug) && (

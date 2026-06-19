@@ -41,6 +41,17 @@ export interface DayProcessContent {
   phases: DayProcessPhase[]
 }
 
+export interface ResultsSectionContent {
+  badge: string
+  title: string
+  subtitle: string
+  image: string
+  imageAlt: string
+  overlayTitle: string
+  overlayDesc: string
+  phases: DayProcessPhase[]
+}
+
 export interface BeforeAfterContent {
   title: string
   subtitle: string
@@ -153,6 +164,7 @@ export interface ProductPageSections {
   howToUseSubtitle: string
   comparisonRows: ComparisonRow[]
   dayProcess: DayProcessContent
+  results?: ResultsSectionContent
   beforeAfterComparison?: BeforeAfterContent
   statsSection?: StatsSectionContent
   trustOrigin?: TrustOriginContent
@@ -383,6 +395,18 @@ const HERBAL_LUNG_SPRAY_SECTIONS: ProductPageSections = {
     imageAlt: 'رجل يستخدم بخاخ نفس العشبي لتنفس مريح',
     overlayTitle:
       'طوق النجاة لكل مدخن ولكل شخص انخنق من البلغم والكتمة',
+    overlayDesc:
+      'تخيل تصحى بكرة صدرك خفيف، وتاخذ نفس عميق بكل راحة.. هذا اللي بيصير لك!',
+    phases: SHARED_DAY_PROCESS_PHASES,
+  },
+  results: {
+    badge: 'النتائج',
+    title: 'كيف يتغير تنفسك خلال 28 يوم؟',
+    subtitle:
+      'روتين يومي بسيط — كل أسبوع تحس بفرق أوضح لين ترجع تتنفس براحة كاملة.',
+    image: '',
+    imageAlt: 'رجل يستخدم بخاخ نفس العشبي لتنفس مريح',
+    overlayTitle: 'طوق النجاة لكل مدخن ولكل شخص انخنق من البلغم والكتمة',
     overlayDesc:
       'تخيل تصحى بكرة صدرك خفيف، وتاخذ نفس عميق بكل راحة.. هذا اللي بيصير لك!',
     phases: SHARED_DAY_PROCESS_PHASES,
