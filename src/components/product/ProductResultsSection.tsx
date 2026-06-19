@@ -107,14 +107,14 @@ export default function ProductResultsSection({ content }: ProductResultsSection
             </div>
           </div>
 
-          {/* Timeline — right visually in RTL */}
+          {/* Results list — right visually in RTL */}
           <div className="order-2 w-full space-y-8 lg:w-1/2">
-            {content.phases.map((phase) => (
-              <div key={phase.period} className="text-right">
+            {content.phases.map((phase, index) => (
+              <div key={`${phase.title}-${index}`} className="text-right">
                 <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-white px-5 py-2.5 shadow-md">
                   <TrendingUp className="h-4 w-4 shrink-0 text-gold" />
                   <span className="text-sm font-extrabold text-teal-dark md:text-base">
-                    {phase.period} : {phase.title}
+                    {phase.period ? `${phase.period} : ${phase.title}` : phase.title}
                   </span>
                 </div>
 
