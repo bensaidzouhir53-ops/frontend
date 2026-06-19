@@ -578,8 +578,12 @@ export async function initPixels(): Promise<void> {
 
 function safeFbq(action: string, event: string, params?: Record<string, unknown>): void {
   syncMetaReadyState()
-  if (typeof window !== 'undefined' && window.fbq && _metaReady) {
-    window.fbq(action, event, params)
+  const fbqReady =
+    typeof window !== 'undefined' &&
+    window.fbq &&
+    (_metaReady || window.__nasamaMetaReady)
+  if (fbqReady) {
+    window.fbq!(action, event, params)
   } else {
     _metaQueue.push([action, event, params])
   }

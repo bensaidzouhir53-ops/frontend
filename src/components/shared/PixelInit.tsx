@@ -20,7 +20,9 @@ export default function PixelInit({ config }: PixelInitProps) {
     syncMetaReadyState()
     trackFirstPartyPageView()
 
-    const interval = window.setInterval(syncMetaReadyState, 50)
+    const interval = window.setInterval(() => {
+      syncMetaReadyState()
+    }, 50)
     const timeout = window.setTimeout(() => window.clearInterval(interval), 3000)
     return () => {
       window.clearInterval(interval)
