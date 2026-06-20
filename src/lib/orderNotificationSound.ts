@@ -1,41 +1,23 @@
 const CHA_CHING_SRC = '/sounds/cha-ching.mp3'
 
-let audioContext: AudioContext | null = null
-let chaChingAudio: HTMLAudioElement | null = null
-let audioUnlocked = false
+let unlockedAudio: HTMLAudioElement | null = null
 
-function getAudioContext(): AudioContext | null {
-  if (typeof window === 'undefined') return null
-  const Ctx =
-    window.AudioContext ||
-    (window as typeof window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext
-  if (!Ctx) return null
-  if (!audioContext) audioContext = new Ctx()
-  return audioContext
-}
-
-function getChaChingAudio(): HTMLAudioElement | null {
-  if (typeof window === 'undefined') return null
-  if (!chaChingAudio) {
-    chaChingAudio = new Audio(CHA_CHING_SRC)
-    chaChingAudio.preload = 'auto'
-    chaChingAudio.volume = 1
-  }
-  return chaChingAudio
+function createChaChingAudio(): HTMLAudioElement {
+  const audio = new Audio(CHA_CHING_SRC)
+  audio.preload = 'auto'
+  audio.volume = 1
+  return audio
 }
 
 /** Call once after a user gesture (e.g. login) so browsers allow playback later. */
 export function unlockOrderNotificationSound(): void {
-  const ctx = getAudioContext()
-  if (ctx?.state === 'suspended') void ctx.resume()
+  if (unlockedAudio) return
 
-  const audio = getChaChingAudio()
-  if (!audio || audioUnlocked) return
-
+  const audio = createChaChingAudio()
   audio.muted = true
   const attempt = audio.play()
   if (!attempt) {
-    audioUnlocked = true
+    unlockedAudio = audio
     audio.pause()
     audio.currentTime = 0
     audio.muted = false
@@ -47,54 +29,30 @@ export function unlockOrderNotificationSound(): void {
       audio.pause()
       audio.currentTime = 0
       audio.muted = false
-      audioUnlocked = true
+      unlockedAudio = audio
     })
     .catch(() => {
       audio.muted = false
     })
 }
 
-/** Classic cash-register cha-ching when a new order arrives. */
+/** Shopify-style cash register cha-ching when a new order arrives. */
 export function playOrderNotificationSound(): void {
-  const audio = getChaChingAudio()
-  if (!audio) {
-    playSyntheticChaChing()
+  const audio = createChaChingAudio()
+  audio.muted = false
+  audio.currentTime = 0
+
+  const play = () => {
+    void audio.play().catch(() => {
+      // Browser blocked autoplay — user must interact once (login / test button).
+    })
+  }
+
+  if (audio.readyState >= HTMLMediaElement.HAVE_ENOUGH_DATA) {
+    play()
     return
   }
 
-  audio.muted = false
-  audio.currentTime = 0
-  void audio.play().catch(() => {
-    playSyntheticChaChing()
-  })
-}
-
-function playSyntheticChaChing(): void {
-  const ctx = getAudioContext()
-  if (!ctx) return
-
-  void ctx.resume().then(() => {
-    const t0 = ctx.currentTime
-    const master = ctx.createGain()
-    master.gain.value = 0.85
-    master.connect(ctx.destination)
-
-    const ring = (frequency: number, at: number, duration: number, volume: number) => {
-      const gain = ctx.createGain()
-      gain.connect(master)
-      gain.gain.setValueAtTime(0.0001, t0 + at)
-      gain.gain.exponentialRampToValueAtTime(volume, t0 + at + 0.012)
-      gain.gain.exponentialRampToValueAtTime(0.0001, t0 + at + duration)
-
-      const osc = ctx.createOscillator()
-      osc.type = 'sine'
-      osc.frequency.value = frequency
-      osc.connect(gain)
-      osc.start(t0 + at)
-      osc.stop(t0 + at + duration + 0.05)
-    }
-
-    ring(880, 0, 0.08, 0.42)
-    ring(1318, 0.07, 0.28, 0.48)
-  })
+  audio.addEventListener('canplaythrough', play, { once: true })
+  audio.load()
 }
