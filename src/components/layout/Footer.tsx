@@ -39,7 +39,7 @@ export default function Footer() {
                   نَفَس
                 </span>
                 <span className="mt-2 max-w-[14rem] text-xs font-semibold leading-snug text-gold opacity-90 drop-shadow-sm">
-                  انتعاش مستوحى من الطبيعة
+                  الكنز الأخضر
                 </span>
               </div>
             </div>

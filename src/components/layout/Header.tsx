@@ -34,7 +34,7 @@ export default function Header() {
               نَفَس
             </span>
             <span className="mt-0.5 max-w-[9.5rem] text-[9px] font-semibold leading-snug text-teal/80">
-              انتعاش مستوحى من الطبيعة
+              الكنز الأخضر
             </span>
           </div>
         </Link>
