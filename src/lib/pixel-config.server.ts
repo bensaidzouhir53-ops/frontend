@@ -71,6 +71,36 @@ export function normalizePixelConfig(raw: {
 
 type PixelConfigInput = Parameters<typeof normalizePixelConfig>[0]
 
+const DEPRECATED_TIKTOK_PIXEL_IDS = new Set(['D8C3P7RC77UA4F3IGAJG'])
+const CURRENT_TIKTOK_PIXEL_ID = 'D6FOFO3C77U2V3Q5MST0'
+
+function isDeprecatedTikTokPixel(value: string | null | undefined): boolean {
+  if (!value) return false
+  return DEPRECATED_TIKTOK_PIXEL_IDS.has(value.trim())
+}
+
+/** Deploy-time TikTok override (Dockerfile / Easypanel frontend env). */
+export function getTikTokPixelOverride(): string | null {
+  const candidates = [
+    process.env.NEXT_PUBLIC_TIKTOK_PIXEL_ID,
+    process.env.TIKTOK_PIXEL_CODE,
+    process.env.TIKTOK_PIXEL_ID,
+  ]
+
+  for (const raw of candidates) {
+    if (!isValidPixelId(raw)) continue
+    const id = raw.trim()
+    if (!isDeprecatedTikTokPixel(id)) return id
+  }
+
+  return isValidPixelId(CURRENT_TIKTOK_PIXEL_ID) ? CURRENT_TIKTOK_PIXEL_ID : null
+}
+
+function getSnapPixelOverride(): string | null {
+  const raw = process.env.NEXT_PUBLIC_SNAP_PIXEL_ID ?? process.env.SNAP_PIXEL_ID ?? null
+  return isValidPixelId(raw) ? raw.trim() : null
+}
+
 /** Merge backend + env (+ any other sources) so a baked-in primary ID never hides new pixels. */
 export function mergePixelConfigs(...sources: PixelConfigInput[]): ServerPixelConfig {
   const metaIds = collectMetaPixelIds({
@@ -90,9 +120,17 @@ export function mergePixelConfigs(...sources: PixelConfigInput[]): ServerPixelCo
       ? source.tiktok_pixel_id!.trim()
       : null
     const nextSnap = isValidPixelId(source.snap_pixel_id) ? source.snap_pixel_id!.trim() : null
-    if (nextTiktok) tiktok = nextTiktok
-    if (nextSnap) snap = nextSnap
+    // First valid backend/API source wins — avoid stale env fallbacks replacing fresh config.
+    if (nextTiktok && !tiktok) tiktok = nextTiktok
+    if (nextSnap && !snap) snap = nextSnap
   }
+
+  const tiktokOverride = getTikTokPixelOverride()
+  if (tiktokOverride) tiktok = tiktokOverride
+  else if (tiktok && isDeprecatedTikTokPixel(tiktok)) tiktok = null
+
+  const snapOverride = getSnapPixelOverride()
+  if (snapOverride) snap = snapOverride
 
   const hasAny = Boolean(metaIds.length || tiktok || snap)
   const webPixelsEnabled = process.env.ENABLE_WEB_PIXELS !== 'false'
@@ -165,8 +203,6 @@ export async function fetchTrackingConfigFromBackend(): Promise<ServerPixelConfi
       {
         enabled: envFallback.enabled,
         meta_pixel_ids: envFallback.meta_pixel_ids,
-        tiktok_pixel_id: envFallback.tiktok_pixel_id,
-        snap_pixel_id: envFallback.snap_pixel_id,
       },
     )
   }
