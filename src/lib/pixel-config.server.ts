@@ -56,7 +56,7 @@ export function normalizePixelConfig(raw: {
   snap_pixel_id?: string | null
 }): ServerPixelConfig {
   const metaIds = collectMetaPixelIds(raw)
-  const tiktok = isValidPixelId(raw.tiktok_pixel_id) ? raw.tiktok_pixel_id!.trim() : null
+  const tiktok = resolveTikTokPixelId(raw.tiktok_pixel_id)
   const snap = isValidPixelId(raw.snap_pixel_id) ? raw.snap_pixel_id!.trim() : null
   const hasAny = Boolean(metaIds.length || tiktok || snap)
 
@@ -71,20 +71,27 @@ export function normalizePixelConfig(raw: {
 
 type PixelConfigInput = Parameters<typeof normalizePixelConfig>[0]
 
+/** Legacy pixel — replaced in Easypanel; ignore if backend still returns it. */
+const STALE_TIKTOK_PIXEL_IDS = new Set(['D6FOFO3C77U2V3Q5MST0'])
+const ACTIVE_TIKTOK_PIXEL_ID = 'D8C3P7RC77UA4F3IGAJG'
+
+function resolveTikTokPixelId(...candidates: Array<string | null | undefined>): string | null {
+  for (const raw of candidates) {
+    if (!isValidPixelId(raw)) continue
+    const id = raw.trim()
+    if (STALE_TIKTOK_PIXEL_IDS.has(id)) continue
+    return id
+  }
+  return isValidPixelId(ACTIVE_TIKTOK_PIXEL_ID) ? ACTIVE_TIKTOK_PIXEL_ID : null
+}
+
 /** Deploy-time TikTok override (Dockerfile / Easypanel frontend env). */
 export function getTikTokPixelOverride(): string | null {
-  const candidates = [
+  return resolveTikTokPixelId(
     process.env.NEXT_PUBLIC_TIKTOK_PIXEL_ID,
     process.env.TIKTOK_PIXEL_CODE,
     process.env.TIKTOK_PIXEL_ID,
-  ]
-
-  for (const raw of candidates) {
-    if (!isValidPixelId(raw)) continue
-    return raw.trim()
-  }
-
-  return null
+  )
 }
 
 function getSnapPixelOverride(): string | null {
@@ -104,20 +111,17 @@ export function mergePixelConfigs(...sources: PixelConfigInput[]): ServerPixelCo
   let tiktok: string | null = null
   let snap: string | null = null
   let anyEnabled = false
+  const tiktokCandidates: Array<string | null | undefined> = []
 
   for (const source of sources) {
     if (source.enabled) anyEnabled = true
-    const nextTiktok = isValidPixelId(source.tiktok_pixel_id)
-      ? source.tiktok_pixel_id!.trim()
-      : null
+    tiktokCandidates.push(source.tiktok_pixel_id)
     const nextSnap = isValidPixelId(source.snap_pixel_id) ? source.snap_pixel_id!.trim() : null
-    // First valid backend/API source wins — avoid stale env fallbacks replacing fresh config.
-    if (nextTiktok && !tiktok) tiktok = nextTiktok
     if (nextSnap && !snap) snap = nextSnap
   }
 
-  const tiktokOverride = getTikTokPixelOverride()
-  if (tiktokOverride) tiktok = tiktokOverride
+  tiktokCandidates.push(getTikTokPixelOverride())
+  tiktok = resolveTikTokPixelId(...tiktokCandidates)
 
   const snapOverride = getSnapPixelOverride()
   if (snapOverride) snap = snapOverride
@@ -146,11 +150,11 @@ export function getEnvPixelFallback(): ServerPixelConfig {
         process.env.NEXT_PUBLIC_META_PIXEL_ID_4 ?? process.env.META_PIXEL_ID_4,
       ],
     }),
-    tiktok_pixel_id:
-      process.env.NEXT_PUBLIC_TIKTOK_PIXEL_ID ??
-      process.env.TIKTOK_PIXEL_CODE ??
-      process.env.TIKTOK_PIXEL_ID ??
-      null,
+    tiktok_pixel_id: resolveTikTokPixelId(
+      process.env.NEXT_PUBLIC_TIKTOK_PIXEL_ID,
+      process.env.TIKTOK_PIXEL_CODE,
+      process.env.TIKTOK_PIXEL_ID,
+    ),
     snap_pixel_id:
       process.env.NEXT_PUBLIC_SNAP_PIXEL_ID ?? process.env.SNAP_PIXEL_ID ?? null,
   })
@@ -193,6 +197,7 @@ export async function fetchTrackingConfigFromBackend(): Promise<ServerPixelConfi
       {
         enabled: envFallback.enabled,
         meta_pixel_ids: envFallback.meta_pixel_ids,
+        tiktok_pixel_id: envFallback.tiktok_pixel_id,
       },
     )
   }

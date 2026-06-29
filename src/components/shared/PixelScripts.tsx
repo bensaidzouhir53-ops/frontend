@@ -15,7 +15,7 @@ export default function PixelScripts({ config }: PixelScriptsProps) {
   return (
     <>
       {tiktokId ? (
-        <Script id="tiktok-pixel-stub" strategy="lazyOnload">
+        <Script id="tiktok-pixel-stub" strategy="afterInteractive">
           {`
             !function (w, d, t) {
               w.TiktokAnalyticsObject=t;

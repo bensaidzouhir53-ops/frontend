@@ -31,6 +31,7 @@ export async function GET() {
             process.env.NEXT_PUBLIC_META_PIXEL_ID_3,
             process.env.NEXT_PUBLIC_META_PIXEL_ID_4,
           ].filter(Boolean) as string[],
+          tiktok_pixel_id: getEnvPixelFallback().tiktok_pixel_id,
         })
         return NextResponse.json(body, {
           headers: { 'Cache-Control': 'no-store' },
