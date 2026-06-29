@@ -6,6 +6,7 @@ import {
   initPixelsFromServerConfig,
   saveFirstLandingUrl,
   syncMetaReadyState,
+  syncTtqReadyState,
   trackFirstPartyPageView,
 } from '@/lib/tracking'
 
@@ -18,10 +19,12 @@ export default function PixelInit({ config }: PixelInitProps) {
     saveFirstLandingUrl()
     initPixelsFromServerConfig(config)
     syncMetaReadyState()
+    syncTtqReadyState()
     trackFirstPartyPageView()
 
     const interval = window.setInterval(() => {
       syncMetaReadyState()
+      syncTtqReadyState()
     }, 100)
     const timeout = window.setTimeout(() => window.clearInterval(interval), 10000)
     return () => {

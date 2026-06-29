@@ -614,7 +614,19 @@ function safeFbq(action: string, event: string, params?: Record<string, unknown>
   _metaQueue.push([action, event, params])
 }
 
+/** Sync with PixelScripts when it inits ttq before tracking.ts sets _ttqReady. */
+export function syncTtqReadyState(): void {
+  if (typeof window === 'undefined' || !window.ttq) return
+  if (_ttqReady) return
+  _ttqReady = true
+  _ttqQueue.forEach(([event, params]) => {
+    window.ttq?.track?.(event, params)
+  })
+  _ttqQueue.length = 0
+}
+
 function safeTtq(event: string, params?: Record<string, unknown>): void {
+  syncTtqReadyState()
   if (typeof window !== 'undefined' && window.ttq?.track && _ttqReady) {
     window.ttq.track(event, params)
   } else {

@@ -71,14 +71,6 @@ export function normalizePixelConfig(raw: {
 
 type PixelConfigInput = Parameters<typeof normalizePixelConfig>[0]
 
-const DEPRECATED_TIKTOK_PIXEL_IDS = new Set(['D8C3P7RC77UA4F3IGAJG'])
-const CURRENT_TIKTOK_PIXEL_ID = 'D6FOFO3C77U2V3Q5MST0'
-
-function isDeprecatedTikTokPixel(value: string | null | undefined): boolean {
-  if (!value) return false
-  return DEPRECATED_TIKTOK_PIXEL_IDS.has(value.trim())
-}
-
 /** Deploy-time TikTok override (Dockerfile / Easypanel frontend env). */
 export function getTikTokPixelOverride(): string | null {
   const candidates = [
@@ -89,11 +81,10 @@ export function getTikTokPixelOverride(): string | null {
 
   for (const raw of candidates) {
     if (!isValidPixelId(raw)) continue
-    const id = raw.trim()
-    if (!isDeprecatedTikTokPixel(id)) return id
+    return raw.trim()
   }
 
-  return isValidPixelId(CURRENT_TIKTOK_PIXEL_ID) ? CURRENT_TIKTOK_PIXEL_ID : null
+  return null
 }
 
 function getSnapPixelOverride(): string | null {
@@ -127,7 +118,6 @@ export function mergePixelConfigs(...sources: PixelConfigInput[]): ServerPixelCo
 
   const tiktokOverride = getTikTokPixelOverride()
   if (tiktokOverride) tiktok = tiktokOverride
-  else if (tiktok && isDeprecatedTikTokPixel(tiktok)) tiktok = null
 
   const snapOverride = getSnapPixelOverride()
   if (snapOverride) snap = snapOverride
