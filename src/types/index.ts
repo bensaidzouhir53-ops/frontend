@@ -57,6 +57,7 @@ export interface CartState {
   isCheckoutOpen: boolean
   isUpsellOpen: boolean
   upsellProduct: UpsellData | null
+  pendingUpsell: UpsellData | null
   pendingOrderId: string | null
   pendingOrderNumber: string | null
   addItem: (product: Product, qty: number, price: number) => void
@@ -69,6 +70,8 @@ export interface CartState {
   closeCheckout: () => void
   openUpsell: (data: UpsellData) => void
   closeUpsell: () => void
+  scheduleUpsell: (data: UpsellData) => void
+  clearScheduledUpsell: () => void
   total: () => number
   itemCount: () => number
 }

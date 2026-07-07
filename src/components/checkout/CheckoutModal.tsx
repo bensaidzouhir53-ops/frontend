@@ -32,6 +32,7 @@ export default function CheckoutModal() {
     items,
     total,
     clearCart,
+    scheduleUpsell,
   } = useCartStore()
 
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -149,6 +150,7 @@ export default function CheckoutModal() {
 
       if (upsell) {
         storePendingUpsell(upsell)
+        scheduleUpsell(upsell)
       } else {
         sessionStorage.removeItem('nasama_pending_upsell')
       }

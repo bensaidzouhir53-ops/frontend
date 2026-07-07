@@ -7,6 +7,7 @@ export const useCartStore = create<CartState>((set, get) => ({
   isCheckoutOpen: false,
   isUpsellOpen: false,
   upsellProduct: null,
+  pendingUpsell: null,
   pendingOrderId: null,
   pendingOrderNumber: null,
 
@@ -60,6 +61,9 @@ export const useCartStore = create<CartState>((set, get) => ({
       isOpen: false,
     }),
   closeUpsell: () => set({ isUpsellOpen: false, upsellProduct: null }),
+
+  scheduleUpsell: (data: UpsellData) => set({ pendingUpsell: data }),
+  clearScheduledUpsell: () => set({ pendingUpsell: null }),
 
   total: () => get().items.reduce((sum, item) => sum + item.price, 0),
   itemCount: () => get().items.reduce((sum, item) => sum + item.qty, 0),
