@@ -84,24 +84,14 @@ export default function ProductPageContent({
             
             {/* Image (Left visually, Right in DOM for RTL) */}
             <div className="w-full lg:w-1/2 lg:sticky lg:top-32 order-1 lg:order-2">
-              <div
-                className={`relative overflow-hidden rounded-[2.5rem] border-4 border-white shadow-2xl shadow-teal/10 ${
-                  product.slug === 'molien-drops'
-                    ? 'aspect-square bg-[#0f1410] md:aspect-[4/3]'
-                    : 'aspect-[4/5] bg-gray-100'
-                }`}
-              >
+              <div className="relative aspect-[4/5] rounded-[2.5rem] overflow-hidden bg-gray-100 border-4 border-white shadow-2xl shadow-teal/10">
                 <Image
                   src={product.image}
                   alt={product.nameAr}
                   fill
                   priority
                   sizes="(max-width: 1024px) 100vw, 50vw"
-                  className={
-                    product.slug === 'molien-drops'
-                      ? 'object-contain p-3 md:p-4'
-                      : 'object-cover'
-                  }
+                  className="object-cover"
                 />
               </div>
             </div>
