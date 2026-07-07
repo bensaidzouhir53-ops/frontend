@@ -3,8 +3,8 @@ import Link from 'next/link'
 import { buildGeneralWhatsAppUrl } from '@/lib/contact'
 
 export const metadata: Metadata = {
-  title: 'نسمة | الشحن والإرجاع',
-  description: 'معلومات الشحن والتوصيل وسياسة الإرجاع لمتجر نسمة — توصيل لجميع مناطق المملكة مع الدفع عند الاستلام.',
+  title: 'نَفَس | الشحن والإرجاع',
+  description: 'معلومات الشحن والتوصيل وسياسة الإرجاع لمتجر نَفَس — توصيل لجميع مناطق المملكة مع الدفع عند الاستلام.',
 }
 
 export default function ShippingReturnsPage() {
@@ -113,7 +113,7 @@ export default function ShippingReturnsPage() {
             <div className="p-6 space-y-5 text-right">
               <div className="bg-mist rounded-xl p-4">
                 <p className="text-charcoal/70 text-sm leading-relaxed">
-                  رضاك عن تجربتك مع نسمة أولويتنا. إذا لم تكن راضياً لأي سبب، تواصل معنا ونحن سنبذل كل ما بوسعنا للمساعدة.
+                  رضاك عن تجربتك مع نَفَس أولويتنا. إذا لم تكن راضياً لأي سبب، تواصل معنا ونحن سنبذل كل ما بوسعنا للمساعدة.
                 </p>
               </div>
 

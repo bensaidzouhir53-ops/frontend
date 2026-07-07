@@ -3,9 +3,9 @@ import { Star, Truck, Headphones, ShieldCheck, Clock, Users } from 'lucide-react
 import SocialProofToast from '@/components/lp/SocialProofToast'
 
 export const metadata: Metadata = {
-  title: 'نسمة | متجر إلكتروني سعودي',
+  title: 'نَفَس | متجر إلكتروني سعودي',
   description:
-    'تسوق بسهولة مع نسمة. توصيل سريع داخل المملكة، دعم عملاء متجاوب، وتجربة طلب واضحة من البداية للنهاية.',
+    'تسوق بسهولة مع نَفَس. توصيل سريع داخل المملكة، دعم عملاء متجاوب، وتجربة طلب واضحة من البداية للنهاية.',
   robots: {
     index: false,
     follow: false,
@@ -69,7 +69,7 @@ export default function LandingPage() {
           </h1>
 
           <p className="mx-auto mb-10 max-w-2xl text-lg font-medium leading-relaxed text-charcoal/75 md:text-xl">
-            نسمة توفر لك تجربة شراء بسيطة داخل المملكة: متابعة للطلب، دعم سريع، وتوصيل لباب بيتك
+            نَفَس توفر لك تجربة شراء بسيطة داخل المملكة: متابعة للطلب، دعم سريع، وتوصيل لباب بيتك
             بالدفع عند الاستلام.
           </p>
 
@@ -93,7 +93,7 @@ export default function LandingPage() {
       <section className="border-y border-sage/20 bg-white py-14 md:py-20">
         <div className="mx-auto max-w-6xl px-4">
           <div className="mb-12 text-center">
-            <p className="mb-3 text-sm font-bold tracking-[0.3em] text-apothecary">لماذا نسمة</p>
+            <p className="mb-3 text-sm font-bold tracking-[0.3em] text-apothecary">لماذا نَفَس</p>
             <h2 className="text-3xl font-extrabold text-charcoal md:text-4xl">
               تجربة شراء مريحة من البداية للنهاية
             </h2>
@@ -143,7 +143,7 @@ export default function LandingPage() {
             آراء عملائنا
           </h2>
           <p className="mb-14 text-lg text-charcoal/60">
-            تجارب حقيقية من عملاء اختاروا التسوق مع نسمة
+            تجارب حقيقية من عملاء اختاروا التسوق مع نَفَس
           </p>
 
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">

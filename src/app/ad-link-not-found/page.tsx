@@ -6,7 +6,7 @@ export default function AdLinkNotFoundPage() {
       <p className="mb-2 text-sm font-bold uppercase tracking-[0.2em] text-teal">404</p>
       <h1 className="mb-4 text-3xl font-extrabold text-charcoal">رابط الإعلان غير موجود</h1>
       <p className="mb-8 max-w-md text-charcoal/65">
-        هذا الرابط غير مفعّل حالياً. تأكد من كتابة الرابط بشكل صحيح أو تواصل مع فريق نسمة.
+        هذا الرابط غير مفعّل حالياً. تأكد من كتابة الرابط بشكل صحيح أو تواصل مع فريق نَفَس.
       </p>
       <Link
         href="/"

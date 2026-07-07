@@ -236,7 +236,7 @@ export default function UpsellModal() {
                   </p>
                   <p className="mt-1 text-xs leading-relaxed text-charcoal/60">
                     {upsellProduct?.offer_text ??
-                      'أكمل روتينك التنفسي — عرض حصري لعملاء نسمة فقط'}
+                      'أكمل روتينك التنفسي — عرض حصري لعملاء نَفَس فقط'}
                   </p>
                 </div>
               </div>

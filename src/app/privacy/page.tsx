@@ -2,8 +2,8 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 
 export const metadata: Metadata = {
-  title: 'نسمة | سياسة الخصوصية',
-  description: 'سياسة خصوصية متجر نسمة — كيف نجمع بياناتك ونستخدمها ونحميها.',
+  title: 'نَفَس | سياسة الخصوصية',
+  description: 'سياسة خصوصية متجر نَفَس — كيف نجمع بياناتك ونستخدمها ونحميها.',
 }
 
 export default function PrivacyPage() {
@@ -31,7 +31,7 @@ export default function PrivacyPage() {
 
             <div className="bg-mist rounded-xl p-5 border border-sage/20">
               <p className="text-charcoal/70 text-sm leading-relaxed">
-                نحن في نسمة نحترم خصوصيتك ونلتزم بحماية بياناتك الشخصية. توضح هذه السياسة كيفية جمع معلوماتك واستخدامها وحمايتها عند تفاعلك مع متجرنا الإلكتروني.
+                نحن في نَفَس نحترم خصوصيتك ونلتزم بحماية بياناتك الشخصية. توضح هذه السياسة كيفية جمع معلوماتك واستخدامها وحمايتها عند تفاعلك مع متجرنا الإلكتروني.
               </p>
             </div>
 

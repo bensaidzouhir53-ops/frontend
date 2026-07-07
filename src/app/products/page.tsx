@@ -5,8 +5,8 @@ import { PRODUCTS } from '@/lib/products'
 import TrustBadges from '@/components/shared/TrustBadges'
 
 export const metadata: Metadata = {
-  title: 'نسمة | جميع منتجاتنا',
-  description: 'تصفح مجموعة نسمة الكاملة من المنتجات العشبية لدعم صحة الجهاز التنفسي. توصيل لجميع مناطق المملكة مع الدفع عند الاستلام.',
+  title: 'نَفَس | جميع منتجاتنا',
+  description: 'تصفح مجموعة نَفَس الكاملة من المنتجات العشبية لدعم صحة الجهاز التنفسي. توصيل لجميع مناطق المملكة مع الدفع عند الاستلام.',
 }
 
 export default function ProductsPage() {
@@ -149,7 +149,7 @@ export default function ProductsPage() {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center" dir="rtl">
           <p className="text-charcoal/40 text-xs leading-relaxed">
             <strong className="font-semibold text-charcoal/60">تنبيه صحي:</strong>{' '}
-            منتجات نسمة مكملات عشبية ولا تُغني عن الاستشارة الطبية. استشر طبيبك دائماً قبل الاستخدام.
+            منتجات نَفَس مكملات عشبية ولا تُغني عن الاستشارة الطبية. استشر طبيبك دائماً قبل الاستخدام.
           </p>
         </div>
       </section>
