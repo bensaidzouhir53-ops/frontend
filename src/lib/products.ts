@@ -72,7 +72,7 @@ export const PRODUCTS: Product[] = [
   },
   {
     slug: 'molien-drops',
-    sku: 'MOLIENDRP3',
+    sku: 'MOIL12',
     nameAr: 'تصحى كل صباح وصدرك مقفول؟ قطرة المولين تذيب البلغم المتحجر وتريحك من "الكتمة" من أول استخدام! 🌿',
     nameEn: 'Molien Drops — Dissolve Hardened Phlegm',
     cardTitleAr: 'قطرة المولين العشبية',

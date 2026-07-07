@@ -15,6 +15,7 @@ import {
   type CheckoutFormData,
 } from '@/lib/validation'
 import { createOrder } from '@/lib/api'
+import { getUpsellOffer, storePendingUpsell } from '@/lib/upsell'
 import {
   captureAttribution,
   generateEventId,
@@ -31,7 +32,6 @@ export default function CheckoutModal() {
     items,
     total,
     clearCart,
-    openUpsell,
   } = useCartStore()
 
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -139,12 +139,20 @@ export default function CheckoutModal() {
         }),
       )
 
-      if (response.upsell) {
-        openUpsell(response.upsell)
-        return
+      const orderItems = items.map((i) => ({
+        product_slug: i.product.slug,
+        quantity: i.qty,
+      }))
+      const upsell =
+        response.upsell ??
+        getUpsellOffer(orderItems)
+
+      if (upsell) {
+        storePendingUpsell(upsell)
+      } else {
+        sessionStorage.removeItem('nasama_pending_upsell')
       }
 
-      sessionStorage.removeItem('nasama_upsell')
       router.push(
         `/thank-you?order=${encodeURIComponent(response.order_number)}&total=${response.total}`,
       )

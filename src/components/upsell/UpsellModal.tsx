@@ -10,9 +10,13 @@ import { acceptUpsell } from '@/lib/api'
 import { getProductBySlug, getOffersForProduct } from '@/lib/products'
 import { trackPurchase, generateEventId } from '@/lib/tracking'
 import { cn } from '@/lib/utils'
+import {
+  UPSELL_PRICE,
+  UPSELL_OFFER_COUNTDOWN_SECONDS,
+  clearPendingUpsell,
+} from '@/lib/upsell'
 
-const UPSELL_PRICE = 99
-const COUNTDOWN_SECONDS = 15
+const COUNTDOWN_SECONDS = UPSELL_OFFER_COUNTDOWN_SECONDS
 
 export default function UpsellModal() {
   const router = useRouter()
@@ -128,6 +132,7 @@ export default function UpsellModal() {
         )
 
         closeUpsell()
+        clearPendingUpsell()
         navigateToThankYou(order.order_number, newTotal)
       } else {
         // Fallback: decline gracefully if order data is missing
@@ -151,6 +156,7 @@ export default function UpsellModal() {
     if (isDeclining || isAccepting) return
     if (timerRef.current) clearInterval(timerRef.current)
     setIsDeclining(true)
+    clearPendingUpsell()
 
     const order = getOrderFromSession()
     closeUpsell()
