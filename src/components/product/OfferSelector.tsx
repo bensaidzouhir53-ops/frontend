@@ -17,6 +17,8 @@ const BADGE_STYLES: Record<string, string> = {
   sage: 'bg-sage/30 text-teal-dark',
   gold: 'bg-gold text-white',
   teal: 'bg-teal text-white',
+  apothecary: 'bg-apothecary text-white',
+  charcoal: 'bg-charcoal text-gold',
 }
 
 const DEFAULT_QTY_LABELS: Record<number, string> = {
@@ -45,23 +47,13 @@ export default function OfferSelector({ product, className }: OfferSelectorProps
 
   return (
     <div className={cn('flex flex-col gap-3 sm:gap-4', className)} dir="rtl">
-      {(product.slug === 'molien-drops' || product.slug === 'herbal-lung-spray') && (
+      {(product.slug === 'herbal-lung-spray') && (
         <div className="flex items-start gap-3 rounded-2xl border border-gold/30 bg-gradient-to-l from-gold/10 to-amber-50/80 px-4 py-3.5">
           <TrendingUp className="mt-0.5 h-5 w-5 shrink-0 text-gold" />
           <p className="text-sm font-bold leading-relaxed text-charcoal/80">
-            {product.slug === 'molien-drops' ? (
-              <>
-                <span className="text-charcoal">ليش الأغلبية يختارون عبوتين أو أكثر؟</span>{' '}
-                البلغم المتحجر ما يروح بعبوة وحدة — الاستمرار شهرين أو أكثر يعطيك نتيجة أوضح وتوفر
-                أكثر على السعر.
-              </>
-            ) : (
-              <>
-                <span className="text-charcoal">صدق اللي جرب — عبوة وحدة تعطيك طعم بس!</span>{' '}
-                الكتمة وبلغم السنين ما يبي يوم واحد، يبي روتين يرافقك. عبوتين فما فوق تضمن إنك ما
-                توقف وتشوف فرق حقيقي — 30 مل · 60 مل · 90 مل.
-              </>
-            )}
+            <span className="text-charcoal">صدق اللي جرب — عبوة وحدة تعطيك طعم بس!</span>{' '}
+            الكتمة وبلغم السنين ما يبي يوم واحد، يبي روتين يرافقك. عبوتين فما فوق تضمن إنك ما
+            توقف وتشوف فرق حقيقي — 30 مل · 60 مل · 90 مل.
           </p>
         </div>
       )}
