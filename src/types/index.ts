@@ -30,7 +30,7 @@ export interface Offer {
   qty: number
   price: number
   badge: string
-  badgeColor: 'sage' | 'gold' | 'teal'
+  badgeColor: 'sage' | 'gold' | 'teal' | 'charcoal' | 'apothecary'
   isDefault?: boolean
   savings?: number
   desc?: string
