@@ -127,6 +127,7 @@ export interface AgitationPoint {
 }
 
 export interface AgitationSectionContent {
+  theme?: 'dark' | 'light'
   alert: string
   title: string
   body: string
@@ -555,6 +556,7 @@ const MOLIEN_DROPS_SECTIONS: ProductPageSections = {
   painVideo: '/videos/molien-drops-pain-animated.mp4',
   painOverlay: 'لا تخلي الكتمة والبلغم يسيطرون على يومك',
   agitation: {
+    theme: 'light',
     alert: 'لا تكابر.. صدرك جالس ينهار من جوّا وأنت تسلّك لنفسك! ⏳',
     title: 'تحسبها مجرد "كحة وتروح"؟ هذا اللي ينتظرك إذا ما نظفت رئتك اليوم!',
     body: 'كل يوم تتجاهل فيه البلغم والكتمة، أنت جالس تبني جدار من السموم داخل رئتك. الغبار، الشيشة، الدخان، وحتى هوا المكيف.. كلها قاعدة تسد مجاري التنفس ببطء. لا تستنى لين يوصل فيك الحال إنك ما تقدر تطلع درج بيتك!',
