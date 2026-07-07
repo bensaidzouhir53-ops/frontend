@@ -185,7 +185,7 @@ export const MOLIEN_DROPS_OFFERS: Offer[] = [
     qtyLabel: 'عبوة واحدة',
     volumeLabel: '60 مل',
     badge: 'العبوة الأولى • تعطيك النتيجة',
-    badgeColor: 'teal',
+    badgeColor: 'sage',
     savings: 0,
     desc: 'العبوة الأولى تعطيك النتيجة وتشوف الفرق المبدئي بفتح الصدر وتخفيف الكتمة.',
   },
