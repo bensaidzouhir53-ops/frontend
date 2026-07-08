@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { Check, ShoppingCart, TrendingUp } from 'lucide-react'
+import { Check, ShoppingCart, TrendingUp, Flame } from 'lucide-react'
 import type { Product } from '@/types'
 import { getOffersForProduct } from '@/lib/products'
 import { useCartStore } from '@/store/cartStore'
@@ -118,13 +118,32 @@ export default function OfferSelector({ product, className }: OfferSelectorProps
       )}
 
       {product.slug === 'molien-drops' && (
-        <div className="flex items-start gap-3 rounded-2xl border border-teal/25 bg-gradient-to-l from-teal/8 via-mist to-gold/10 px-4 py-3.5">
-          <TrendingUp className="mt-0.5 h-5 w-5 shrink-0 text-teal" />
-          <p className="text-sm font-bold leading-relaxed text-charcoal/80">
-            <span className="text-teal-dark">ليش أغلب العملاء يختارون عبوتين أو أكثر؟</span>{' '}
-            تنظيف الرئة من جوّا يبي استمرار — عبوتين تثبت النتيجة شهرين، و3 عبوات تعطيك كورس
-            كامل بأفضل توفير وشحن مجاني.
-          </p>
+        <div className="relative overflow-hidden rounded-2xl border-2 border-gold/45 bg-gradient-to-l from-amber-50 via-ivory to-gold/10 px-4 py-4 shadow-md shadow-gold/10">
+          <div className="absolute inset-y-0 right-0 w-1 bg-gradient-to-b from-gold via-gold-dark to-teal" />
+          <div className="flex items-start gap-3">
+            <div className="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-gold/25 to-red-100 ring-2 ring-gold/35">
+              <Flame className="h-5 w-5 text-gold-dark" />
+            </div>
+            <div className="min-w-0 flex-1">
+              <div className="mb-2 flex flex-wrap items-center gap-2">
+                <span className="relative flex h-2 w-2">
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-400 opacity-75" />
+                  <span className="relative inline-flex h-2 w-2 rounded-full bg-red-500" />
+                </span>
+                <span className="text-[11px] font-extrabold tracking-wide text-red-700 sm:text-xs">
+                  🔥 الأكثر مبيعاً اليوم — لا تكتفي بعبوة وحدة
+                </span>
+              </div>
+              <p className="text-sm font-extrabold leading-relaxed text-charcoal sm:text-[15px]">
+                <span className="text-teal-dark">ليش أغلب العملاء يختارون عبوتين أو أكثر؟</span>{' '}
+                تنظيف الرئة من جوّا يبي استمرار —{' '}
+                <span className="text-gold-dark">عبوتين تثبت النتيجة شهرين</span>، و{' '}
+                <span className="text-gold-dark">
+                  3 عبوات تعطيك كورس كامل بأفضل توفير وشحن مجاني.
+                </span>
+              </p>
+            </div>
+          </div>
         </div>
       )}
 
