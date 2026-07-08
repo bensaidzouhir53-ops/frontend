@@ -72,7 +72,7 @@ export const PRODUCTS: Product[] = [
   },
   {
     slug: 'molien-drops',
-    sku: 'MOIL12',
+    sku: 'MOILZOUH',
     nameAr: 'كحة، بلغم، وكتمة؟ قطرات مستخلص المولين تنظّف رئتك من جوّا وتطرد بلغم السنين! 🌿',
     nameEn: 'Molien Drops — Deep Lung Cleansing',
     cardTitleAr: 'قطرات المولين لتنظيف الرئة',
