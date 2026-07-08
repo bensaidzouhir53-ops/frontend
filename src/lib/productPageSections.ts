@@ -565,7 +565,8 @@ const MOLIEN_DROPS_SECTIONS: ProductPageSections = {
       { text: 'بعد سنة: البلغم بيتحجر أكثر، ومناعتك بتقل، وبتصير تلهث من أقل مجهود كأنك شايب.' },
       { text: 'بعد فترة: بتصير ضيف دايم في طوارئ المستشفيات تدور أكسجين عشان بس تاخذ "نفس طبيعي"!' }
     ],
-    gif: '/images/molien-agitation-real.gif',
+    gif: '',
+    gifVideo: '/videos/molien-agitation.mp4',
     gifAlt: 'عواقب إهمال كتمة الصدر والبلغم',
     overlay: 'لا تستنى لين يوصل فيك الحال كذا.. نظّف رئتك اليوم!'
   },
