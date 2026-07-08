@@ -673,8 +673,8 @@ const MOLIEN_DROPS_SECTIONS: ProductPageSections = {
     afterImage: '/images/molien-after.png',
     beforeLabel: 'قبل',
     afterLabel: 'بعد',
-    beforeAlt: 'حالة الرئة قبل استخدام قطرة المولين — بلغم متحجر وانسداد',
-    afterAlt: 'حالة الرئة بعد استخدام قطرة المولين — رئتين نظيفتين وتنفس مريح',
+    beforeAlt: 'رجل سعودي يعاني من كحة وكتمة في الصدر قبل استخدام قطرات المولين',
+    afterAlt: 'رجل سعودي يتنفس براحة وصدره مرتاح بعد استخدام قطرات المولين',
   },
   trustOrigin: {
     badge: 'ثقة ومصدر واضح',
