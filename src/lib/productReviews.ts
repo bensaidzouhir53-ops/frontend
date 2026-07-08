@@ -183,6 +183,12 @@ export const MOLIEN_DROPS_REVIEWS: ProductReview[] = [
     city: 'الخبر',
     image: '/images/reviews/molien/7.png',
   },
+  {
+    name: 'سلطان العتيبي',
+    text: 'وصلني الطلب اليوم والتغليف يبيض الوجه زي ما تشوفون. بعد تجربة كم يوم أقدر أقول إني ارتحت من الكتمة اللي كانت متعبتني، والبلغم بدا يخف بشكل ملحوظ وصدري انفتح. منتج بطل وأنصح فيه بقوة خصوصاً للمدخنين، شكراً نَفَس على هالمصداقية.',
+    city: 'الرياض',
+    image: '/images/reviews/molien/8.png',
+  },
 ]
 
 export const DEFAULT_PRODUCT_REVIEWS: ProductReview[] = [

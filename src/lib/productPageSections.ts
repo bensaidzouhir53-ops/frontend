@@ -712,9 +712,9 @@ const MOLIEN_DROPS_SECTIONS: ProductPageSections = {
     subtitle:
       'تجارب موثقة من رجال بالرياض وجدة والدمام — جربوا قطرات المولين وشافوا الفرق بأنفسهم.',
   },
-  showImageReviews: false,
-  reviewsKey: 'molien-drops',
-}
+    showImageReviews: true,
+    reviewsKey: 'molien-drops',
+  }
 
 const PRODUCT_PAGE_SECTIONS: Record<string, ProductPageSections> = {
   'herbal-lung-spray': HERBAL_LUNG_SPRAY_SECTIONS,
