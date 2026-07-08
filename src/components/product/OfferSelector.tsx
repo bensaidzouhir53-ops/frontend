@@ -118,11 +118,11 @@ export default function OfferSelector({ product, className }: OfferSelectorProps
       )}
 
       {product.slug === 'molien-drops' && (
-        <div className="relative overflow-hidden rounded-2xl border-2 border-gold/45 bg-gradient-to-l from-amber-50 via-ivory to-gold/10 px-4 py-4 shadow-md shadow-gold/10">
-          <div className="absolute inset-y-0 right-0 w-1 bg-gradient-to-b from-gold via-gold-dark to-teal" />
+        <div className="relative overflow-hidden rounded-2xl border-2 border-red-500/30 bg-gradient-to-l from-red-50 via-white to-red-100/30 px-4 py-4 shadow-md shadow-red-500/10">
+          <div className="absolute inset-y-0 right-0 w-1 bg-gradient-to-b from-red-400 via-red-500 to-red-600" />
           <div className="flex items-start gap-3">
-            <div className="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-gold/25 to-red-100 ring-2 ring-gold/35">
-              <Flame className="h-5 w-5 text-gold-dark" />
+            <div className="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-red-100 to-red-200 ring-2 ring-red-500/20">
+              <Flame className="h-5 w-5 text-red-600" />
             </div>
             <div className="min-w-0 flex-1">
               <div className="mb-2 flex flex-wrap items-center gap-2">
@@ -131,16 +131,12 @@ export default function OfferSelector({ product, className }: OfferSelectorProps
                   <span className="relative inline-flex h-2 w-2 rounded-full bg-red-500" />
                 </span>
                 <span className="text-[11px] font-extrabold tracking-wide text-red-700 sm:text-xs">
-                  🔥 الأكثر مبيعاً اليوم — لا تكتفي بعبوة وحدة
+                  🔥 الأكثر مبيعاً اليوم — المخزون ينفذ بسرعة!
                 </span>
               </div>
               <p className="text-sm font-extrabold leading-relaxed text-charcoal sm:text-[15px]">
-                <span className="text-teal-dark">ليش أغلب العملاء يختارون عبوتين أو أكثر؟</span>{' '}
-                تنظيف الرئة من جوّا يبي استمرار —{' '}
-                <span className="text-gold-dark">عبوتين تثبت النتيجة شهرين</span>، و{' '}
-                <span className="text-gold-dark">
-                  3 عبوات تعطيك كورس كامل بأفضل توفير وشحن مجاني.
-                </span>
+                <span className="text-red-600">تنبيه:</span> الطلب على قطرات المولين في أعلى مستوياته و{' '}
+                <span className="text-red-600">الكمية المتبقية محدودة جداً</span>. احجز كميتك الحين قبل نفاذ المخزون (لا نضمن توفر المنتج غداً).
               </p>
             </div>
           </div>
