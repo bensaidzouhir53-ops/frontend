@@ -131,12 +131,12 @@ export default function OfferSelector({ product, className }: OfferSelectorProps
                   <span className="relative inline-flex h-2 w-2 rounded-full bg-red-500" />
                 </span>
                 <span className="text-[11px] font-extrabold tracking-wide text-red-700 sm:text-xs">
-                  🔥 الأكثر مبيعاً اليوم — المخزون ينفذ بسرعة!
+                  🔥 الأكثر طلباً اليوم — الكمية بتخلص!
                 </span>
               </div>
               <p className="text-sm font-extrabold leading-relaxed text-charcoal sm:text-[15px]">
-                <span className="text-red-600">تنبيه:</span> الطلب على قطرات المولين في أعلى مستوياته و{' '}
-                <span className="text-red-600">الكمية المتبقية محدودة جداً</span>. احجز كميتك الحين قبل نفاذ المخزون (لا نضمن توفر المنتج غداً).
+                <span className="text-red-600">تنبيه مهم:</span> الطلب على قطرات المولين نار و{' '}
+                <span className="text-red-600">المخزون الباقي قليل جداً</span>. اطلب كميتك الحين واضمنها قبل لا تخلص (ما نوعدك نلقى لك طلبك بكرة).
               </p>
             </div>
           </div>
