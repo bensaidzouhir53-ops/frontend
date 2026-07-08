@@ -10,6 +10,28 @@ function isGifPath(path: string): boolean {
   return path.trim().toLowerCase().endsWith('.gif')
 }
 
+function AnimatedGif({
+  src,
+  alt,
+  className,
+}: {
+  src: string
+  alt: string
+  className?: string
+}) {
+  return (
+    <img
+      key={src}
+      src={src}
+      alt={alt}
+      className={className}
+      loading="eager"
+      decoding="async"
+      draggable={false}
+    />
+  )
+}
+
 export default function ProductAgitationSection({ content }: ProductAgitationSectionProps) {
   const gifSrc = content.gif?.trim() ?? ''
   const videoSrc = content.gifVideo?.trim() ?? ''
@@ -31,7 +53,7 @@ export default function ProductAgitationSection({ content }: ProductAgitationSec
 
       <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col items-center gap-12 lg:flex-row">
-          {/* Animated media — GIF via native img; MP4 loop as fallback only if no GIF */}
+          {/* Animated media — native img for .gif (Next/Image breaks animation) */}
           <div className="relative order-1 w-full lg:w-1/2">
             <div className={`absolute inset-0 rounded-full bg-gold/10 blur-3xl ${isLight ? 'opacity-40' : 'opacity-60'}`} />
             <div className={`relative aspect-[4/5] overflow-hidden rounded-[2.5rem] border shadow-2xl ${
@@ -42,13 +64,10 @@ export default function ProductAgitationSection({ content }: ProductAgitationSec
               {hasMedia ? (
                 <>
                   {hasGif && isGifPath(gifSrc) ? (
-                    <img
-                      key={gifSrc}
+                    <AnimatedGif
                       src={gifSrc}
                       alt={content.gifAlt}
                       className="h-full w-full object-cover contrast-125"
-                      loading="eager"
-                      decoding="async"
                     />
                   ) : hasVideo ? (
                     <video
