@@ -531,7 +531,12 @@ function applyPixelConfig(config: PixelConfig): void {
       : isValidPixelId(config.meta_pixel_id)
         ? [config.meta_pixel_id.trim()]
         : []
-  if (metaIds.length > 0) loadMetaPixels(metaIds)
+  if (metaIds.length > 0 && !window.__nasamaPageViewTracked) {
+    loadMetaPixels(metaIds)
+  } else if (metaIds.length > 0) {
+    registerMetaPixelIds(metaIds)
+    syncMetaReadyState()
+  }
 
   const tiktok = config.tiktok_pixel_id?.trim()
   const snap = config.snap_pixel_id?.trim()

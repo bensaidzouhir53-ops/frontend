@@ -1,5 +1,3 @@
-import Script from 'next/script'
-
 const FB_LOADER = `!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');`
 
 interface MetaPixelHeadScriptsProps {
@@ -12,11 +10,16 @@ function buildMetaBootstrap(pixelIds: string[]): string {
   if (!safeIds.length) return ''
 
   const init = safeIds.map((id) => `fbq('init','${id}');`).join('')
-  const pageView = safeIds.map((id) => `fbq('trackSingle','${id}','PageView');`).join('')
-  return `${FB_LOADER}${init}${pageView}`
+  // Standard Meta snippet — Pixel Helper expects fbq('track','PageView') after init.
+  const pageView =
+    safeIds.length === 1
+      ? "fbq('track','PageView');"
+      : safeIds.map((id) => `fbq('trackSingle','${id}','PageView');`).join('')
+
+  return `${FB_LOADER}${init}${pageView}window.__nasamaPageViewTracked=true;window.__nasamaMetaReady=true;`
 }
 
-/** Standard Meta pixel in <head> — Meta Pixel Helper detects this immediately. */
+/** Inline Meta pixel in <head> — runs on first HTML parse (Pixel Helper detects this). */
 export default function MetaPixelHeadScripts({
   enabled,
   pixelIds,
@@ -30,9 +33,10 @@ export default function MetaPixelHeadScripts({
 
   return (
     <>
-      <Script id="nasama-meta-fbevents" strategy="afterInteractive">
-        {bootstrap}
-      </Script>
+      <script
+        id="nasama-meta-pixel-bootstrap"
+        dangerouslySetInnerHTML={{ __html: bootstrap }}
+      />
       <noscript>
         {safeIds.map((id) => (
           // eslint-disable-next-line @next/next/no-img-element

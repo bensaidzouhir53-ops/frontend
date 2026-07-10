@@ -10,6 +10,9 @@ export interface ServerPixelConfig {
   snap_pixel_id: string | null
 }
 
+/** Store pixel — used when env/backend are missing (e.g. Docker build). */
+const DEFAULT_META_PIXEL_ID = '576636091443534'
+
 const EMPTY: ServerPixelConfig = {
   enabled: false,
   meta_pixel_id: null,
@@ -151,7 +154,9 @@ export function getEnvPixelFallback(): ServerPixelConfig {
   return normalizePixelConfig({
     enabled: process.env.ENABLE_WEB_PIXELS !== 'false',
     meta_pixel_id:
-      process.env.NEXT_PUBLIC_META_PIXEL_ID ?? process.env.META_PIXEL_ID ?? null,
+      process.env.NEXT_PUBLIC_META_PIXEL_ID ??
+      process.env.META_PIXEL_ID ??
+      DEFAULT_META_PIXEL_ID,
     tiktok_pixel_id: resolveTikTokPixelId(
       process.env.NEXT_PUBLIC_TIKTOK_PIXEL_ID,
       process.env.TIKTOK_PIXEL_CODE,
@@ -195,7 +200,11 @@ export async function fetchTrackingConfigFromBackend(): Promise<ServerPixelConfi
   if (backendRaw) {
     const backendConfig = normalizePixelConfig(backendRaw)
     if (backendConfig.meta_pixel_ids.length > 0) {
-      return backendConfig.enabled ? backendConfig : EMPTY
+      const webPixelsEnabled = process.env.ENABLE_WEB_PIXELS !== 'false'
+      return {
+        ...backendConfig,
+        enabled: backendConfig.enabled || webPixelsEnabled,
+      }
     }
     return mergePixelConfigs(backendConfig, envFallback)
   }
