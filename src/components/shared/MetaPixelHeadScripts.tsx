@@ -1,4 +1,3 @@
-import Script from 'next/script'
 import { DEFAULT_META_PIXEL_ID } from '@/lib/meta-pixel'
 
 interface MetaPixelHeadScriptsProps {
@@ -6,8 +5,8 @@ interface MetaPixelHeadScriptsProps {
 }
 
 /**
- * Official Meta Pixel bootstrap inlined in <head> via beforeInteractive.
- * Avoids /meta-pixel.js + document.currentScript (unreliable with Next Script loader).
+ * Official Meta Pixel bootstrap as a raw inline <script>.
+ * Avoids next/script __next_s queue delays that break Pixel Helper / Test Events.
  */
 export default function MetaPixelHeadScripts({
   pixelId = DEFAULT_META_PIXEL_ID,
@@ -15,9 +14,7 @@ export default function MetaPixelHeadScripts({
   const id = (pixelId ?? DEFAULT_META_PIXEL_ID).trim()
   if (!/^\d+$/.test(id)) return null
 
-  return (
-    <>
-      <Script id="nasama-meta-pixel" strategy="beforeInteractive">{`
+  const bootstrap = `
 !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
 n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
 n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
@@ -28,7 +25,11 @@ fbq('track','PageView');
 window.__nasamaPageViewTracked=true;
 window.__nasamaMetaReady=true;
 window.__nasamaInitializedPixelIds=['${id}'];
-      `}</Script>
+`.trim()
+
+  return (
+    <>
+      <script id="nasama-meta-pixel" dangerouslySetInnerHTML={{ __html: bootstrap }} />
       <noscript>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
