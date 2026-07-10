@@ -848,6 +848,33 @@ export default function ProductPageContent({
         </div>
       </section>
 
+      {/* ── 6.1 SFDA Establishment Certificate ── */}
+      {sections.sfdaCertificateSection && (
+        <section className={`py-14 md:py-16 ${isMolien ? 'bg-surface-rose' : 'bg-mist/10'}`}>
+          <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+            <div className="mb-8 text-center">
+              <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-teal/20 bg-teal/10 px-5 py-2 text-sm font-bold text-teal shadow-sm">
+                <ShieldCheck className="h-4 w-4" />
+                شهادة تسجيل SFDA
+              </div>
+              <h2 className="mb-3 text-3xl font-extrabold text-charcoal md:text-4xl">
+                {sections.sfdaCertificateSection.title}
+              </h2>
+              <p className="mx-auto max-w-2xl text-lg font-medium leading-relaxed text-charcoal/70">
+                {sections.sfdaCertificateSection.subtitle}
+              </p>
+            </div>
+            <div className="overflow-hidden rounded-[2rem] border border-warm-border bg-white p-4 shadow-xl md:p-6">
+              <img
+                src={sections.sfdaCertificateSection.image}
+                alt={sections.sfdaCertificateSection.imageAlt}
+                className="mx-auto h-auto w-full object-contain"
+              />
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* ── 7. FAQ ── */}
       <section className={`border-y border-sage/20 py-14 md:py-16 ${isMolien ? 'bg-surface-rose' : 'bg-white'}`}>
         <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">

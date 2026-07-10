@@ -177,6 +177,12 @@ export interface ProductPageSections {
   facebookSocialProof?: FacebookSocialProofSectionContent
   showImageReviews: boolean
   reviewsKey: 'herbal-lung-spray' | 'molien-drops'
+  sfdaCertificateSection?: {
+    image: string
+    imageAlt: string
+    title: string
+    subtitle: string
+  }
 }
 
 const SHARED_DAY_PROCESS_PHASES: DayProcessPhase[] = [
@@ -714,6 +720,13 @@ const MOLIEN_DROPS_SECTIONS: ProductPageSections = {
   },
     showImageReviews: true,
     reviewsKey: 'molien-drops',
+    sfdaCertificateSection: {
+      image: '/images/molien-drops-sfda-certificate.png',
+      imageAlt: 'شهادة تسجيل منشأة من هيئة الغذاء والدواء SFDA — مستخلص ورق المولين',
+      title: 'شهادة تسجيل رسمية من هيئة الغذاء والدواء (SFDA)',
+      subtitle:
+        'منتجنا مسجّل رسمياً لدى الهيئة العامة للغذاء والدواء — مستخلص ورق المولين معتمد كمكمل غذائي. استخدمه وأنت مطمئن.',
+    },
   }
 
 const PRODUCT_PAGE_SECTIONS: Record<string, ProductPageSections> = {
