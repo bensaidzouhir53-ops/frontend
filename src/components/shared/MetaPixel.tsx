@@ -8,6 +8,8 @@ interface MetaPixelProps {
   pixelId?: string | null
 }
 
+type FbqFn = NonNullable<Window['fbq']>
+
 /** Client fallback if the head bootstrap did not run (adblock / failed inject). */
 export default function MetaPixel({ pixelId = DEFAULT_META_PIXEL_ID }: MetaPixelProps) {
   useEffect(() => {
@@ -31,24 +33,21 @@ export default function MetaPixel({ pixelId = DEFAULT_META_PIXEL_ID }: MetaPixel
 
     if (markReady()) return
 
-    // Standard Meta stub + fbevents (same as head bootstrap)
-    const w = window as Window & { fbq?: Window['fbq']; _fbq?: Window['fbq'] }
-    if (!w.fbq) {
-      const n = function (...args: unknown[]) {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const fn = n as any
-        fn.callMethod ? fn.callMethod(...args) : fn.queue.push(args)
-      } as NonNullable<Window['fbq']>
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      ;(n as any).push = n
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      ;(n as any).loaded = true
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      ;(n as any).version = '2.0'
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      ;(n as any).queue = []
-      w.fbq = n
-      w._fbq = n
+    if (!window.fbq) {
+      const fbq = function (...args: unknown[]) {
+        if (fbq.callMethod) {
+          fbq.callMethod(...args)
+        } else {
+          fbq.queue!.push(args)
+        }
+      } as FbqFn
+
+      fbq.push = fbq
+      fbq.loaded = true
+      fbq.version = '2.0'
+      fbq.queue = []
+      window.fbq = fbq
+      window._fbq = fbq
     }
 
     const existing = document.querySelector(
@@ -61,9 +60,9 @@ export default function MetaPixel({ pixelId = DEFAULT_META_PIXEL_ID }: MetaPixel
       document.head.appendChild(script)
     }
 
-    w.fbq?.('init', id)
+    window.fbq?.('init', id)
     if (!window.__nasamaPageViewTracked) {
-      w.fbq?.('track', 'PageView')
+      window.fbq?.('track', 'PageView')
       window.__nasamaPageViewTracked = true
     }
     window.__nasamaMetaReady = true
