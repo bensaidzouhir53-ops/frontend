@@ -126,7 +126,7 @@ export default function ProductPageContent({
                 <div
                   className={
                     isMolien
-                      ? 'relative aspect-square overflow-hidden rounded-3xl border border-white/40 bg-surface-rose shadow-2xl'
+                      ? 'relative aspect-[4/5] overflow-hidden rounded-3xl border border-white/40 bg-white shadow-2xl'
                       : 'relative aspect-[4/5] overflow-hidden rounded-[2.5rem] border-4 border-white bg-gray-100 shadow-2xl shadow-teal/10'
                   }
                 >
@@ -140,7 +140,7 @@ export default function ProductPageContent({
                         ? '(max-width: 640px) 100vw, (max-width: 1024px) 448px, 640px'
                         : '(max-width: 1024px) 100vw, 50vw'
                     }
-                    className="object-cover"
+                    className={isMolien ? 'object-contain' : 'object-cover'}
                   />
                 </div>
 
