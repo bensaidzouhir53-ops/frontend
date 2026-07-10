@@ -633,30 +633,6 @@ export default function ProductPageContent({
                     </div>
                   ))}
                 </div>
-
-                {sections.ingredientsSfdaCertificate && (
-                  <div className="mt-12 rounded-[2rem] border border-teal/20 bg-white p-6 shadow-lg md:p-8">
-                    <div className="mb-6 text-right">
-                      <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-teal/20 bg-teal/10 px-4 py-1.5 text-sm font-bold text-teal">
-                        <ShieldCheck className="h-4 w-4" />
-                        معتمد SFDA
-                      </div>
-                      <h3 className="mb-2 text-2xl font-extrabold text-charcoal">
-                        {sections.ingredientsSfdaCertificate.title}
-                      </h3>
-                      <p className="text-base font-medium leading-relaxed text-charcoal/70">
-                        {sections.ingredientsSfdaCertificate.subtitle}
-                      </p>
-                    </div>
-                    <div className="overflow-hidden rounded-2xl border border-warm-border bg-surface-rose shadow-inner">
-                      <img
-                        src={sections.ingredientsSfdaCertificate.image}
-                        alt={sections.ingredientsSfdaCertificate.imageAlt}
-                        className="mx-auto h-auto w-full max-w-2xl object-contain"
-                      />
-                    </div>
-                  </div>
-                )}
               </div>
             </div>
           </div>

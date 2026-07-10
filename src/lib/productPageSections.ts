@@ -164,12 +164,6 @@ export interface ProductPageSections {
   mechanismImageAlt: string
   ingredientsMainImage: string
   ingredientsMainImageAlt: string
-  ingredientsSfdaCertificate?: {
-    image: string
-    imageAlt: string
-    title: string
-    subtitle: string
-  }
   howToUseSteps: HowToUseStep[]
   howToUseTitle: string
   howToUseSubtitle: string
@@ -637,13 +631,6 @@ const MOLIEN_DROPS_SECTIONS: ProductPageSections = {
   },
   ingredientsMainImage: '/images/molien-ingredients.png',
   ingredientsMainImageAlt: 'مكونات قطرة المولين العشبية الطبيعية',
-  ingredientsSfdaCertificate: {
-    image: '/images/molien-drops-sfda-certificate.png',
-    imageAlt: 'شهادة تسجيل منشأة من هيئة الغذاء والدواء SFDA — مستخلص ورق المولين',
-    title: 'شهادة تسجيل رسمية من هيئة الغذاء والدواء (SFDA)',
-    subtitle:
-      'منتجنا مسجّل رسمياً لدى الهيئة العامة للغذاء والدواء — مستخلص ورق المولين معتمد كمكمل غذائي. استخدمه وأنت مطمئن.',
-  },
   howToUseSteps: [
     {
       step: 1,
