@@ -1,36 +1,43 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
+import { useEffect } from 'react'
+import { DEFAULT_META_PIXEL_ID } from '@/lib/meta-pixel'
 import { registerMetaPixelIds, syncMetaReadyState } from '@/lib/tracking'
 
 interface MetaPixelProps {
-  enabled: boolean
-  pixelIds: string[]
+  pixelId?: string | null
 }
 
-/** Sync head pixel with tracking.ts — no second script load. */
-export default function MetaPixel({ enabled, pixelIds }: MetaPixelProps) {
-  const started = useRef(false)
-
+/** Fallback — if /meta-pixel.js was blocked, inject bootstrap once on the client. */
+export default function MetaPixel({ pixelId = DEFAULT_META_PIXEL_ID }: MetaPixelProps) {
   useEffect(() => {
-    if (!enabled || pixelIds.length === 0 || started.current) return
-    started.current = true
+    const id = (pixelId ?? DEFAULT_META_PIXEL_ID).trim()
+    if (!/^\d+$/.test(id)) return
 
     const sync = () => {
       if (!window.fbq) return false
       window.__nasamaMetaReady = true
-      registerMetaPixelIds(pixelIds)
+      registerMetaPixelIds([id])
       syncMetaReadyState()
       return true
     }
 
-    if (!sync()) {
-      const interval = window.setInterval(() => {
-        if (sync()) window.clearInterval(interval)
-      }, 50)
-      window.setTimeout(() => window.clearInterval(interval), 10000)
+    if (sync()) return
+
+    const script = document.createElement('script')
+    script.src = '/meta-pixel.js'
+    script.async = false
+    script.dataset.pixelId = id
+    script.onload = () => {
+      sync()
     }
-  }, [enabled, pixelIds.join(',')])
+    document.head.appendChild(script)
+
+    const interval = window.setInterval(() => {
+      if (sync()) window.clearInterval(interval)
+    }, 100)
+    window.setTimeout(() => window.clearInterval(interval), 10000)
+  }, [pixelId])
 
   return null
 }

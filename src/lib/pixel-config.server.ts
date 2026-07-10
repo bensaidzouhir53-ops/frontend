@@ -1,4 +1,5 @@
 import { getBackendCandidates } from '@/lib/orders.server'
+import { DEFAULT_META_PIXEL_ID } from '@/lib/meta-pixel'
 
 export interface ServerPixelConfig {
   enabled: boolean
@@ -9,9 +10,6 @@ export interface ServerPixelConfig {
   tiktok_pixel_id: string | null
   snap_pixel_id: string | null
 }
-
-/** Store pixel — used when env/backend are missing (e.g. Docker build). */
-const DEFAULT_META_PIXEL_ID = '576636091443534'
 
 const EMPTY: ServerPixelConfig = {
   enabled: false,
@@ -64,7 +62,7 @@ export function normalizePixelConfig(raw: {
   const hasAny = Boolean(metaIds.length || tiktok || snap)
 
   return {
-    enabled: Boolean(raw.enabled) && hasAny,
+    enabled: hasAny && (Boolean(raw.enabled) || process.env.ENABLE_WEB_PIXELS !== 'false'),
     meta_pixel_id: metaIds[0] ?? null,
     meta_pixel_ids: metaIds,
     tiktok_pixel_id: tiktok,

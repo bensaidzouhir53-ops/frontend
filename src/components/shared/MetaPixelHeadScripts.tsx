@@ -1,54 +1,34 @@
-const FB_LOADER = `!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');`
+import Script from 'next/script'
+import { DEFAULT_META_PIXEL_ID } from '@/lib/meta-pixel'
 
 interface MetaPixelHeadScriptsProps {
-  enabled: boolean
-  pixelIds: string[]
+  pixelId?: string | null
 }
 
-function buildMetaBootstrap(pixelIds: string[]): string {
-  const safeIds = pixelIds.filter((id) => /^\d+$/.test(id))
-  if (!safeIds.length) return ''
-
-  const init = safeIds.map((id) => `fbq('init','${id}');`).join('')
-  // Standard Meta snippet — Pixel Helper expects fbq('track','PageView') after init.
-  const pageView =
-    safeIds.length === 1
-      ? "fbq('track','PageView');"
-      : safeIds.map((id) => `fbq('trackSingle','${id}','PageView');`).join('')
-
-  return `${FB_LOADER}${init}${pageView}window.__nasamaPageViewTracked=true;window.__nasamaMetaReady=true;`
-}
-
-/** Inline Meta pixel in <head> — runs on first HTML parse (Pixel Helper detects this). */
+/** Meta pixel — always loads via static /meta-pixel.js (before React/hydration). */
 export default function MetaPixelHeadScripts({
-  enabled,
-  pixelIds,
+  pixelId = DEFAULT_META_PIXEL_ID,
 }: MetaPixelHeadScriptsProps) {
-  if (!enabled || pixelIds.length === 0) return null
-
-  const bootstrap = buildMetaBootstrap(pixelIds)
-  if (!bootstrap) return null
-
-  const safeIds = pixelIds.filter((id) => /^\d+$/.test(id))
+  const id = (pixelId ?? DEFAULT_META_PIXEL_ID).trim()
+  if (!/^\d+$/.test(id)) return null
 
   return (
     <>
-      <script
-        id="nasama-meta-pixel-bootstrap"
-        dangerouslySetInnerHTML={{ __html: bootstrap }}
+      <Script
+        id="nasama-meta-pixel"
+        src="/meta-pixel.js"
+        strategy="beforeInteractive"
+        data-pixel-id={id}
       />
       <noscript>
-        {safeIds.map((id) => (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            key={id}
-            height="1"
-            width="1"
-            style={{ display: 'none' }}
-            src={`https://www.facebook.com/tr?id=${id}&ev=PageView&noscript=1`}
-            alt=""
-          />
-        ))}
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          height="1"
+          width="1"
+          style={{ display: 'none' }}
+          src={`https://www.facebook.com/tr?id=${id}&ev=PageView&noscript=1`}
+          alt=""
+        />
       </noscript>
     </>
   )
