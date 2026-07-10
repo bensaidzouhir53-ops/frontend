@@ -80,7 +80,7 @@ function bootMetaPixels(pixelIds: string[]): void {
   syncMetaReadyState()
 }
 
-/** Client-side Meta pixel — loads fbevents.js once and inits every pixel with trackSingle. */
+/** Client fallback — registers pixels with tracking.ts if head script already ran, else loads fbq. */
 export default function MetaPixel({ enabled, pixelIds }: MetaPixelProps) {
   const started = useRef(false)
 
@@ -90,14 +90,18 @@ export default function MetaPixel({ enabled, pixelIds }: MetaPixelProps) {
 
     let cancelled = false
 
-    void loadFbeventsScript()
-      .then(() => {
-        if (cancelled) return
-        bootMetaPixels(pixelIds)
-      })
-      .catch((error) => {
+    const finish = () => {
+      if (cancelled) return
+      bootMetaPixels(pixelIds)
+    }
+
+    if (window.fbq?.callMethod || window.__nasamaPageViewTracked) {
+      finish()
+    } else {
+      void loadFbeventsScript().then(finish).catch((error) => {
         console.warn('[MetaPixel] Failed to load:', error)
       })
+    }
 
     const interval = window.setInterval(() => {
       syncMetaReadyState()
@@ -109,21 +113,5 @@ export default function MetaPixel({ enabled, pixelIds }: MetaPixelProps) {
     }
   }, [enabled, pixelIds.join(',')])
 
-  if (!enabled || pixelIds.length === 0) return null
-
-  return (
-    <noscript>
-      {pixelIds.map((id) => (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img
-          key={id}
-          height="1"
-          width="1"
-          style={{ display: 'none' }}
-          src={`https://www.facebook.com/tr?id=${id}&ev=PageView&noscript=1`}
-          alt=""
-        />
-      ))}
-    </noscript>
-  )
+  return null
 }

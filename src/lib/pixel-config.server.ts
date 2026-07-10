@@ -202,6 +202,12 @@ export async function fetchTrackingConfigFromBackend(): Promise<ServerPixelConfi
     )
   }
 
+  if (envFallback.meta_pixel_ids.length > 0 || envFallback.tiktok_pixel_id) {
+    console.warn(
+      '[pixel-config] Backend /api/tracking/config unreachable — using env fallback for pixel IDs',
+    )
+  }
+
   return envFallback.enabled ? envFallback : EMPTY
 }
 

@@ -8,6 +8,7 @@ import {
   syncMetaReadyState,
   syncTtqReadyState,
   trackFirstPartyPageView,
+  trackPageView,
 } from '@/lib/tracking'
 
 interface PixelInitProps {
@@ -22,9 +23,20 @@ export default function PixelInit({ config }: PixelInitProps) {
     syncTtqReadyState()
     trackFirstPartyPageView()
 
+    let pageViewSent = false
+    const tryTrackPageView = () => {
+      if (pageViewSent) return
+      if (!window.__nasamaMetaReady && !window.fbq?.callMethod) return
+      pageViewSent = true
+      trackPageView()
+    }
+
+    tryTrackPageView()
+
     const interval = window.setInterval(() => {
       syncMetaReadyState()
       syncTtqReadyState()
+      tryTrackPageView()
     }, 100)
     const timeout = window.setTimeout(() => window.clearInterval(interval), 10000)
     return () => {

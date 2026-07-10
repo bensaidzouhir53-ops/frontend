@@ -535,6 +535,14 @@ async function fetchPixelConfig(): Promise<PixelConfig | null> {
 }
 
 function applyPixelConfig(config: PixelConfig): void {
+  const metaIds =
+    config.meta_pixel_ids.length > 0
+      ? config.meta_pixel_ids.filter((id) => isValidPixelId(id))
+      : isValidPixelId(config.meta_pixel_id)
+        ? [config.meta_pixel_id.trim()]
+        : []
+  if (metaIds.length > 0) loadMetaPixels(metaIds)
+
   const tiktok = config.tiktok_pixel_id?.trim()
   const snap = config.snap_pixel_id?.trim()
   if (tiktok) loadTikTokPixel(tiktok)
