@@ -15,69 +15,10 @@ interface OfferSelectorProps {
 
 const BADGE_STYLES: Record<string, string> = {
   sage: 'bg-sage/40 text-teal-dark border border-sage/50',
-  gold: 'bg-gradient-to-r from-gold to-gold-dark text-white shadow-sm',
-  teal: 'bg-teal text-white shadow-sm',
+  gold: 'bg-gold/15 text-gold-dark border border-gold/40',
+  teal: 'bg-teal/10 text-teal-dark border border-teal/20',
   apothecary: 'bg-apothecary text-white shadow-sm',
   charcoal: 'bg-charcoal text-gold border border-gold/30 shadow-sm',
-}
-
-type OfferCardTheme = {
-  cardDefault: string
-  cardSelected: string
-  radioDefault: string
-  radioSelected: string
-  price: string
-  volumePill: string
-  savings: string
-  shipping: string
-  savingsBanner: string
-}
-
-const MOLIEN_OFFER_THEMES: Record<number, OfferCardTheme> = {
-  1: {
-    cardDefault:
-      'border-sage/60 bg-gradient-to-l from-mint-clean via-white to-mist hover:border-teal/50',
-    cardSelected:
-      'border-teal bg-gradient-to-l from-teal/12 via-mist to-white shadow-lg shadow-teal/20 ring-2 ring-teal/15',
-    radioDefault: 'border-teal/35 bg-white',
-    radioSelected: 'border-teal bg-teal shadow-sm shadow-teal/30',
-    price: 'text-teal-dark',
-    volumePill: 'bg-teal/10 text-teal-dark ring-1 ring-teal/15',
-    savings: 'text-teal-dark',
-    shipping: 'bg-teal/12 text-teal-dark ring-1 ring-teal/15',
-    savingsBanner: 'bg-teal/10 text-teal-dark',
-  },
-  2: {
-    cardDefault:
-      'border-gold/45 bg-gradient-to-l from-amber-50/95 via-ivory to-gold/8 hover:border-gold/70',
-    cardSelected:
-      'border-gold bg-gradient-to-l from-gold/18 via-amber-50/90 to-ivory shadow-xl shadow-gold/25 ring-2 ring-gold/25',
-    radioDefault: 'border-gold/50 bg-white',
-    radioSelected: 'border-gold bg-gold shadow-sm shadow-gold/35',
-    price: 'text-apothecary-dark',
-    volumePill: 'bg-gold/15 text-gold-dark ring-1 ring-gold/25',
-    savings: 'text-gold-dark font-extrabold',
-    shipping: 'bg-gold/15 text-gold-dark ring-1 ring-gold/25',
-    savingsBanner: 'bg-gold/12 text-gold-dark',
-  },
-  3: {
-    cardDefault:
-      'border-charcoal/15 bg-gradient-to-l from-charcoal/[0.04] via-ivory to-gold/10 hover:border-charcoal/30',
-    cardSelected:
-      'border-charcoal/70 bg-gradient-to-l from-charcoal/10 via-ivory to-gold/15 shadow-xl shadow-charcoal/15 ring-2 ring-gold/20',
-    radioDefault: 'border-charcoal/25 bg-white',
-    radioSelected: 'border-charcoal bg-charcoal shadow-sm shadow-charcoal/30',
-    price: 'text-charcoal',
-    volumePill: 'bg-charcoal/8 text-charcoal ring-1 ring-charcoal/10',
-    savings: 'text-gold-dark font-extrabold',
-    shipping: 'bg-charcoal text-gold ring-1 ring-gold/20',
-    savingsBanner: 'bg-gradient-to-l from-charcoal/10 to-gold/10 text-charcoal',
-  },
-}
-
-function getOfferTheme(productSlug: string, qty: number): OfferCardTheme | null {
-  if (productSlug !== 'molien-drops') return null
-  return MOLIEN_OFFER_THEMES[qty] ?? null
 }
 
 const DEFAULT_QTY_LABELS: Record<number, string> = {
@@ -91,6 +32,7 @@ export default function OfferSelector({ product, className }: OfferSelectorProps
   const basePrice = offers[0].price
   const [selectedIdx, setSelectedIdx] = useState(offers.findIndex((o) => o.isDefault))
   const { addItem, openCart } = useCartStore()
+  const isMolien = product.slug === 'molien-drops'
 
   const selected = offers[selectedIdx] ?? offers[1]
 
@@ -106,7 +48,7 @@ export default function OfferSelector({ product, className }: OfferSelectorProps
 
   return (
     <div className={cn('flex flex-col gap-3 sm:gap-4', className)} dir="rtl">
-      {(product.slug === 'herbal-lung-spray') && (
+      {product.slug === 'herbal-lung-spray' && (
         <div className="flex items-start gap-3 rounded-2xl border border-gold/30 bg-gradient-to-l from-gold/10 to-amber-50/80 px-4 py-3.5">
           <TrendingUp className="mt-0.5 h-5 w-5 shrink-0 text-gold" />
           <p className="text-sm font-bold leading-relaxed text-charcoal/80">
@@ -117,60 +59,38 @@ export default function OfferSelector({ product, className }: OfferSelectorProps
         </div>
       )}
 
-      {product.slug === 'molien-drops' && (
-        <div className="relative overflow-hidden rounded-2xl border-2 border-red-500/30 bg-gradient-to-l from-red-50 via-white to-red-100/30 px-4 py-4 shadow-md shadow-red-500/10">
-          <div className="absolute inset-y-0 right-0 w-1 bg-gradient-to-b from-red-400 via-red-500 to-red-600" />
-          <div className="flex items-start gap-3">
-            <div className="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-red-100 to-red-200 ring-2 ring-red-500/20">
-              <Flame className="h-5 w-5 text-red-600" />
-            </div>
-            <div className="min-w-0 flex-1">
-              <div className="mb-2 flex flex-wrap items-center gap-2">
-                <span className="relative flex h-2 w-2">
-                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-400 opacity-75" />
-                  <span className="relative inline-flex h-2 w-2 rounded-full bg-red-500" />
-                </span>
-                <span className="text-[11px] font-extrabold tracking-wide text-red-700 sm:text-xs">
-                  🔥 الأكثر طلباً اليوم — الكمية بتخلص!
-                </span>
-              </div>
-              <p className="text-sm font-extrabold leading-relaxed text-charcoal sm:text-[15px]">
-                <span className="text-red-600">تنبيه مهم:</span> الطلب على قطرات المولين نار و{' '}
-                <span className="text-red-600">المخزون الباقي قليل جداً</span>. اطلب كميتك الحين واضمنها قبل لا تخلص (ما نوعدك نلقى لك طلبك بكرة).
-              </p>
-            </div>
-          </div>
+      {isMolien && (
+        <div className="inline-flex w-fit max-w-full items-center gap-2 rounded-full border border-red-200 bg-red-50 px-3 py-1.5 text-[11px] font-extrabold text-red-700 sm:text-xs">
+          <Flame className="h-3.5 w-3.5 shrink-0 text-red-600" />
+          <span className="leading-snug">الأكثر طلباً اليوم — الكمية بتخلص!</span>
         </div>
       )}
 
       <p className="text-sm font-semibold text-charcoal/70">اختر كميتك:</p>
 
-      <div className="flex flex-col gap-2.5 sm:gap-3">
+      <div className="flex flex-col gap-3">
         {offers.map((offer, idx) => {
           const isSelected = idx === selectedIdx
           const perUnit = Math.round(offer.price / offer.qty)
           const qtyLabel = offer.qtyLabel ?? DEFAULT_QTY_LABELS[offer.qty]
-          const theme = getOfferTheme(product.slug, offer.qty)
 
           return (
             <button
               key={offer.qty}
               onClick={() => setSelectedIdx(idx)}
               className={cn(
-                'relative w-full rounded-2xl border-2 p-3.5 text-right transition-all duration-200 sm:p-4',
-                theme
-                  ? isSelected
-                    ? cn(theme.cardSelected, 'scale-[1.01]')
-                    : theme.cardDefault
-                  : isSelected
-                    ? 'border-teal bg-teal/5 shadow-md'
+                'relative w-full rounded-2xl border-2 p-4 text-right transition-all duration-200',
+                isSelected
+                  ? 'border-teal bg-teal/5 shadow-md'
+                  : isMolien
+                    ? 'border-warm-border bg-white hover:border-teal/30 hover:bg-surface-rose/60'
                     : 'border-sage/40 bg-white hover:border-teal/40',
               )}
               aria-pressed={isSelected}
             >
-              {product.slug === 'molien-drops' && offer.qty === 2 && (
-                <span className="pointer-events-none absolute -top-2.5 left-4 rounded-full bg-gradient-to-r from-gold to-gold-dark px-2.5 py-0.5 text-[10px] font-extrabold text-white shadow-md">
-                  ⭐ الأكثر طلباً
+              {isMolien && offer.qty === 2 && (
+                <span className="pointer-events-none absolute -top-3 right-4 rounded-full bg-gold px-2.5 py-0.5 text-[10px] font-extrabold text-charcoal shadow-sm">
+                  الأكثر طلباً
                 </span>
               )}
 
@@ -178,42 +98,26 @@ export default function OfferSelector({ product, className }: OfferSelectorProps
                 <div
                   className={cn(
                     'mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full border-2 transition-colors',
-                    theme
-                      ? isSelected
-                        ? theme.radioSelected
-                        : theme.radioDefault
-                      : isSelected
-                        ? 'border-teal bg-teal'
-                        : 'border-sage/60 bg-white',
+                    isSelected ? 'border-teal bg-teal' : 'border-sage/60 bg-white',
                   )}
                 >
-                  {isSelected && (
-                    <Check
-                      className={cn(
-                        'h-3.5 w-3.5 stroke-[3]',
-                        offer.qty === 3 && product.slug === 'molien-drops'
-                          ? 'text-gold'
-                          : 'text-white',
-                      )}
-                    />
-                  )}
+                  {isSelected &&
+                    (isMolien ? (
+                      <span className="h-2 w-2 rounded-full bg-gold" />
+                    ) : (
+                      <Check className="h-3.5 w-3.5 stroke-[3] text-white" />
+                    ))}
                 </div>
 
                 <div className="min-w-0 flex-1">
-                  <div className="mb-2 flex flex-col gap-2 sm:mb-1 sm:flex-row sm:items-start sm:justify-between">
+                  <div className="mb-1 flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
                     <div className="min-w-0 flex-1">
-                      <div className="mb-1.5 flex flex-wrap items-center gap-x-2 gap-y-1">
+                      <div className="mb-1 flex flex-wrap items-center gap-x-2 gap-y-1">
                         <span className="text-base font-bold text-charcoal sm:text-[17px]">
                           {qtyLabel}
                         </span>
                         {offer.volumeLabel && (
-                          <span
-                            className={cn(
-                              'rounded-full px-2 py-0.5 text-[10px] font-bold sm:text-[11px]',
-                              theme?.volumePill ??
-                                'bg-mist text-teal-dark',
-                            )}
-                          >
+                          <span className="rounded-full bg-mist px-2 py-0.5 text-[10px] font-bold text-teal-dark sm:text-[11px]">
                             {offer.volumeLabel}
                           </span>
                         )}
@@ -234,47 +138,30 @@ export default function OfferSelector({ product, className }: OfferSelectorProps
                       )}
                     </div>
 
-                    <div className="flex shrink-0 items-center justify-between gap-3 sm:flex-col sm:items-end sm:justify-center sm:gap-0.5">
-                      <div className="text-right sm:text-left">
-                        <p
-                          className={cn(
-                            'text-lg font-extrabold sm:text-xl',
-                            theme?.price ?? 'text-teal',
-                          )}
-                        >
-                          {offer.price} ريال
+                    <div className="flex shrink-0 flex-col items-start sm:items-end">
+                      <p className="text-xl font-extrabold tabular-nums text-teal-dark">
+                        {offer.price} {isMolien ? 'ر.س' : 'ريال'}
+                      </p>
+                      {offer.qty > 1 && (
+                        <p className="text-[11px] text-charcoal/40 line-through sm:text-xs">
+                          {basePrice * offer.qty} {isMolien ? 'ر.س' : 'ريال'}
                         </p>
-                        {offer.qty > 1 && (
-                          <p className="text-[11px] text-charcoal/40 line-through sm:text-xs">
-                            {basePrice * offer.qty} ريال
-                          </p>
-                        )}
-                      </div>
+                      )}
                     </div>
                   </div>
 
                   <div className="flex flex-wrap items-center gap-x-2 gap-y-1.5">
                     <span className="text-[11px] text-charcoal/50 sm:text-xs">
-                      {perUnit} ريال / للعبوة
+                      {perUnit} {isMolien ? 'ر.س' : 'ريال'} / للعبوة
                     </span>
                     {(offer.savings ?? 0) > 0 && (
-                      <span
-                        className={cn(
-                          'text-[11px] font-semibold sm:text-xs',
-                          theme?.savings ?? 'text-gold',
-                        )}
-                      >
+                      <span className="text-[11px] font-semibold text-gold-dark sm:text-xs">
                         وفّر {offer.savings} ريال
                       </span>
                     )}
                     {offer.qty > 1 && (
-                      <span
-                        className={cn(
-                          'inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-bold sm:text-[11px]',
-                          theme?.shipping ?? 'bg-teal/10 text-teal',
-                        )}
-                      >
-                        🚚 شحن مجاني
+                      <span className="inline-flex items-center rounded-full bg-teal/10 px-2 py-0.5 text-[10px] font-bold text-teal-dark sm:text-[11px]">
+                        شحن مجاني
                       </span>
                     )}
                   </div>
@@ -285,14 +172,8 @@ export default function OfferSelector({ product, className }: OfferSelectorProps
         })}
       </div>
 
-      {(selected.savings ?? 0) > 0 && (
-        <div
-          className={cn(
-            'flex items-center justify-center rounded-xl px-3 py-2.5 sm:px-4',
-            getOfferTheme(product.slug, selected.qty)?.savingsBanner ??
-              'bg-gold/10 text-gold',
-          )}
-        >
+      {(selected.savings ?? 0) > 0 && !isMolien && (
+        <div className="flex items-center justify-center rounded-xl bg-gold/10 px-3 py-2.5 text-gold sm:px-4">
           <span className="text-center text-xs font-bold sm:text-sm">
             ستوفّر {selected.savings} ريال مع هذا الخيار 🎉
           </span>
@@ -301,23 +182,29 @@ export default function OfferSelector({ product, className }: OfferSelectorProps
 
       <button
         onClick={handleAddToCart}
-        className="mt-1 flex w-full items-center justify-center gap-2 rounded-2xl bg-teal px-4 py-3.5 text-base font-extrabold text-white shadow-lg shadow-teal/30 transition-all hover:bg-teal-dark active:scale-[0.98] sm:gap-3 sm:py-4 sm:text-lg md:py-5"
+        className="mt-1 flex min-h-[56px] w-full items-center justify-center gap-2 rounded-2xl bg-teal px-4 py-4 text-base font-bold text-white shadow-lg shadow-teal/20 transition-all hover:bg-teal-dark active:scale-[0.98] sm:gap-3 sm:text-lg"
       >
         <ShoppingCart className="h-5 w-5 shrink-0 sm:h-6 sm:w-6" />
         <span className="leading-snug">أكمل الطلب الآن — الدفع عند الاستلام</span>
       </button>
 
-      <div className="mt-1 flex flex-col items-stretch gap-2 rounded-xl bg-mist/50 px-3 py-3 text-xs font-bold text-charcoal/60 sm:flex-row sm:flex-wrap sm:items-center sm:justify-center sm:gap-4 sm:text-sm">
-        <span className="flex items-center justify-center gap-1 sm:justify-start">
-          <Check className="h-3 w-3 shrink-0 text-teal" /> الدفع عند الاستلام
-        </span>
-        <span className="flex items-center justify-center gap-1 sm:justify-start">
-          <Check className="h-3 w-3 shrink-0 text-teal" /> شحن سريع 2-4 أيام
-        </span>
-        <span className="flex items-center justify-center gap-1 sm:justify-start">
-          <Check className="h-3 w-3 shrink-0 text-teal" /> إرجاع مجاني
-        </span>
-      </div>
+      {isMolien ? (
+        <p className="text-center text-xs font-medium text-charcoal/55">
+          الدفع عند الاستلام · شحن سريع 2-4 أيام · إرجاع مجاني
+        </p>
+      ) : (
+        <div className="mt-1 flex flex-col items-stretch gap-2 rounded-xl bg-mist/50 px-3 py-3 text-xs font-bold text-charcoal/60 sm:flex-row sm:flex-wrap sm:items-center sm:justify-center sm:gap-4 sm:text-sm">
+          <span className="flex items-center justify-center gap-1 sm:justify-start">
+            <Check className="h-3 w-3 shrink-0 text-teal" /> الدفع عند الاستلام
+          </span>
+          <span className="flex items-center justify-center gap-1 sm:justify-start">
+            <Check className="h-3 w-3 shrink-0 text-teal" /> شحن سريع 2-4 أيام
+          </span>
+          <span className="flex items-center justify-center gap-1 sm:justify-start">
+            <Check className="h-3 w-3 shrink-0 text-teal" /> إرجاع مجاني
+          </span>
+        </div>
+      )}
     </div>
   )
 }

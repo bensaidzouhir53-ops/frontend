@@ -12,8 +12,13 @@ const config: Config = {
         ivory: '#FAF7F0',
         mist: '#EEF7F4',
         'mint-clean': '#E8F3EE',
+        'surface-rose': '#F5F0E5',
+        'warm-border': '#E5DFCD',
         'signal-red': '#B0282B',
         charcoal: '#1F2933',
+      },
+      maxWidth: {
+        container: '1280px',
       },
       fontFamily: {
         arabic: ['var(--font-tajawal)', 'Tajawal', 'sans-serif'],

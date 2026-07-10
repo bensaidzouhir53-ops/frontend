@@ -1,4 +1,5 @@
 import Image from 'next/image'
+import { cn } from '@/lib/utils'
 
 type HowToUseStepProps = {
   step: number
@@ -6,12 +7,34 @@ type HowToUseStepProps = {
   desc: string
   image: string
   video?: string
+  variant?: 'default' | 'nama'
 }
 
-export default function HowToUseStep({ step, title, desc, image, video }: HowToUseStepProps) {
+export default function HowToUseStep({
+  step,
+  title,
+  desc,
+  image,
+  video,
+  variant = 'default',
+}: HowToUseStepProps) {
+  const isNama = variant === 'nama'
+
   return (
-    <article className="group overflow-hidden rounded-[2rem] border border-sage/20 bg-white text-center shadow-card transition-shadow duration-300 hover:border-teal/30 hover:shadow-card-hover">
-      <div className="relative aspect-[4/3] overflow-hidden bg-mist ring-1 ring-inset ring-sage/20">
+    <article
+      className={cn(
+        'group overflow-hidden text-center transition-all duration-300',
+        isNama
+          ? 'rounded-3xl border border-warm-border bg-white shadow-sm hover:-translate-y-1 hover:shadow-md'
+          : 'rounded-[2rem] border border-sage/20 bg-white shadow-card hover:border-teal/30 hover:shadow-card-hover',
+      )}
+    >
+      <div
+        className={cn(
+          'relative overflow-hidden bg-mist',
+          isNama ? 'aspect-square' : 'aspect-[4/3] ring-1 ring-inset ring-sage/20',
+        )}
+      >
         {video ? (
           <video
             src={`${video}#t=0.001`}
@@ -20,7 +43,7 @@ export default function HowToUseStep({ step, title, desc, image, video }: HowToU
             muted
             loop
             preload="metadata"
-            className="h-full w-full object-cover bg-mist"
+            className="h-full w-full bg-mist object-cover"
             aria-label={title}
           />
         ) : (
@@ -36,7 +59,14 @@ export default function HowToUseStep({ step, title, desc, image, video }: HowToU
 
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-charcoal/30 via-transparent to-transparent" />
 
-        <div className="absolute right-3 top-3 flex h-9 w-9 items-center justify-center rounded-full bg-gold text-sm font-extrabold text-white shadow-lg">
+        <div
+          className={cn(
+            'absolute right-3 top-3 flex items-center justify-center font-extrabold text-white shadow-lg',
+            isNama
+              ? 'h-11 w-11 rounded-2xl bg-teal text-gold ring-2 ring-gold/30 ring-offset-2'
+              : 'h-9 w-9 rounded-full bg-gold text-sm',
+          )}
+        >
           {step}
         </div>
       </div>

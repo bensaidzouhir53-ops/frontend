@@ -56,10 +56,10 @@ export default function ProductAgitationSection({ content }: ProductAgitationSec
           {/* Animated media — native img for .gif (Next/Image breaks animation) */}
           <div className="relative order-1 w-full lg:w-1/2">
             <div className={`absolute inset-0 rounded-full bg-gold/10 blur-3xl ${isLight ? 'opacity-40' : 'opacity-60'}`} />
-            <div className={`relative aspect-[4/5] overflow-hidden rounded-[2.5rem] border shadow-2xl ${
+            <div className={`relative aspect-[4/5] overflow-hidden shadow-2xl ${
               isLight 
-                ? 'border-gold/20 bg-ivory shadow-black/10' 
-                : 'border-gold/30 bg-charcoal/80 shadow-black/40'
+                ? 'rounded-[2rem] border-8 border-white bg-ivory shadow-black/10' 
+                : 'rounded-[2.5rem] border border-gold/30 bg-charcoal/80 shadow-black/40'
             }`}>
               {hasMedia ? (
                 <>
