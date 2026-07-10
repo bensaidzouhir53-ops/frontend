@@ -104,7 +104,7 @@ export default function ProductPageContent({
           <div
             className={
               isMolien
-                ? 'grid items-center gap-8 sm:gap-10 lg:grid-cols-[1.15fr_0.85fr] lg:gap-12'
+                ? 'grid items-stretch gap-8 sm:gap-10 lg:grid-cols-[1.15fr_0.85fr] lg:gap-12'
                 : 'flex flex-col items-start gap-8 lg:flex-row lg:gap-16'
             }
           >
@@ -119,7 +119,7 @@ export default function ProductPageContent({
               <div
                 className={
                   isMolien
-                    ? 'relative mx-auto w-full max-w-2xl lg:max-w-none'
+                    ? 'relative mx-auto flex h-full w-full max-w-2xl flex-col lg:max-w-none'
                     : 'relative mx-auto w-full max-w-md lg:max-w-xl'
                 }
               >
@@ -132,7 +132,7 @@ export default function ProductPageContent({
                 <div
                   className={
                     isMolien
-                      ? 'relative aspect-[4/5] min-h-[420px] overflow-hidden rounded-3xl border border-white/40 bg-white shadow-2xl sm:min-h-[520px] lg:min-h-[640px]'
+                      ? 'relative min-h-[360px] flex-1 overflow-hidden rounded-3xl border border-white/40 bg-white shadow-2xl sm:min-h-[440px] lg:min-h-0'
                       : 'relative aspect-[4/5] overflow-hidden rounded-[2.5rem] border-4 border-white bg-gray-100 shadow-2xl shadow-teal/10'
                   }
                 >
@@ -146,7 +146,7 @@ export default function ProductPageContent({
                         ? '(max-width: 640px) 100vw, (max-width: 1024px) 90vw, 50vw'
                         : '(max-width: 1024px) 100vw, 50vw'
                     }
-                    className={isMolien ? 'object-contain p-1 sm:p-2' : 'object-cover'}
+                    className={isMolien ? 'h-full w-full object-cover' : 'object-cover'}
                   />
                 </div>
 
