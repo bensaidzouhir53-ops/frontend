@@ -116,13 +116,7 @@ export default function ProductPageContent({
                   : 'order-1 w-full lg:sticky lg:top-32 lg:order-2 lg:w-1/2'
               }
             >
-              <div
-                className={
-                  isMolien
-                    ? 'relative mx-auto w-full max-w-[340px] sm:max-w-md lg:max-w-[480px]'
-                    : 'relative mx-auto w-full max-w-md lg:max-w-xl'
-                }
-              >
+              <div className="relative mx-auto w-full max-w-md lg:max-w-xl">
                 {isMolien && (
                   <div
                     className="absolute inset-0 scale-150 rounded-full bg-teal/10 blur-3xl"
@@ -143,7 +137,7 @@ export default function ProductPageContent({
                     priority
                     sizes={
                       isMolien
-                        ? '(max-width: 640px) 340px, (max-width: 1024px) 448px, 480px'
+                        ? '(max-width: 640px) 100vw, (max-width: 1024px) 448px, 640px'
                         : '(max-width: 1024px) 100vw, 50vw'
                     }
                     className="object-cover"
@@ -151,14 +145,14 @@ export default function ProductPageContent({
                 </div>
 
                 {isMolien && (
-                  <div className="mt-2.5 grid grid-cols-4 gap-1.5 sm:mt-3 sm:gap-2">
+                  <div className="mt-3 grid grid-cols-4 gap-2">
                     {molienHeroStats.map((stat) => (
                       <div
                         key={stat.label}
-                        className="rounded-xl border border-warm-border/70 bg-white/95 px-1.5 py-2 text-center shadow-sm backdrop-blur sm:p-2.5"
+                        className="rounded-xl border border-warm-border/70 bg-white/95 p-2.5 text-center shadow-sm backdrop-blur sm:p-3"
                       >
-                        <p className="text-sm font-extrabold text-teal sm:text-base">{stat.value}</p>
-                        <p className="line-clamp-1 text-[9px] font-medium text-charcoal/55 sm:text-[10px]">
+                        <p className="text-base font-extrabold text-teal">{stat.value}</p>
+                        <p className="line-clamp-1 text-[10px] font-medium text-charcoal/55">
                           {stat.label}
                         </p>
                       </div>
@@ -194,7 +188,7 @@ export default function ProductPageContent({
               )}
 
               {isMolien && (
-                <p className="mb-2 text-xs font-bold text-teal sm:mb-2.5 sm:text-sm">
+                <p className="mb-3 text-sm font-bold text-teal">
                   قطرات مرخّصة من هيئة الغذاء والدواء (SFDA)
                 </p>
               )}
@@ -202,7 +196,7 @@ export default function ProductPageContent({
               <h1
                 className={
                   isMolien
-                    ? 'mb-3 text-[22px] font-extrabold leading-[1.25] tracking-tight text-charcoal text-balance sm:mb-3.5 sm:text-[28px] lg:text-[32px]'
+                    ? 'mb-4 text-[28px] font-extrabold leading-[1.15] tracking-tight text-charcoal text-balance sm:text-4xl lg:text-5xl'
                     : 'mb-4 text-3xl font-extrabold leading-[1.3] tracking-tight text-charcoal md:text-5xl'
                 }
               >
@@ -210,7 +204,7 @@ export default function ProductPageContent({
               </h1>
 
               {isMolien && (
-                <p className="mb-3 border-r-2 border-gold pr-3 text-sm font-medium leading-relaxed text-charcoal/80 sm:mb-4 sm:pr-4 sm:text-base">
+                <p className="mb-5 border-r-2 border-gold pr-4 text-base font-medium leading-relaxed text-charcoal/85 sm:text-lg lg:text-xl">
                   {product.descAr}
                 </p>
               )}
@@ -218,30 +212,21 @@ export default function ProductPageContent({
               <div
                 className={
                   isMolien
-                    ? 'mb-3.5 flex flex-wrap items-center gap-1.5 text-[12px] sm:mb-4 sm:gap-2 sm:text-sm'
+                    ? 'mb-5 flex flex-wrap items-center gap-2'
                     : 'mb-6 ml-auto flex w-fit flex-wrap items-center justify-end gap-3 rounded-xl border border-sage/20 bg-white p-3'
                 }
               >
                 <div className="flex gap-0.5">
                   {[...Array(5)].map((_, i) => (
-                    <Star
-                      key={i}
-                      className={
-                        isMolien
-                          ? 'h-3.5 w-3.5 fill-yellow-500 text-yellow-500 sm:h-4 sm:w-4'
-                          : 'h-4 w-4 fill-yellow-500 text-yellow-500 sm:h-5 sm:w-5'
-                      }
-                    />
+                    <Star key={i} className="h-4 w-4 fill-yellow-500 text-yellow-500 sm:h-5 sm:w-5" />
                   ))}
                 </div>
-                <span className={`font-extrabold text-teal ${isMolien ? '' : 'text-sm sm:text-base'}`}>
-                  4.9
-                </span>
-                <span className={`font-bold text-charcoal/60 ${isMolien ? '' : 'text-sm'}`}>
+                <span className="text-sm font-extrabold text-teal sm:text-base">4.9</span>
+                <span className="text-sm font-bold text-charcoal/60">
                   (أكثر من 2,700 تقييم · مؤكدة)
                 </span>
                 {isMolien && (
-                  <span className="font-bold text-charcoal/70">· من 189 ر.س / عبوة</span>
+                  <span className="text-sm font-bold text-charcoal/70">· من 189 ر.س / عبوة</span>
                 )}
               </div>
 
