@@ -445,18 +445,8 @@ interface PixelConfig {
 }
 
 function collectMetaIdsFromEnv(): string[] {
-  const ids: string[] = []
-  const add = (value: string | undefined) => {
-    if (isValidPixelId(value)) {
-      const trimmed = value.trim()
-      if (!ids.includes(trimmed)) ids.push(trimmed)
-    }
-  }
-  add(process.env.NEXT_PUBLIC_META_PIXEL_ID)
-  add(process.env.NEXT_PUBLIC_META_PIXEL_ID_2)
-  add(process.env.NEXT_PUBLIC_META_PIXEL_ID_3)
-  add(process.env.NEXT_PUBLIC_META_PIXEL_ID_4)
-  return ids
+  const id = process.env.NEXT_PUBLIC_META_PIXEL_ID
+  return isValidPixelId(id) ? [id.trim()] : []
 }
 
 function configFromEnv(): PixelConfig | null {

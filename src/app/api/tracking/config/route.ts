@@ -25,12 +25,7 @@ export async function GET() {
         const backendRaw = (await response.json()) as PublicTrackingConfig
         const body = mergePixelConfigs(backendRaw, {
           enabled: process.env.ENABLE_WEB_PIXELS !== 'false',
-          meta_pixel_ids: [
-            process.env.NEXT_PUBLIC_META_PIXEL_ID,
-            process.env.NEXT_PUBLIC_META_PIXEL_ID_2,
-            process.env.NEXT_PUBLIC_META_PIXEL_ID_3,
-            process.env.NEXT_PUBLIC_META_PIXEL_ID_4,
-          ].filter(Boolean) as string[],
+          meta_pixel_id: process.env.NEXT_PUBLIC_META_PIXEL_ID ?? null,
           tiktok_pixel_id: getEnvPixelFallback().tiktok_pixel_id,
         })
         return NextResponse.json(body, {

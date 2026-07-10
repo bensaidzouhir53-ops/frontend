@@ -71,9 +71,8 @@ export function normalizePixelConfig(raw: {
 
 type PixelConfigInput = Parameters<typeof normalizePixelConfig>[0]
 
-/** Legacy pixel — replaced in Easypanel; ignore if backend still returns it. */
+/** Legacy TikTok pixel IDs — ignored when unset in env. */
 const STALE_TIKTOK_PIXEL_IDS = new Set(['D6FOFO3C77U2V3Q5MST0'])
-const ACTIVE_TIKTOK_PIXEL_ID = 'D8C3P7RC77UA4F3IGAJG'
 
 function resolveTikTokPixelId(...candidates: Array<string | null | undefined>): string | null {
   for (const raw of candidates) {
@@ -82,7 +81,7 @@ function resolveTikTokPixelId(...candidates: Array<string | null | undefined>): 
     if (STALE_TIKTOK_PIXEL_IDS.has(id)) continue
     return id
   }
-  return isValidPixelId(ACTIVE_TIKTOK_PIXEL_ID) ? ACTIVE_TIKTOK_PIXEL_ID : null
+  return null
 }
 
 /** Deploy-time TikTok override (Dockerfile / Easypanel frontend env). */
@@ -99,14 +98,23 @@ function getSnapPixelOverride(): string | null {
   return isValidPixelId(raw) ? raw.trim() : null
 }
 
-/** Merge backend + env (+ any other sources) so a baked-in primary ID never hides new pixels. */
+/** Merge configs — backend meta pixel wins; env fallback only when backend has none. */
 export function mergePixelConfigs(...sources: PixelConfigInput[]): ServerPixelConfig {
-  const metaIds = collectMetaPixelIds({
-    extra: sources.flatMap((source) => [
-      source.meta_pixel_id,
-      ...(source.meta_pixel_ids ?? []),
-    ]),
+  const backendSource = sources[0]
+  const backendMetaIds = collectMetaPixelIds({
+    meta_pixel_id: backendSource?.meta_pixel_id,
+    meta_pixel_ids: backendSource?.meta_pixel_ids,
   })
+
+  const metaIds =
+    backendMetaIds.length > 0
+      ? backendMetaIds
+      : collectMetaPixelIds({
+          extra: sources.flatMap((source) => [
+            source.meta_pixel_id,
+            ...(source.meta_pixel_ids ?? []),
+          ]),
+        })
 
   let tiktok: string | null = null
   let snap: string | null = null
@@ -142,14 +150,8 @@ export function mergePixelConfigs(...sources: PixelConfigInput[]): ServerPixelCo
 export function getEnvPixelFallback(): ServerPixelConfig {
   return normalizePixelConfig({
     enabled: process.env.ENABLE_WEB_PIXELS !== 'false',
-    meta_pixel_ids: collectMetaPixelIds({
-      extra: [
-        process.env.NEXT_PUBLIC_META_PIXEL_ID ?? process.env.META_PIXEL_ID,
-        process.env.NEXT_PUBLIC_META_PIXEL_ID_2 ?? process.env.META_PIXEL_ID_2,
-        process.env.NEXT_PUBLIC_META_PIXEL_ID_3 ?? process.env.META_PIXEL_ID_3,
-        process.env.NEXT_PUBLIC_META_PIXEL_ID_4 ?? process.env.META_PIXEL_ID_4,
-      ],
-    }),
+    meta_pixel_id:
+      process.env.NEXT_PUBLIC_META_PIXEL_ID ?? process.env.META_PIXEL_ID ?? null,
     tiktok_pixel_id: resolveTikTokPixelId(
       process.env.NEXT_PUBLIC_TIKTOK_PIXEL_ID,
       process.env.TIKTOK_PIXEL_CODE,
@@ -192,14 +194,10 @@ export async function fetchTrackingConfigFromBackend(): Promise<ServerPixelConfi
 
   if (backendRaw) {
     const backendConfig = normalizePixelConfig(backendRaw)
-    return mergePixelConfigs(
-      { ...backendRaw, enabled: backendConfig.enabled || envFallback.enabled },
-      {
-        enabled: envFallback.enabled,
-        meta_pixel_ids: envFallback.meta_pixel_ids,
-        tiktok_pixel_id: envFallback.tiktok_pixel_id,
-      },
-    )
+    if (backendConfig.meta_pixel_ids.length > 0) {
+      return backendConfig.enabled ? backendConfig : EMPTY
+    }
+    return mergePixelConfigs(backendConfig, envFallback)
   }
 
   if (envFallback.meta_pixel_ids.length > 0 || envFallback.tiktok_pixel_id) {
