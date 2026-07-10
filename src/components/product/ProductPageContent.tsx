@@ -104,7 +104,7 @@ export default function ProductPageContent({
           <div
             className={
               isMolien
-                ? 'grid items-center gap-8 sm:gap-10 lg:grid-cols-2 lg:gap-16'
+                ? 'grid items-center gap-8 sm:gap-10 lg:grid-cols-[1.15fr_0.85fr] lg:gap-12'
                 : 'flex flex-col items-start gap-8 lg:flex-row lg:gap-16'
             }
           >
@@ -116,7 +116,13 @@ export default function ProductPageContent({
                   : 'order-1 w-full lg:sticky lg:top-32 lg:order-2 lg:w-1/2'
               }
             >
-              <div className="relative mx-auto w-full max-w-md lg:max-w-xl">
+              <div
+                className={
+                  isMolien
+                    ? 'relative mx-auto w-full max-w-2xl lg:max-w-none'
+                    : 'relative mx-auto w-full max-w-md lg:max-w-xl'
+                }
+              >
                 {isMolien && (
                   <div
                     className="absolute inset-0 scale-150 rounded-full bg-teal/10 blur-3xl"
@@ -126,7 +132,7 @@ export default function ProductPageContent({
                 <div
                   className={
                     isMolien
-                      ? 'relative aspect-[4/5] overflow-hidden rounded-3xl border border-white/40 bg-white shadow-2xl'
+                      ? 'relative aspect-[4/5] min-h-[420px] overflow-hidden rounded-3xl border border-white/40 bg-white shadow-2xl sm:min-h-[520px] lg:min-h-[640px]'
                       : 'relative aspect-[4/5] overflow-hidden rounded-[2.5rem] border-4 border-white bg-gray-100 shadow-2xl shadow-teal/10'
                   }
                 >
@@ -137,10 +143,10 @@ export default function ProductPageContent({
                     priority
                     sizes={
                       isMolien
-                        ? '(max-width: 640px) 100vw, (max-width: 1024px) 448px, 640px'
+                        ? '(max-width: 640px) 100vw, (max-width: 1024px) 90vw, 50vw'
                         : '(max-width: 1024px) 100vw, 50vw'
                     }
-                    className={isMolien ? 'object-contain' : 'object-cover'}
+                    className={isMolien ? 'object-contain p-1 sm:p-2' : 'object-cover'}
                   />
                 </div>
 
