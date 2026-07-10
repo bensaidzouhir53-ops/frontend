@@ -734,7 +734,18 @@ export function trackFirstPartyPageView(): void {
 
 export function trackPageView(): void {
   trackFirstParty('PageView')
-  safeFbq('track', 'PageView')
+  // Head bootstrap already sent Meta PageView — avoid duplicate on hydration.
+  if (
+    typeof window === 'undefined' ||
+    (!window.__nasamaPageViewTracked && !_metaPageViewTracked)
+  ) {
+    safeFbq('track', 'PageView')
+    _metaPageViewTracked = true
+    if (typeof window !== 'undefined') window.__nasamaPageViewTracked = true
+  } else {
+    _metaPageViewTracked = true
+    syncMetaReadyState()
+  }
   safeTtq('ViewContent')
   safeSnaptr('track', 'PAGE_VIEW')
 }
