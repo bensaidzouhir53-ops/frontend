@@ -1,9 +1,13 @@
 'use client'
 
 import { useState } from 'react'
-import { Check, ShoppingCart, TrendingUp, Flame } from 'lucide-react'
+import { Check, ShoppingCart, TrendingUp, Flame, Gift } from 'lucide-react'
 import type { Product } from '@/types'
-import { getOffersForProduct } from '@/lib/products'
+import {
+  getOffersForProduct,
+  getOfferTotalUnits,
+  getOfferOriginalPrice,
+} from '@/lib/products'
 import { useCartStore } from '@/store/cartStore'
 import { trackAddToCart, generateEventId } from '@/lib/tracking'
 import { cn } from '@/lib/utils'
@@ -29,7 +33,6 @@ const DEFAULT_QTY_LABELS: Record<number, string> = {
 
 export default function OfferSelector({ product, className }: OfferSelectorProps) {
   const offers = getOffersForProduct(product.slug)
-  const basePrice = offers[0].price
   const [selectedIdx, setSelectedIdx] = useState(offers.findIndex((o) => o.isDefault))
   const { addItem, openCart } = useCartStore()
   const isMolien = product.slug === 'molien-drops'
@@ -60,19 +63,41 @@ export default function OfferSelector({ product, className }: OfferSelectorProps
       )}
 
       {isMolien && (
-        <div className="inline-flex w-fit max-w-full items-center gap-2 rounded-full border border-red-200 bg-red-50 px-3 py-1.5 text-[11px] font-extrabold text-red-700 sm:text-xs">
-          <Flame className="h-3.5 w-3.5 shrink-0 text-red-600" />
-          <span className="leading-snug">الأكثر طلباً اليوم — الكمية بتخلص!</span>
+        <div className="relative overflow-hidden rounded-2xl border-2 border-red-300 bg-gradient-to-l from-red-50 via-orange-50 to-amber-50 px-4 py-4 shadow-sm">
+          <div className="absolute -left-6 -top-6 h-24 w-24 rounded-full bg-red-200/40 blur-2xl" />
+          <div className="relative flex items-start gap-3">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-red-600 shadow-md">
+              <Gift className="h-5 w-5 text-white" />
+            </div>
+            <div>
+              <p className="mb-1 text-base font-extrabold text-red-700 sm:text-lg">
+                🔥 عرض محدود — اشتري وخذ نفس العدد مجاناً!
+              </p>
+              <p className="text-sm font-semibold leading-relaxed text-charcoal/75">
+                1+1 بـ 199 ر.س · 2+2 بـ 299 ر.س · 3+3 بـ 399 ر.س — كل ما زادت الكمية، كل ما
+                وفّرت أكثر. لا تفوّت العرض!
+              </p>
+              <p className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-red-600 px-3 py-1 text-[11px] font-extrabold text-white sm:text-xs">
+                <Flame className="h-3.5 w-3.5" />
+                الأكثر طلباً اليوم — الكمية بتخلص!
+              </p>
+            </div>
+          </div>
         </div>
       )}
 
-      <p className="text-sm font-semibold text-charcoal/70">اختر كميتك:</p>
+      <p className="text-sm font-semibold text-charcoal/70">
+        {isMolien ? 'اختر عرضك:' : 'اختر كميتك:'}
+      </p>
 
       <div className="flex flex-col gap-3">
         {offers.map((offer, idx) => {
           const isSelected = idx === selectedIdx
-          const perUnit = Math.round(offer.price / offer.qty)
+          const totalUnits = getOfferTotalUnits(offer)
+          const perUnit = Math.round(offer.price / totalUnits)
           const qtyLabel = offer.qtyLabel ?? DEFAULT_QTY_LABELS[offer.qty]
+          const originalPrice = getOfferOriginalPrice(product.slug, offer)
+          const showStrikethrough = (offer.savings ?? 0) > 0
 
           return (
             <button
@@ -90,7 +115,13 @@ export default function OfferSelector({ product, className }: OfferSelectorProps
             >
               {isMolien && offer.qty === 2 && (
                 <span className="pointer-events-none absolute -top-3 right-4 rounded-full bg-gold px-2.5 py-0.5 text-[10px] font-extrabold text-charcoal shadow-sm">
-                  الأكثر طلباً
+                  الأكثر طلباً ⭐
+                </span>
+              )}
+
+              {isMolien && offer.totalUnits && (
+                <span className="pointer-events-none absolute -top-3 left-4 rounded-full bg-red-600 px-2.5 py-0.5 text-[10px] font-extrabold text-white shadow-sm">
+                  {totalUnits} عبوات
                 </span>
               )}
 
@@ -142,9 +173,9 @@ export default function OfferSelector({ product, className }: OfferSelectorProps
                       <p className="text-xl font-extrabold tabular-nums text-teal-dark">
                         {offer.price} {isMolien ? 'ر.س' : 'ريال'}
                       </p>
-                      {offer.qty > 1 && (
+                      {showStrikethrough && (
                         <p className="text-[11px] text-charcoal/40 line-through sm:text-xs">
-                          {basePrice * offer.qty} {isMolien ? 'ر.س' : 'ريال'}
+                          {originalPrice} {isMolien ? 'ر.س' : 'ريال'}
                         </p>
                       )}
                     </div>
@@ -159,7 +190,12 @@ export default function OfferSelector({ product, className }: OfferSelectorProps
                         وفّر {offer.savings} ريال
                       </span>
                     )}
-                    {offer.qty > 1 && (
+                    {isMolien && offer.totalUnits && (
+                      <span className="inline-flex items-center rounded-full bg-red-100 px-2 py-0.5 text-[10px] font-bold text-red-700 sm:text-[11px]">
+                        🎁 {offer.qty} مجاناً
+                      </span>
+                    )}
+                    {(offer.qty > 1 || isMolien) && (
                       <span className="inline-flex items-center rounded-full bg-teal/10 px-2 py-0.5 text-[10px] font-bold text-teal-dark sm:text-[11px]">
                         شحن مجاني
                       </span>
@@ -172,7 +208,16 @@ export default function OfferSelector({ product, className }: OfferSelectorProps
         })}
       </div>
 
-      {(selected.savings ?? 0) > 0 && !isMolien && (
+      {isMolien && (selected.savings ?? 0) > 0 && (
+        <div className="flex items-center justify-center rounded-xl bg-gold/15 px-3 py-2.5 text-gold-dark sm:px-4">
+          <span className="text-center text-xs font-bold sm:text-sm">
+            🎉 ستوفّر {selected.savings} ريال — {getOfferTotalUnits(selected)} عبوات بـ{' '}
+            {selected.price} ر.س فقط!
+          </span>
+        </div>
+      )}
+
+      {!isMolien && (selected.savings ?? 0) > 0 && (
         <div className="flex items-center justify-center rounded-xl bg-gold/10 px-3 py-2.5 text-gold sm:px-4">
           <span className="text-center text-xs font-bold sm:text-sm">
             ستوفّر {selected.savings} ريال مع هذا الخيار 🎉
@@ -182,10 +227,19 @@ export default function OfferSelector({ product, className }: OfferSelectorProps
 
       <button
         onClick={handleAddToCart}
-        className="mt-1 flex min-h-[56px] w-full items-center justify-center gap-2 rounded-2xl bg-teal px-4 py-4 text-base font-bold text-white shadow-lg shadow-teal/20 transition-all hover:bg-teal-dark active:scale-[0.98] sm:gap-3 sm:text-lg"
+        className={cn(
+          'mt-1 flex min-h-[56px] w-full items-center justify-center gap-2 rounded-2xl px-4 py-4 text-base font-bold text-white shadow-lg transition-all active:scale-[0.98] sm:gap-3 sm:text-lg',
+          isMolien
+            ? 'bg-gradient-to-l from-red-600 to-red-500 shadow-red-500/25 hover:from-red-700 hover:to-red-600'
+            : 'bg-teal shadow-teal/20 hover:bg-teal-dark',
+        )}
       >
         <ShoppingCart className="h-5 w-5 shrink-0 sm:h-6 sm:w-6" />
-        <span className="leading-snug">أكمل الطلب الآن — الدفع عند الاستلام</span>
+        <span className="leading-snug">
+          {isMolien
+            ? `اطلب الآن — ${getOfferTotalUnits(selected)} عبوات بـ ${selected.price} ر.س`
+            : 'أكمل الطلب الآن — الدفع عند الاستلام'}
+        </span>
       </button>
 
       {isMolien ? (

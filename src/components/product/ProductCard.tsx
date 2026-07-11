@@ -5,7 +5,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { ShoppingCart, Star, Eye } from 'lucide-react'
 import type { Product } from '@/types'
-import { getOffersForProduct, getDefaultOffer } from '@/lib/products'
+import { getDefaultOffer, getOfferOriginalPrice, getOfferTotalUnits } from '@/lib/products'
 import { useCartStore } from '@/store/cartStore'
 import { trackAddToCart, generateEventId } from '@/lib/tracking'
 import { cn } from '@/lib/utils'
@@ -16,9 +16,8 @@ interface ProductCardProps {
 }
 
 export default function ProductCard({ product, className }: ProductCardProps) {
-  const offers = getOffersForProduct(product.slug)
-  const basePrice = offers[0].price
   const defaultOffer = getDefaultOffer(product.slug)
+  const isMolien = product.slug === 'molien-drops'
   const { addItem, openCart } = useCartStore()
 
   const handleAddToCart = () => {
@@ -85,12 +84,19 @@ export default function ProductCard({ product, className }: ProductCardProps) {
           <span className="text-lg font-extrabold text-teal">
             {defaultOffer.price} ريال
           </span>
-          <span className="text-sm text-charcoal/40 line-through">
-            {basePrice * defaultOffer.qty} ريال
-          </span>
-          {defaultOffer.savings && defaultOffer.savings > 0 && (
-            <span className="rounded-full bg-gold/15 px-2 py-0.5 text-[11px] font-semibold text-gold">
-              وفّر {defaultOffer.savings} ريال
+          {(defaultOffer.savings ?? 0) > 0 && (
+            <>
+              <span className="text-sm text-charcoal/40 line-through">
+                {getOfferOriginalPrice(product.slug, defaultOffer)} ريال
+              </span>
+              <span className="rounded-full bg-gold/15 px-2 py-0.5 text-[11px] font-semibold text-gold">
+                وفّر {defaultOffer.savings} ريال
+              </span>
+            </>
+          )}
+          {isMolien && defaultOffer.totalUnits && (
+            <span className="rounded-full bg-red-100 px-2 py-0.5 text-[10px] font-bold text-red-700">
+              {getOfferTotalUnits(defaultOffer)} عبوات
             </span>
           )}
         </div>

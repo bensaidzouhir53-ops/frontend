@@ -178,37 +178,43 @@ export const HERBAL_LUNG_SPRAY_OFFERS: Offer[] = [
   },
 ]
 
+/** Regular per-bottle price used for BOGO savings display on molien-drops */
+export const MOLIEN_REGULAR_UNIT_PRICE = 199
+
 export const MOLIEN_DROPS_OFFERS: Offer[] = [
   {
     qty: 1,
-    price: 189,
-    qtyLabel: 'عبوة واحدة',
-    volumeLabel: '60 مل',
-    badge: 'العبوة الأولى • تعطيك النتيجة',
+    price: 199,
+    totalUnits: 2,
+    qtyLabel: '1+1 مجاناً',
+    volumeLabel: '120 مل',
+    badge: '🎁 اشتري 1 والثانية هدية',
     badgeColor: 'sage',
-    savings: 0,
-    desc: 'العبوة الأولى تعطيك النتيجة وتشوف الفرق المبدئي بفتح الصدر وتخفيف الكتمة.',
+    savings: 199,
+    desc: 'عبوة لك وعبوة هدية! 120 مل تكفيك شهر — جرّب التنظيف العميق وشوف الفرق من أول أسبوع.',
   },
   {
     qty: 2,
-    price: 229,
-    qtyLabel: 'عبوتين',
-    volumeLabel: '120 مل',
-    badge: 'الأكثر طلباً • تثبت النتيجة',
+    price: 299,
+    totalUnits: 4,
+    qtyLabel: '2+2 مجاناً',
+    volumeLabel: '240 مل',
+    badge: '🔥 الأكثر طلباً — 4 عبوات بسعر 2!',
     badgeColor: 'gold',
     isDefault: true,
-    savings: 149,
-    desc: 'العبوتين تثبت النتيجة! روتين يكفيك شهرين لضمان تنظيف أعمق للرئة وتوفير 149 ريال.',
+    savings: 497,
+    desc: '4 عبوات بـ 299 فقط! شهرين كاملين تنظّف فيهم رئتك من جوّا — وفّر 497 ريال + شحن مجاني.',
   },
   {
     qty: 3,
-    price: 255,
-    qtyLabel: '3 عبوات',
-    volumeLabel: '180 مل',
-    badge: 'أفضل توفير • وفر 312 ريال',
+    price: 399,
+    totalUnits: 6,
+    qtyLabel: '3+3 مجاناً',
+    volumeLabel: '360 مل',
+    badge: '💎 أفضل قيمة — 6 عبوات!',
     badgeColor: 'charcoal',
-    savings: 312,
-    desc: 'لكل اللي يبي يتنفس براحة مستدامة! تغطيك 3 شهور، توفر 312 ريال، وتودع الكتمة للأبد.',
+    savings: 795,
+    desc: '6 عبوات بـ 399! الكورس الكامل 3 شهور — ودّع الكتمة والبلغم للأبد ووفّر 795 ريال.',
   },
 ]
 
@@ -251,6 +257,18 @@ export function getCrossSellProducts(currentSlug: string): Product[] {
 export function getDefaultOffer(slug?: string): Offer {
   const offers = slug ? getOffersForProduct(slug) : HERBAL_LUNG_SPRAY_OFFERS
   return offers.find((o) => o.isDefault) ?? offers[1]
+}
+
+export function getOfferTotalUnits(offer: Offer): number {
+  return offer.totalUnits ?? offer.qty
+}
+
+export function getOfferOriginalPrice(slug: string, offer: Offer): number {
+  if (slug === 'molien-drops') {
+    return MOLIEN_REGULAR_UNIT_PRICE * getOfferTotalUnits(offer)
+  }
+  const base = getOffersForProduct(slug)[0]?.price ?? offer.price
+  return base * offer.qty
 }
 
 // Re-export types so components can import from one place

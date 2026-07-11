@@ -1,5 +1,6 @@
 import { create } from 'zustand'
 import type { CartItem, CartState, Product, UpsellData } from '@/types'
+import { getOfferForProductQty, getOfferTotalUnits } from '@/lib/products'
 
 export const useCartStore = create<CartState>((set, get) => ({
   items: [],
@@ -66,5 +67,9 @@ export const useCartStore = create<CartState>((set, get) => ({
   clearScheduledUpsell: () => set({ pendingUpsell: null }),
 
   total: () => get().items.reduce((sum, item) => sum + item.price, 0),
-  itemCount: () => get().items.reduce((sum, item) => sum + item.qty, 0),
+  itemCount: () =>
+    get().items.reduce((sum, item) => {
+      const offer = getOfferForProductQty(item.product.slug, item.qty)
+      return sum + (offer ? getOfferTotalUnits(offer) : item.qty)
+    }, 0),
 }))

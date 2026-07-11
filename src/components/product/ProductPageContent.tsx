@@ -226,7 +226,9 @@ export default function ProductPageContent({
                   (أكثر من 2,700 تقييم · مؤكدة)
                 </span>
                 {isMolien && (
-                  <span className="text-sm font-bold text-charcoal/70">· من 189 ر.س / عبوة</span>
+                  <span className="rounded-full bg-red-100 px-2.5 py-0.5 text-xs font-extrabold text-red-700">
+                    🔥 عرض 1+1 · 2+2 · 3+3 مجاناً
+                  </span>
                 )}
               </div>
 

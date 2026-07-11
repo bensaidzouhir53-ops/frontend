@@ -36,6 +36,8 @@ export interface Offer {
   desc?: string
   volumeLabel?: string
   qtyLabel?: string
+  /** Total bottles/units the customer receives (e.g. BOGO: tier 2 → 4 units) */
+  totalUnits?: number
 }
 
 export interface CartItem {

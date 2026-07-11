@@ -6,7 +6,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { X, ShoppingCart, Trash2, Shield, Truck, RotateCcw, Package } from 'lucide-react'
 import { useCartStore } from '@/store/cartStore'
-import { getProductBySlug, getOfferForProductQty, getDefaultOffer } from '@/lib/products'
+import { getProductBySlug, getOfferForProductQty, getDefaultOffer, getOfferTotalUnits } from '@/lib/products'
 import { trackAddToCart, generateEventId } from '@/lib/tracking'
 import { cn } from '@/lib/utils'
 import type { Product } from '@/types'
@@ -139,7 +139,12 @@ export default function CartDrawer() {
                 <div className="px-5 py-4">
                   {/* Cart items */}
                   <div className="flex flex-col gap-3">
-                    {items.map((item) => (
+                    {items.map((item) => {
+                      const offer = getOfferForProductQty(item.product.slug, item.qty)
+                      const totalUnits = offer ? getOfferTotalUnits(offer) : item.qty
+                      const isMolien = item.product.slug === 'molien-drops'
+
+                      return (
                       <div
                         key={item.product.slug}
                         className="flex items-center gap-3 rounded-2xl bg-white p-3 shadow-sm"
@@ -156,8 +161,9 @@ export default function CartDrawer() {
                             {item.product.nameAr}
                           </p>
                           <p className="mt-1 text-xs text-charcoal/50">
-                            الكمية: {item.qty}{' '}
-                            {item.qty === 1 ? 'قطعة' : item.qty === 2 ? 'قطعتان' : 'قطع'}
+                            {isMolien && offer?.qtyLabel
+                              ? `${totalUnits} عبوات (${offer.qtyLabel})`
+                              : `الكمية: ${item.qty} ${item.qty === 1 ? 'قطعة' : item.qty === 2 ? 'قطعتان' : 'قطع'}`}
                           </p>
                           <p className="mt-0.5 text-sm font-extrabold text-teal">
                             {item.price} ريال
@@ -171,7 +177,7 @@ export default function CartDrawer() {
                           <Trash2 className="h-4 w-4" />
                         </button>
                       </div>
-                    ))}
+                    )})}
                   </div>
 
                   {/* Savings callout */}

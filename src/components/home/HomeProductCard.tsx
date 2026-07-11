@@ -4,7 +4,7 @@
 import Link from 'next/link'
 import { ArrowLeft, Check, ShoppingCart, Star, Truck } from 'lucide-react'
 import type { Product } from '@/types'
-import { getDefaultOffer, getOffersForProduct } from '@/lib/products'
+import { getDefaultOffer, getOfferOriginalPrice, getOfferTotalUnits } from '@/lib/products'
 import { useCartStore } from '@/store/cartStore'
 import { trackAddToCart, generateEventId } from '@/lib/tracking'
 import { cn } from '@/lib/utils'
@@ -15,9 +15,8 @@ interface HomeProductCardProps {
 }
 
 export default function HomeProductCard({ product, className }: HomeProductCardProps) {
-  const offers = getOffersForProduct(product.slug)
-  const basePrice = offers[0].price
   const defaultOffer = getDefaultOffer(product.slug)
+  const isMolien = product.slug === 'molien-drops'
   const { addItem, openCart } = useCartStore()
 
   const displayTitle = product.cardTitleAr ?? product.nameAr
@@ -131,7 +130,12 @@ export default function HomeProductCard({ product, className }: HomeProductCardP
               <span className="text-sm font-bold text-charcoal/50">ريال</span>
               {(defaultOffer.savings ?? 0) > 0 && (
                 <span className="text-sm font-medium text-charcoal/35 line-through">
-                  {basePrice * defaultOffer.qty} ريال
+                  {getOfferOriginalPrice(product.slug, defaultOffer)} ريال
+                </span>
+              )}
+              {isMolien && defaultOffer.totalUnits && (
+                <span className="rounded-full bg-red-100 px-2 py-0.5 text-[10px] font-bold text-red-700">
+                  {getOfferTotalUnits(defaultOffer)} عبوات
                 </span>
               )}
             </div>
