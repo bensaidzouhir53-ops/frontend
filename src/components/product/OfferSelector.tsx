@@ -63,23 +63,23 @@ export default function OfferSelector({ product, className }: OfferSelectorProps
       )}
 
       {isMolien && (
-        <div className="relative overflow-hidden rounded-2xl border-2 border-red-300 bg-gradient-to-l from-red-50 via-orange-50 to-amber-50 px-4 py-4 shadow-sm">
-          <div className="absolute -left-6 -top-6 h-24 w-24 rounded-full bg-red-200/40 blur-2xl" />
+        <div className="relative overflow-hidden rounded-2xl border-2 border-teal/25 bg-gradient-to-l from-mist via-ivory to-gold/10 px-4 py-4 shadow-sm">
+          <div className="absolute -left-6 -top-6 h-24 w-24 rounded-full bg-teal/15 blur-2xl" />
           <div className="relative flex items-start gap-3">
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-red-600 shadow-md">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-teal to-teal-dark shadow-md shadow-teal/25">
               <Gift className="h-5 w-5 text-white" />
             </div>
             <div>
-              <p className="mb-1 text-base font-extrabold text-red-700 sm:text-lg">
-                🔥 عرض محدود — اشتري وخذ نفس العدد مجاناً!
+              <p className="mb-1 text-base font-extrabold text-teal-dark sm:text-lg">
+                🎁 عرض حصري — اشتري وخذ نفس العدد مجاناً!
               </p>
               <p className="text-sm font-semibold leading-relaxed text-charcoal/75">
                 1+1 بـ 199 ر.س · 2+2 بـ 299 ر.س · 3+3 بـ 399 ر.س — كل ما زادت الكمية، كل ما
                 وفّرت أكثر. لا تفوّت العرض!
               </p>
-              <p className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-red-600 px-3 py-1 text-[11px] font-extrabold text-white sm:text-xs">
-                <Flame className="h-3.5 w-3.5" />
-                الأكثر طلباً اليوم — الكمية بتخلص!
+              <p className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-gold px-3 py-1 text-[11px] font-extrabold text-charcoal sm:text-xs">
+                <Flame className="h-3.5 w-3.5 text-charcoal" />
+                الأكثر طلباً اليوم — الكمية محدودة!
               </p>
             </div>
           </div>
@@ -120,7 +120,7 @@ export default function OfferSelector({ product, className }: OfferSelectorProps
               )}
 
               {isMolien && offer.totalUnits && (
-                <span className="pointer-events-none absolute -top-3 left-4 rounded-full bg-red-600 px-2.5 py-0.5 text-[10px] font-extrabold text-white shadow-sm">
+                <span className="pointer-events-none absolute -top-3 left-4 rounded-full bg-teal px-2.5 py-0.5 text-[10px] font-extrabold text-white shadow-sm">
                   {totalUnits} عبوات
                 </span>
               )}
@@ -191,7 +191,7 @@ export default function OfferSelector({ product, className }: OfferSelectorProps
                       </span>
                     )}
                     {isMolien && offer.totalUnits && (
-                      <span className="inline-flex items-center rounded-full bg-red-100 px-2 py-0.5 text-[10px] font-bold text-red-700 sm:text-[11px]">
+                      <span className="inline-flex items-center rounded-full bg-gold/15 px-2 py-0.5 text-[10px] font-bold text-gold-dark sm:text-[11px]">
                         🎁 {offer.qty} مجاناً
                       </span>
                     )}
@@ -227,12 +227,7 @@ export default function OfferSelector({ product, className }: OfferSelectorProps
 
       <button
         onClick={handleAddToCart}
-        className={cn(
-          'mt-1 flex min-h-[56px] w-full items-center justify-center gap-2 rounded-2xl px-4 py-4 text-base font-bold text-white shadow-lg transition-all active:scale-[0.98] sm:gap-3 sm:text-lg',
-          isMolien
-            ? 'bg-gradient-to-l from-red-600 to-red-500 shadow-red-500/25 hover:from-red-700 hover:to-red-600'
-            : 'bg-teal shadow-teal/20 hover:bg-teal-dark',
-        )}
+        className="mt-1 flex min-h-[56px] w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-l from-teal-dark to-teal px-4 py-4 text-base font-bold text-white shadow-lg shadow-teal/30 transition-all hover:from-apothecary hover:to-teal-dark active:scale-[0.98] sm:gap-3 sm:text-lg"
       >
         <ShoppingCart className="h-5 w-5 shrink-0 sm:h-6 sm:w-6" />
         <span className="leading-snug">

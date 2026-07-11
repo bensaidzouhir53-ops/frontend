@@ -226,8 +226,8 @@ export default function ProductPageContent({
                   (أكثر من 2,700 تقييم · مؤكدة)
                 </span>
                 {isMolien && (
-                  <span className="rounded-full bg-red-100 px-2.5 py-0.5 text-xs font-extrabold text-red-700">
-                    🔥 عرض 1+1 · 2+2 · 3+3 مجاناً
+                  <span className="rounded-full bg-teal/10 px-2.5 py-0.5 text-xs font-extrabold text-teal-dark">
+                    🎁 عرض 1+1 · 2+2 · 3+3 مجاناً
                   </span>
                 )}
               </div>
@@ -327,7 +327,7 @@ export default function ProductPageContent({
         <div className="mx-auto max-w-container px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col items-center gap-12 lg:flex-row">
             <div className="order-2 w-full text-right lg:order-1 lg:w-1/2">
-              <div className="mb-5 inline-flex items-center gap-3 rounded-full bg-gradient-to-r from-red-600 to-red-500 px-5 py-2.5 text-sm font-extrabold text-white shadow-[0_4px_20px_rgba(220,38,38,0.4)]">
+              <div className="mb-5 inline-flex items-center gap-3 rounded-full bg-gradient-to-r from-teal-dark to-teal px-5 py-2.5 text-sm font-extrabold text-white shadow-[0_4px_20px_rgba(15,118,110,0.35)]">
                 <BellRing className="h-5 w-5" />
                 {sections.painAlert}
               </div>

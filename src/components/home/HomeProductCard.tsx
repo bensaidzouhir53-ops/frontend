@@ -134,7 +134,7 @@ export default function HomeProductCard({ product, className }: HomeProductCardP
                 </span>
               )}
               {isMolien && defaultOffer.totalUnits && (
-                <span className="rounded-full bg-red-100 px-2 py-0.5 text-[10px] font-bold text-red-700">
+                <span className="rounded-full bg-teal/10 px-2 py-0.5 text-[10px] font-bold text-teal-dark">
                   {getOfferTotalUnits(defaultOffer)} عبوات
                 </span>
               )}
