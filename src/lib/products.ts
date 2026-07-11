@@ -147,39 +147,45 @@ export const PRODUCTS: Product[] = [
 export const HERBAL_LUNG_SPRAY_OFFERS: Offer[] = [
   {
     qty: 1,
-    price: 179,
-    qtyLabel: 'علبة واحدة',
-    volumeLabel: '30 مل',
-    badge: 'للتجربة بس',
+    price: 199,
+    totalUnits: 2,
+    qtyLabel: '1+1 مجاناً',
+    volumeLabel: '60 مل',
+    badge: '🎁 اشتري 1 والثانية هدية',
     badgeColor: 'sage',
-    savings: 0,
-    desc: 'تبي تتأكد بس؟ 30 مل يخليك تحس بانتعاش من أول أيام — لكن لا تتوقع تودع الكتمة! ترسبات السنين والبلغم المتراكم يبيله أكثر من عبوة وحدة عشان يطلع من صدرك.',
+    savings: 199,
+    desc: 'بخاخ لك وبخاخ هدية! 60 مل يخليك تحس بانتعاش من أول بخة — جرب الفرق من أول أسبوع.',
   },
   {
     qty: 2,
-    price: 245,
-    qtyLabel: 'عبوتين',
-    volumeLabel: '60 مل',
-    badge: 'الأكثر طلباً + شحن مجاني 🚚',
+    price: 349,
+    totalUnits: 4,
+    qtyLabel: '2+2 مجاناً',
+    volumeLabel: '120 مل',
+    badge: '🔥 الأكثر طلباً — 4 عبوات بسعر 2!',
     badgeColor: 'gold',
     isDefault: true,
-    savings: 113,
+    savings: 447,
     desc: 'ليش أغلب السعوديين ياخذون هالخيار؟ 60 مل = شهرين كاملين بدون ما تفصل الروتين. من الأسبوع الثاني تحس إن البلغم الصباحي يقل والصدر ينشرح — وتوفر 113 ريال + شحن مجاني.',
   },
   {
     qty: 3,
-    price: 325,
-    qtyLabel: '3 عبوات',
-    volumeLabel: '90 مل',
-    badge: 'الكورس الكامل + شحن مجاني 🚚',
-    badgeColor: 'teal',
-    savings: 212,
+    price: 449,
+    totalUnits: 6,
+    qtyLabel: '3+3 مجاناً',
+    volumeLabel: '180 مل',
+    badge: '💎 أفضل قيمة — 6 عبوات!',
+    badgeColor: 'charcoal',
+    savings: 745,
     desc: 'لكل مدخن وكل واحد تعب من الكتمة! 90 مل تغطيك 3 شهور — الكورس اللي فعلاً يودع البلغم والكحة. وفّر 212 ريال ولا تخسر روتينك في نص الطريق.',
   },
 ]
 
-/** Regular per-bottle price used for BOGO savings display on molien-drops */
-export const MOLIEN_REGULAR_UNIT_PRICE = 199
+/** Regular per-bottle price used for BOGO savings display */
+export const BOGO_UNIT_PRICE = 199
+
+/** @deprecated Use BOGO_UNIT_PRICE */
+export const MOLIEN_REGULAR_UNIT_PRICE = BOGO_UNIT_PRICE
 
 export const MOLIEN_DROPS_OFFERS: Offer[] = [
   {
@@ -264,11 +270,15 @@ export function getOfferTotalUnits(offer: Offer): number {
 }
 
 export function getOfferOriginalPrice(slug: string, offer: Offer): number {
-  if (slug === 'molien-drops') {
-    return MOLIEN_REGULAR_UNIT_PRICE * getOfferTotalUnits(offer)
+  if (offer.totalUnits) {
+    return BOGO_UNIT_PRICE * getOfferTotalUnits(offer)
   }
   const base = getOffersForProduct(slug)[0]?.price ?? offer.price
   return base * offer.qty
+}
+
+export function productHasBogoOffers(slug: string): boolean {
+  return getOffersForProduct(slug).some((o) => (o.totalUnits ?? 0) > o.qty)
 }
 
 // Re-export types so components can import from one place

@@ -142,7 +142,7 @@ export default function CartDrawer() {
                     {items.map((item) => {
                       const offer = getOfferForProductQty(item.product.slug, item.qty)
                       const totalUnits = offer ? getOfferTotalUnits(offer) : item.qty
-                      const isMolien = item.product.slug === 'molien-drops'
+                      const isBogoLine = Boolean(offer?.totalUnits && offer?.qtyLabel)
 
                       return (
                       <div
@@ -161,8 +161,8 @@ export default function CartDrawer() {
                             {item.product.nameAr}
                           </p>
                           <p className="mt-1 text-xs text-charcoal/50">
-                            {isMolien && offer?.qtyLabel
-                              ? `${totalUnits} عبوات (${offer.qtyLabel})`
+                            {isBogoLine
+                              ? `${totalUnits} عبوات (${offer!.qtyLabel})`
                               : `الكمية: ${item.qty} ${item.qty === 1 ? 'قطعة' : item.qty === 2 ? 'قطعتان' : 'قطع'}`}
                           </p>
                           <p className="mt-0.5 text-sm font-extrabold text-teal">

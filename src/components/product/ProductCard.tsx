@@ -17,7 +17,6 @@ interface ProductCardProps {
 
 export default function ProductCard({ product, className }: ProductCardProps) {
   const defaultOffer = getDefaultOffer(product.slug)
-  const isMolien = product.slug === 'molien-drops'
   const { addItem, openCart } = useCartStore()
 
   const handleAddToCart = () => {
@@ -94,7 +93,7 @@ export default function ProductCard({ product, className }: ProductCardProps) {
               </span>
             </>
           )}
-          {isMolien && defaultOffer.totalUnits && (
+          {defaultOffer.totalUnits && (
             <span className="rounded-full bg-teal/10 px-2 py-0.5 text-[10px] font-bold text-teal-dark">
               {getOfferTotalUnits(defaultOffer)} عبوات
             </span>

@@ -16,7 +16,6 @@ interface HomeProductCardProps {
 
 export default function HomeProductCard({ product, className }: HomeProductCardProps) {
   const defaultOffer = getDefaultOffer(product.slug)
-  const isMolien = product.slug === 'molien-drops'
   const { addItem, openCart } = useCartStore()
 
   const displayTitle = product.cardTitleAr ?? product.nameAr
@@ -133,7 +132,7 @@ export default function HomeProductCard({ product, className }: HomeProductCardP
                   {getOfferOriginalPrice(product.slug, defaultOffer)} ريال
                 </span>
               )}
-              {isMolien && defaultOffer.totalUnits && (
+              {defaultOffer.totalUnits && (
                 <span className="rounded-full bg-teal/10 px-2 py-0.5 text-[10px] font-bold text-teal-dark">
                   {getOfferTotalUnits(defaultOffer)} عبوات
                 </span>

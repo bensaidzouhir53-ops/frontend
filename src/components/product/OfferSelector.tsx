@@ -1,12 +1,13 @@
 'use client'
 
 import { useState } from 'react'
-import { Check, ShoppingCart, TrendingUp, Flame, Gift } from 'lucide-react'
+import { ShoppingCart, Flame, Gift } from 'lucide-react'
 import type { Product } from '@/types'
 import {
   getOffersForProduct,
   getOfferTotalUnits,
   getOfferOriginalPrice,
+  productHasBogoOffers,
 } from '@/lib/products'
 import { useCartStore } from '@/store/cartStore'
 import { trackAddToCart, generateEventId } from '@/lib/tracking'
@@ -35,9 +36,10 @@ export default function OfferSelector({ product, className }: OfferSelectorProps
   const offers = getOffersForProduct(product.slug)
   const [selectedIdx, setSelectedIdx] = useState(offers.findIndex((o) => o.isDefault))
   const { addItem, openCart } = useCartStore()
-  const isMolien = product.slug === 'molien-drops'
+  const isBogo = productHasBogoOffers(product.slug)
 
   const selected = offers[selectedIdx] ?? offers[1]
+  const selectedUnits = getOfferTotalUnits(selected)
 
   const handleAddToCart = () => {
     addItem(product, selected.qty, selected.price)
@@ -51,18 +53,7 @@ export default function OfferSelector({ product, className }: OfferSelectorProps
 
   return (
     <div className={cn('flex flex-col gap-3 sm:gap-4', className)} dir="rtl">
-      {product.slug === 'herbal-lung-spray' && (
-        <div className="flex items-start gap-3 rounded-2xl border border-gold/30 bg-gradient-to-l from-gold/10 to-amber-50/80 px-4 py-3.5">
-          <TrendingUp className="mt-0.5 h-5 w-5 shrink-0 text-gold" />
-          <p className="text-sm font-bold leading-relaxed text-charcoal/80">
-            <span className="text-charcoal">صدق اللي جرب — عبوة وحدة تعطيك طعم بس!</span>{' '}
-            الكتمة وبلغم السنين ما يبي يوم واحد، يبي روتين يرافقك. عبوتين فما فوق تضمن إنك ما
-            توقف وتشوف فرق حقيقي — 30 مل · 60 مل · 90 مل.
-          </p>
-        </div>
-      )}
-
-      {isMolien && (
+      {isBogo && (
         <div className="relative overflow-hidden rounded-2xl border-2 border-teal/25 bg-gradient-to-l from-mist via-ivory to-gold/10 px-4 py-4 shadow-sm">
           <div className="absolute -left-6 -top-6 h-24 w-24 rounded-full bg-teal/15 blur-2xl" />
           <div className="relative flex items-start gap-3">
@@ -87,7 +78,7 @@ export default function OfferSelector({ product, className }: OfferSelectorProps
       )}
 
       <p className="text-sm font-semibold text-charcoal/70">
-        {isMolien ? 'اختر عرضك:' : 'اختر كميتك:'}
+        {isBogo ? 'اختر عرضك:' : 'اختر كميتك:'}
       </p>
 
       <div className="flex flex-col gap-3">
@@ -107,19 +98,17 @@ export default function OfferSelector({ product, className }: OfferSelectorProps
                 'relative w-full rounded-2xl border-2 p-4 text-right transition-all duration-200',
                 isSelected
                   ? 'border-teal bg-teal/5 shadow-md'
-                  : isMolien
-                    ? 'border-warm-border bg-white hover:border-teal/30 hover:bg-surface-rose/60'
-                    : 'border-sage/40 bg-white hover:border-teal/40',
+                  : 'border-warm-border bg-white hover:border-teal/30 hover:bg-surface-rose/60',
               )}
               aria-pressed={isSelected}
             >
-              {isMolien && offer.qty === 2 && (
+              {offer.qty === 2 && (
                 <span className="pointer-events-none absolute -top-3 right-4 rounded-full bg-gold px-2.5 py-0.5 text-[10px] font-extrabold text-charcoal shadow-sm">
                   الأكثر طلباً ⭐
                 </span>
               )}
 
-              {isMolien && offer.totalUnits && (
+              {offer.totalUnits && (
                 <span className="pointer-events-none absolute -top-3 left-4 rounded-full bg-teal px-2.5 py-0.5 text-[10px] font-extrabold text-white shadow-sm">
                   {totalUnits} عبوات
                 </span>
@@ -132,12 +121,7 @@ export default function OfferSelector({ product, className }: OfferSelectorProps
                     isSelected ? 'border-teal bg-teal' : 'border-sage/60 bg-white',
                   )}
                 >
-                  {isSelected &&
-                    (isMolien ? (
-                      <span className="h-2 w-2 rounded-full bg-gold" />
-                    ) : (
-                      <Check className="h-3.5 w-3.5 stroke-[3] text-white" />
-                    ))}
+                  {isSelected && <span className="h-2 w-2 rounded-full bg-gold" />}
                 </div>
 
                 <div className="min-w-0 flex-1">
@@ -171,11 +155,11 @@ export default function OfferSelector({ product, className }: OfferSelectorProps
 
                     <div className="flex shrink-0 flex-col items-start sm:items-end">
                       <p className="text-xl font-extrabold tabular-nums text-teal-dark">
-                        {offer.price} {isMolien ? 'ر.س' : 'ريال'}
+                        {offer.price} ر.س
                       </p>
                       {showStrikethrough && (
                         <p className="text-[11px] text-charcoal/40 line-through sm:text-xs">
-                          {originalPrice} {isMolien ? 'ر.س' : 'ريال'}
+                          {originalPrice} ر.س
                         </p>
                       )}
                     </div>
@@ -183,23 +167,21 @@ export default function OfferSelector({ product, className }: OfferSelectorProps
 
                   <div className="flex flex-wrap items-center gap-x-2 gap-y-1.5">
                     <span className="text-[11px] text-charcoal/50 sm:text-xs">
-                      {perUnit} {isMolien ? 'ر.س' : 'ريال'} / للعبوة
+                      {perUnit} ر.س / للعبوة
                     </span>
                     {(offer.savings ?? 0) > 0 && (
                       <span className="text-[11px] font-semibold text-gold-dark sm:text-xs">
                         وفّر {offer.savings} ريال
                       </span>
                     )}
-                    {isMolien && offer.totalUnits && (
+                    {offer.totalUnits && (
                       <span className="inline-flex items-center rounded-full bg-gold/15 px-2 py-0.5 text-[10px] font-bold text-gold-dark sm:text-[11px]">
                         🎁 {offer.qty} مجاناً
                       </span>
                     )}
-                    {(offer.qty > 1 || isMolien) && (
-                      <span className="inline-flex items-center rounded-full bg-teal/10 px-2 py-0.5 text-[10px] font-bold text-teal-dark sm:text-[11px]">
-                        شحن مجاني
-                      </span>
-                    )}
+                    <span className="inline-flex items-center rounded-full bg-teal/10 px-2 py-0.5 text-[10px] font-bold text-teal-dark sm:text-[11px]">
+                      شحن مجاني
+                    </span>
                   </div>
                 </div>
               </div>
@@ -208,19 +190,12 @@ export default function OfferSelector({ product, className }: OfferSelectorProps
         })}
       </div>
 
-      {isMolien && (selected.savings ?? 0) > 0 && (
+      {(selected.savings ?? 0) > 0 && (
         <div className="flex items-center justify-center rounded-xl bg-gold/15 px-3 py-2.5 text-gold-dark sm:px-4">
           <span className="text-center text-xs font-bold sm:text-sm">
-            🎉 ستوفّر {selected.savings} ريال — {getOfferTotalUnits(selected)} عبوات بـ{' '}
-            {selected.price} ر.س فقط!
-          </span>
-        </div>
-      )}
-
-      {!isMolien && (selected.savings ?? 0) > 0 && (
-        <div className="flex items-center justify-center rounded-xl bg-gold/10 px-3 py-2.5 text-gold sm:px-4">
-          <span className="text-center text-xs font-bold sm:text-sm">
-            ستوفّر {selected.savings} ريال مع هذا الخيار 🎉
+            {isBogo
+              ? `🎉 ستوفّر ${selected.savings} ريال — ${selectedUnits} عبوات بـ ${selected.price} ر.س فقط!`
+              : `🎉 ستوفّر ${selected.savings} ريال مع هذا الخيار`}
           </span>
         </div>
       )}
@@ -231,29 +206,15 @@ export default function OfferSelector({ product, className }: OfferSelectorProps
       >
         <ShoppingCart className="h-5 w-5 shrink-0 sm:h-6 sm:w-6" />
         <span className="leading-snug">
-          {isMolien
-            ? `اطلب الآن — ${getOfferTotalUnits(selected)} عبوات بـ ${selected.price} ر.س`
+          {isBogo
+            ? `اطلب الآن — ${selectedUnits} عبوات بـ ${selected.price} ر.س`
             : 'أكمل الطلب الآن — الدفع عند الاستلام'}
         </span>
       </button>
 
-      {isMolien ? (
-        <p className="text-center text-xs font-medium text-charcoal/55">
-          الدفع عند الاستلام · شحن سريع 2-4 أيام · إرجاع مجاني
-        </p>
-      ) : (
-        <div className="mt-1 flex flex-col items-stretch gap-2 rounded-xl bg-mist/50 px-3 py-3 text-xs font-bold text-charcoal/60 sm:flex-row sm:flex-wrap sm:items-center sm:justify-center sm:gap-4 sm:text-sm">
-          <span className="flex items-center justify-center gap-1 sm:justify-start">
-            <Check className="h-3 w-3 shrink-0 text-teal" /> الدفع عند الاستلام
-          </span>
-          <span className="flex items-center justify-center gap-1 sm:justify-start">
-            <Check className="h-3 w-3 shrink-0 text-teal" /> شحن سريع 2-4 أيام
-          </span>
-          <span className="flex items-center justify-center gap-1 sm:justify-start">
-            <Check className="h-3 w-3 shrink-0 text-teal" /> إرجاع مجاني
-          </span>
-        </div>
-      )}
+      <p className="text-center text-xs font-medium text-charcoal/55">
+        الدفع عند الاستلام · شحن سريع 2-4 أيام · إرجاع مجاني
+      </p>
     </div>
   )
 }
