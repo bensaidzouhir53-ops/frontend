@@ -74,7 +74,7 @@ export default function OfferSelector({ product, className }: OfferSelectorProps
                 🎁 عرض حصري — اشتري وخذ نفس العدد مجاناً!
               </p>
               <p className="text-sm font-semibold leading-relaxed text-charcoal/75">
-                1+1 بـ 199 ر.س · 2+2 بـ 299 ر.س · 3+3 بـ 399 ر.س — كل ما زادت الكمية، كل ما
+                1+1 بـ 199 ر.س · 2+2 بـ 349 ر.س · 3+3 بـ 449 ر.س — كل ما زادت الكمية، كل ما
                 وفّرت أكثر. لا تفوّت العرض!
               </p>
               <p className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-gold px-3 py-1 text-[11px] font-extrabold text-charcoal sm:text-xs">
