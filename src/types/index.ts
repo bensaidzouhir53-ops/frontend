@@ -36,6 +36,16 @@ export interface Offer {
   desc?: string
   volumeLabel?: string
   qtyLabel?: string
+  /** Short hook above the description */
+  headline?: string
+  /** Quick benefit bullets for the offer card */
+  bullets?: string[]
+  /** Top ribbon text (e.g. "الأكثر طلباً") */
+  ribbon?: string
+  /** Display % off vs buying singles */
+  percentOff?: number
+  /** Marks the highest-AOV / best-value tier visually */
+  isBestValue?: boolean
   /** Total bottles/units the customer receives (e.g. BOGO: tier 2 → 4 units) */
   totalUnits?: number
 }
