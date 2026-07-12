@@ -607,7 +607,7 @@ const MOLIEN_DROPS_SECTIONS: ProductPageSections = {
     },
   ],
   mechanismImage: '/images/molien-mechanism.png',
-  mechanismImageAlt: 'امتصاص قطرة المولين وتأثيرها على الرئة',
+  mechanismImageAlt: 'قطرات مولين BreathDetox — مستخلص عشبي مركّز لتنظيف الرئة وفتح الصدر',
   statsSection: {
     badge: 'نتائج حقيقية — يوم بعد يوم',
     title: 'ينفع لكل اللي يعانون من مشاكل التنفس',
