@@ -17,6 +17,12 @@ const config: Config = {
         'signal-red': '#B0282B',
         charcoal: '#1F2933',
         'offer-selected': '#ECF6F2',
+        'pine-light': '#E8F5F2',
+        'offer-panel': '#F9FAFB',
+        'offer-amber': '#C68A3B',
+        'offer-amber-light': '#FAF6ED',
+        'offer-amber-border': '#F2E8D5',
+        border: '#E5E7EB',
       },
       maxWidth: {
         container: '1280px',

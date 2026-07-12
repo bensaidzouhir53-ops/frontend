@@ -179,7 +179,7 @@ export default function ProductPageContent({
                 )}
               </div>
 
-              <div id="offer" className="overflow-hidden">
+              <div className="overflow-hidden">
                 <OfferSelector product={product} />
               </div>
             </div>

@@ -36,6 +36,19 @@ export interface Offer {
   desc?: string
   volumeLabel?: string
   qtyLabel?: string
+  /** Main line on offer card (BreathDetox-style) */
+  cardTitle?: string
+  /** Floating ribbon above card */
+  ribbonBadge?: string
+  ribbonVariant?: 'popular' | 'value' | 'package' | 'stage'
+  stageRibbonBadge?: string
+  /** Small pills under the title */
+  cardBadges?: string[]
+  /** Bold lead shown when selected */
+  cardSubtitleLead?: string
+  /** Supporting copy shown when selected */
+  cardSubtitle?: string
+  freeShipping?: boolean
   /** Short hook above the description */
   headline?: string
   /** Quick benefit bullets for the offer card */
