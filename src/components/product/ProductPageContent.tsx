@@ -717,28 +717,16 @@ export default function ProductPageContent({
       )}
 
       {/* ── Sticky Mobile CTA ── */}
-      <div className="fixed bottom-0 left-0 right-0 z-50 lg:hidden bg-white border-t border-sage/30 p-4 shadow-[0_-10px_40px_rgba(15,118,110,0.15)]" dir="rtl">
+      <div className="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-white/95 p-3 shadow-[0_-8px_20px_rgba(0,0,0,0.06)] backdrop-blur-md lg:hidden" dir="rtl">
         <div className="max-w-md mx-auto">
           <Link
             href="#offer"
-            className="w-full bg-gradient-to-r from-teal-dark to-teal text-white font-extrabold py-3.5 px-4 rounded-xl text-center shadow-lg shadow-teal/30 flex items-center justify-center gap-2 active:scale-95 transition-transform "
+            className="flex min-h-[56px] w-full items-center justify-center gap-2 rounded-2xl bg-teal px-4 font-bold text-white shadow-lg transition-colors hover:bg-teal-dark active:scale-[0.98]"
           >
-            اطلب الآن والدفع عند الاستلام 📦
-            <ChevronLeft className="w-4 h-4" />
+            <ShoppingCart className="h-5 w-5 shrink-0" />
+            <span>اختر عرضك — الدفع عند الاستلام</span>
           </Link>
         </div>
-      </div>
-      {/* ── Sticky Mobile CTA ── */}
-      <div className="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-white/95 p-3 shadow-[0_-8px_20px_rgba(0,0,0,0.06)] backdrop-blur-md lg:hidden">
-        <button
-          onClick={() => {
-            document.getElementById('offer')?.scrollIntoView({ behavior: 'smooth', block: 'center' })
-          }}
-          className="flex min-h-[56px] w-full items-center justify-center gap-2 rounded-2xl bg-teal px-4 font-bold text-white shadow-lg transition-colors hover:bg-teal-dark active:scale-[0.98]"
-        >
-          <ShoppingCart className="h-5 w-5 shrink-0" />
-          <span>اختر عرضك — الدفع عند الاستلام</span>
-        </button>
       </div>
     </main>
   )
