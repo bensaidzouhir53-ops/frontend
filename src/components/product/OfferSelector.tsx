@@ -292,15 +292,26 @@ export default function OfferSelector({ product, className }: OfferSelectorProps
       <button
         type="button"
         onClick={handleAddToCart}
-        className="flex min-h-[52px] w-full items-center justify-center gap-2 rounded-2xl bg-teal px-4 py-3.5 text-base font-bold text-white shadow-[0_4px_18px_rgba(15,118,110,0.28)] transition-all hover:bg-teal-dark active:scale-[0.99]"
+        className="flex min-h-[56px] w-full items-center justify-center gap-2 rounded-2xl bg-teal px-4 py-3.5 text-base font-bold text-white shadow-[0_4px_18px_rgba(15,118,110,0.28)] transition-all hover:bg-teal-dark active:scale-[0.99]"
       >
         <ShoppingCart className="h-5 w-5 shrink-0" />
         <span>أكمل الطلب الآن — الدفع عند الاستلام</span>
       </button>
 
-      <p className="text-center text-[11px] font-medium text-charcoal/50">
-        ضمان استرجاع 30 يوم · بدون دفع مقدّم
-      </p>
+      <div className="mt-2 flex flex-wrap items-center justify-center gap-4 text-[10.5px] font-bold text-charcoal/65 sm:text-xs">
+        <div className="flex items-center gap-1.5">
+          <ShieldCheck className="h-3.5 w-3.5 text-teal" />
+          مصرح SFDA
+        </div>
+        <div className="flex items-center gap-1.5">
+          <span className="text-sm">🇸🇦</span>
+          صنع في السعودية
+        </div>
+        <div className="flex items-center gap-1.5">
+          <Truck className="h-3.5 w-3.5 text-teal" />
+          استرجاع 30 يوم
+        </div>
+      </div>
     </div>
   )
 }
