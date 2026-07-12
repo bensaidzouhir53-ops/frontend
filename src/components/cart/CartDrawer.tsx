@@ -6,7 +6,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { X, ShoppingCart, Trash2, Shield, Truck, RotateCcw, Package } from 'lucide-react'
 import { useCartStore } from '@/store/cartStore'
-import { getProductBySlug, getOfferForProductQty, getDefaultOffer, getOfferTotalUnits } from '@/lib/products'
+import { getProductBySlug, getOfferForProductQty, getDefaultOffer } from '@/lib/products'
 import { trackAddToCart, generateEventId } from '@/lib/tracking'
 import { cn } from '@/lib/utils'
 import type { Product } from '@/types'
@@ -141,8 +141,9 @@ export default function CartDrawer() {
                   <div className="flex flex-col gap-3">
                     {items.map((item) => {
                       const offer = getOfferForProductQty(item.product.slug, item.qty)
-                      const totalUnits = offer ? getOfferTotalUnits(offer) : item.qty
-                      const isBogoLine = Boolean(offer?.totalUnits && offer?.qtyLabel)
+                      const qtyLabel =
+                        offer?.qtyLabel ??
+                        (item.qty === 1 ? 'قطعة واحدة' : item.qty === 2 ? 'قطعتان' : `${item.qty} قطع`)
 
                       return (
                       <div
@@ -161,9 +162,8 @@ export default function CartDrawer() {
                             {item.product.nameAr}
                           </p>
                           <p className="mt-1 text-xs text-charcoal/50">
-                            {isBogoLine
-                              ? `${totalUnits} عبوات (${offer!.qtyLabel})`
-                              : `الكمية: ${item.qty} ${item.qty === 1 ? 'قطعة' : item.qty === 2 ? 'قطعتان' : 'قطع'}`}
+                            {qtyLabel}
+                            {offer?.volumeLabel ? ` · ${offer.volumeLabel}` : ''}
                           </p>
                           <p className="mt-0.5 text-sm font-extrabold text-teal">
                             {item.price} ريال

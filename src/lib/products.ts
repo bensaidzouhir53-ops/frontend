@@ -144,83 +144,77 @@ export const PRODUCTS: Product[] = [
   },
 ]
 
+export const REGULAR_UNIT_PRICE = 169
+
+/** @deprecated Use REGULAR_UNIT_PRICE */
+export const BOGO_UNIT_PRICE = REGULAR_UNIT_PRICE
+
+/** @deprecated Use REGULAR_UNIT_PRICE */
+export const MOLIEN_REGULAR_UNIT_PRICE = REGULAR_UNIT_PRICE
+
 export const HERBAL_LUNG_SPRAY_OFFERS: Offer[] = [
   {
     qty: 1,
-    price: 199,
-    totalUnits: 2,
-    qtyLabel: '1+1 مجاناً',
-    volumeLabel: '60 مل',
-    badge: '🎁 اشتري 1 والثانية هدية',
+    price: 169,
+    qtyLabel: 'علبة واحدة',
+    volumeLabel: '30 مل',
+    badge: '✨ ابدأ الآن',
     badgeColor: 'sage',
-    savings: 199,
-    desc: 'بخاخ لك وبخاخ هدية! 60 مل يخليك تحس بانتعاش من أول بخة — جرب الفرق من أول أسبوع.',
+    desc: 'شهر كامل من الراحة — جرّب التنظيف العميق وشوف الفرق من أول أسبوع.',
   },
   {
     qty: 2,
-    price: 349,
-    totalUnits: 4,
-    qtyLabel: '2+2 مجاناً',
-    volumeLabel: '120 مل',
-    badge: '🔥 الأكثر طلباً — 4 عبوات بسعر 2!',
+    price: 229,
+    qtyLabel: 'علبتان',
+    volumeLabel: '60 مل',
+    badge: '🔥 الأكثر طلباً',
     badgeColor: 'gold',
     isDefault: true,
-    savings: 447,
-    desc: 'ليش أغلب السعوديين ياخذون هالخيار؟ 60 مل = شهرين كاملين بدون ما تفصل الروتين. من الأسبوع الثاني تحس إن البلغم الصباحي يقل والصدر ينشرح — وتوفر 113 ريال + شحن مجاني.',
+    savings: 109,
+    desc: 'شهرين متواصلين — العبوتين تثبّت النتيجة وتوفر أكثر مع شحن مجاني.',
   },
   {
     qty: 3,
-    price: 449,
-    totalUnits: 6,
-    qtyLabel: '3+3 مجاناً',
-    volumeLabel: '180 مل',
-    badge: '💎 أفضل قيمة — 6 عبوات!',
+    price: 299,
+    qtyLabel: '3 علب',
+    volumeLabel: '90 مل',
+    badge: '💎 أفضل توفير',
     badgeColor: 'charcoal',
-    savings: 745,
-    desc: 'لكل مدخن وكل واحد تعب من الكتمة! 90 مل تغطيك 3 شهور — الكورس اللي فعلاً يودع البلغم والكحة. وفّر 212 ريال ولا تخسر روتينك في نص الطريق.',
+    savings: 208,
+    desc: 'كورس 3 شهور كامل — ودّع الكتمة والبلغم ووفّر حتى 208 ر.س.',
   },
 ]
-
-/** Regular per-bottle price used for BOGO savings display */
-export const BOGO_UNIT_PRICE = 199
-
-/** @deprecated Use BOGO_UNIT_PRICE */
-export const MOLIEN_REGULAR_UNIT_PRICE = BOGO_UNIT_PRICE
 
 export const MOLIEN_DROPS_OFFERS: Offer[] = [
   {
     qty: 1,
-    price: 199,
-    totalUnits: 2,
-    qtyLabel: '1+1 مجاناً',
-    volumeLabel: '120 مل',
-    badge: '🎁 اشتري 1 والثانية هدية',
+    price: 169,
+    qtyLabel: 'علبة واحدة',
+    volumeLabel: '60 مل',
+    badge: '✨ ابدأ الآن',
     badgeColor: 'sage',
-    savings: 199,
-    desc: 'عبوة لك وعبوة هدية! 120 مل تكفيك شهر — جرّب التنظيف العميق وشوف الفرق من أول أسبوع.',
+    desc: 'شهر كامل تنظيف — جرّب التنظيف العميق وشوف الفرق من أول أسبوع.',
   },
   {
     qty: 2,
-    price: 349,
-    totalUnits: 4,
-    qtyLabel: '2+2 مجاناً',
-    volumeLabel: '240 مل',
-    badge: '🔥 الأكثر طلباً — 4 عبوات بسعر 2!',
+    price: 229,
+    qtyLabel: 'علبتان',
+    volumeLabel: '120 مل',
+    badge: '🔥 الأكثر طلباً',
     badgeColor: 'gold',
     isDefault: true,
-    savings: 447,
-    desc: '4 عبوات بـ 349 فقط! شهرين كاملين تنظّف فيهم رئتك من جوّا — وفّر 447 ريال + شحن مجاني.',
+    savings: 109,
+    desc: 'شهرين متواصلين — العبوتين تثبّت النتيجة وتوفر أكثر مع شحن مجاني.',
   },
   {
     qty: 3,
-    price: 449,
-    totalUnits: 6,
-    qtyLabel: '3+3 مجاناً',
-    volumeLabel: '360 مل',
-    badge: '💎 أفضل قيمة — 6 عبوات!',
+    price: 299,
+    qtyLabel: '3 علب',
+    volumeLabel: '180 مل',
+    badge: '💎 أفضل توفير',
     badgeColor: 'charcoal',
-    savings: 745,
-    desc: '6 عبوات بـ 449! الكورس الكامل 3 شهور — ودّع الكتمة والبلغم للأبد ووفّر 745 ريال.',
+    savings: 208,
+    desc: 'كورس 3 شهور كامل — ودّع الكتمة والبلغم ووفّر حتى 208 ر.س.',
   },
 ]
 
@@ -271,10 +265,13 @@ export function getOfferTotalUnits(offer: Offer): number {
 
 export function getOfferOriginalPrice(slug: string, offer: Offer): number {
   if (offer.totalUnits) {
-    return BOGO_UNIT_PRICE * getOfferTotalUnits(offer)
+    return REGULAR_UNIT_PRICE * getOfferTotalUnits(offer)
   }
-  const base = getOffersForProduct(slug)[0]?.price ?? offer.price
-  return base * offer.qty
+  return REGULAR_UNIT_PRICE * offer.qty
+}
+
+export function getMaxOfferSavings(slug: string): number {
+  return Math.max(...getOffersForProduct(slug).map((o) => o.savings ?? 0), 0)
 }
 
 export function productHasBogoOffers(slug: string): boolean {

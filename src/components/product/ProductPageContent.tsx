@@ -7,7 +7,7 @@ import {
   BellRing, Truck, HeartHandshake, CircleCheckBig, CircleX
 } from 'lucide-react'
 import type { Product } from '@/types'
-import { getDefaultOffer, productHasBogoOffers } from '@/lib/products'
+import { getDefaultOffer, getMaxOfferSavings } from '@/lib/products'
 import OfferSelector from '@/components/product/OfferSelector'
 import ProductDayProcessSection from '@/components/product/ProductDayProcessSection'
 import ProductResultsSection from '@/components/product/ProductResultsSection'
@@ -172,9 +172,9 @@ export default function ProductPageContent({
                 <span className="text-sm font-bold text-charcoal/60">
                   (أكثر من 2,700 تقييم · مؤكدة)
                 </span>
-                {productHasBogoOffers(product.slug) && (
+                {getMaxOfferSavings(product.slug) > 0 && (
                   <span className="rounded-full bg-teal/10 px-2.5 py-0.5 text-xs font-extrabold text-teal-dark">
-                    🎁 عرض 1+1 · 2+2 · 3+3 مجاناً
+                    💰 وفّر حتى {getMaxOfferSavings(product.slug)} ر.س
                   </span>
                 )}
               </div>

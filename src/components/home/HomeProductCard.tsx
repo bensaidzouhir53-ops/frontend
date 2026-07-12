@@ -4,7 +4,7 @@
 import Link from 'next/link'
 import { ArrowLeft, Check, ShoppingCart, Star, Truck } from 'lucide-react'
 import type { Product } from '@/types'
-import { getDefaultOffer, getOfferOriginalPrice, getOfferTotalUnits } from '@/lib/products'
+import { getDefaultOffer, getOfferOriginalPrice } from '@/lib/products'
 import { useCartStore } from '@/store/cartStore'
 import { trackAddToCart, generateEventId } from '@/lib/tracking'
 import { cn } from '@/lib/utils'
@@ -130,11 +130,6 @@ export default function HomeProductCard({ product, className }: HomeProductCardP
               {(defaultOffer.savings ?? 0) > 0 && (
                 <span className="text-sm font-medium text-charcoal/35 line-through">
                   {getOfferOriginalPrice(product.slug, defaultOffer)} ريال
-                </span>
-              )}
-              {defaultOffer.totalUnits && (
-                <span className="rounded-full bg-teal/10 px-2 py-0.5 text-[10px] font-bold text-teal-dark">
-                  {getOfferTotalUnits(defaultOffer)} عبوات
                 </span>
               )}
             </div>

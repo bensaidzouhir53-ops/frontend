@@ -16,6 +16,7 @@ const config: Config = {
         'warm-border': '#E5DFCD',
         'signal-red': '#B0282B',
         charcoal: '#1F2933',
+        'offer-selected': '#ECF6F2',
       },
       maxWidth: {
         container: '1280px',
