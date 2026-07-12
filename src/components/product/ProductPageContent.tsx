@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { 
   ShieldCheck, Star, CheckCircle2, ChevronLeft, ArrowLeft, 
   Leaf, Zap, Wind, HeartPulse, XCircle,
-  BellRing, Truck, HeartHandshake, CircleCheckBig, CircleX
+  BellRing, Truck, HeartHandshake, CircleCheckBig, CircleX, ShoppingCart
 } from 'lucide-react'
 import type { Product } from '@/types'
 import { getDefaultOffer, getMaxOfferSavings } from '@/lib/products'

@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { ShoppingCart, Truck } from 'lucide-react'
+import { ShoppingCart, ShieldCheck, Truck } from 'lucide-react'
 import type { Product, Offer } from '@/types'
 import { getOffersForProduct, getOfferOriginalPrice } from '@/lib/products'
 import { useCartStore } from '@/store/cartStore'
