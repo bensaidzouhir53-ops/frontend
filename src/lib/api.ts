@@ -43,6 +43,18 @@ export async function createOrder(payload: OrderPayload): Promise<OrderResponse>
   return body as OrderResponse
 }
 
+export async function declineUpsell(orderId: string): Promise<void> {
+  const res = await fetch(`/api/orders/${orderId}/upsell/decline`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+  })
+
+  if (!res.ok) {
+    const body = await res.json().catch(() => ({}))
+    throw new Error(parseApiError(body, 'تعذر إكمال الطلب حالياً'))
+  }
+}
+
 export async function acceptUpsell(
   orderId: string,
   payload: { product_slug: string; quantity: number; event_id?: string },

@@ -6,7 +6,7 @@ import Image from 'next/image'
 import * as Dialog from '@radix-ui/react-dialog'
 import { Clock, X, Loader2 } from 'lucide-react'
 import { useCartStore } from '@/store/cartStore'
-import { acceptUpsell } from '@/lib/api'
+import { acceptUpsell, declineUpsell } from '@/lib/api'
 import { getProductBySlug, getOffersForProduct } from '@/lib/products'
 import {
   UPSELL_PRICE,
@@ -92,10 +92,18 @@ export default function UpsellModal() {
     router.push(thankYouPath)
   }
 
-  const finishUpsell = (orderNumber: string, orderTotal: number) => {
+  const finishUpsell = async (orderNumber: string, orderTotal: number) => {
     clearPendingUpsell()
     closeUpsell()
     navigateToThankYou(orderNumber, orderTotal)
+  }
+
+  const notifyUpsellDeclined = async (orderId: string) => {
+    try {
+      await declineUpsell(orderId)
+    } catch {
+      // Still continue to thank-you even if COD sync fails.
+    }
   }
 
   const handleAccept = async () => {
@@ -164,8 +172,9 @@ export default function UpsellModal() {
 
     const order = getOrderFromSession()
 
-    setTimeout(() => {
+    void (async () => {
       if (order) {
+        await notifyUpsellDeclined(order.order_id)
         finishUpsell(order.order_number, order.total)
       } else {
         clearPendingUpsell()
@@ -173,7 +182,7 @@ export default function UpsellModal() {
         router.push('/thank-you')
       }
       setIsDeclining(false)
-    }, 100)
+    })()
   }
 
   const progressPct = (secondsLeft / UPSELL_OFFER_COUNTDOWN_SECONDS) * 100
