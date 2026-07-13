@@ -2,7 +2,6 @@ import { getProductBySlug } from '@/lib/products'
 import type { UpsellData } from '@/types'
 
 export const UPSELL_PRICE = 99
-export const UPSELL_SHOW_DELAY_MS = 10_000
 export const UPSELL_OFFER_COUNTDOWN_SECONDS = 10
 
 export const UPSELL_CROSS_SELL: Record<string, string> = {

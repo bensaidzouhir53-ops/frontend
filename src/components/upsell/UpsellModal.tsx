@@ -1,24 +1,27 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter, usePathname } from 'next/navigation'
 import Image from 'next/image'
 import * as Dialog from '@radix-ui/react-dialog'
 import { Clock, X, Loader2 } from 'lucide-react'
 import { useCartStore } from '@/store/cartStore'
 import { acceptUpsell } from '@/lib/api'
 import { getProductBySlug, getOffersForProduct } from '@/lib/products'
+import {
+  UPSELL_PRICE,
+  UPSELL_OFFER_COUNTDOWN_SECONDS,
+  clearPendingUpsell,
+} from '@/lib/upsell'
 import { trackPurchase, generateEventId } from '@/lib/tracking'
 import { cn } from '@/lib/utils'
 
-const UPSELL_PRICE = 99
-const COUNTDOWN_SECONDS = 10
-
 export default function UpsellModal() {
   const router = useRouter()
+  const pathname = usePathname()
   const { isUpsellOpen, upsellProduct, closeUpsell } = useCartStore()
 
-  const [secondsLeft, setSecondsLeft] = useState(COUNTDOWN_SECONDS)
+  const [secondsLeft, setSecondsLeft] = useState(UPSELL_OFFER_COUNTDOWN_SECONDS)
   const [isAccepting, setIsAccepting] = useState(false)
   const [isDeclining, setIsDeclining] = useState(false)
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null)
@@ -27,11 +30,11 @@ export default function UpsellModal() {
   useEffect(() => {
     if (!isUpsellOpen) {
       if (timerRef.current) clearInterval(timerRef.current)
-      setSecondsLeft(COUNTDOWN_SECONDS)
+      setSecondsLeft(UPSELL_OFFER_COUNTDOWN_SECONDS)
       return
     }
 
-    setSecondsLeft(COUNTDOWN_SECONDS)
+    setSecondsLeft(UPSELL_OFFER_COUNTDOWN_SECONDS)
     timerRef.current = setInterval(() => {
       setSecondsLeft((s) => {
         if (s <= 1) {
@@ -84,7 +87,15 @@ export default function UpsellModal() {
   }
 
   const navigateToThankYou = (orderNumber: string, orderTotal: number) => {
-    router.push(`/thank-you?order=${orderNumber}&total=${orderTotal}`)
+    const thankYouPath = `/thank-you?order=${encodeURIComponent(orderNumber)}&total=${orderTotal}`
+    if (pathname === '/thank-you') return
+    router.push(thankYouPath)
+  }
+
+  const finishUpsell = (orderNumber: string, orderTotal: number) => {
+    clearPendingUpsell()
+    closeUpsell()
+    navigateToThankYou(orderNumber, orderTotal)
   }
 
   const handleAccept = async () => {
@@ -127,19 +138,18 @@ export default function UpsellModal() {
           }),
         )
 
-        closeUpsell()
-        navigateToThankYou(order.order_number, newTotal)
+        finishUpsell(order.order_number, newTotal)
       } else {
-        // Fallback: decline gracefully if order data is missing
+        clearPendingUpsell()
         closeUpsell()
         router.push('/thank-you')
       }
     } catch {
-      // If upsell API fails, just proceed to thank-you
-      closeUpsell()
       if (order) {
-        navigateToThankYou(order.order_number, order.total)
+        finishUpsell(order.order_number, order.total)
       } else {
+        clearPendingUpsell()
+        closeUpsell()
         router.push('/thank-you')
       }
     } finally {
@@ -153,19 +163,20 @@ export default function UpsellModal() {
     setIsDeclining(true)
 
     const order = getOrderFromSession()
-    closeUpsell()
 
     setTimeout(() => {
       if (order) {
-        navigateToThankYou(order.order_number, order.total)
+        finishUpsell(order.order_number, order.total)
       } else {
+        clearPendingUpsell()
+        closeUpsell()
         router.push('/thank-you')
       }
       setIsDeclining(false)
     }, 100)
   }
 
-  const progressPct = (secondsLeft / COUNTDOWN_SECONDS) * 100
+  const progressPct = (secondsLeft / UPSELL_OFFER_COUNTDOWN_SECONDS) * 100
   const upsellImage = upsellProduct
     ? getProductBySlug(upsellProduct.product_slug)?.image
     : undefined

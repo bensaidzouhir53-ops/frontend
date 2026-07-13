@@ -32,7 +32,7 @@ export default function CheckoutModal() {
     items,
     total,
     clearCart,
-    scheduleUpsell,
+    openUpsell,
   } = useCartStore()
 
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -150,14 +150,13 @@ export default function CheckoutModal() {
 
       if (upsell) {
         storePendingUpsell(upsell)
-        scheduleUpsell(upsell)
+        openUpsell(upsell)
       } else {
         sessionStorage.removeItem('nasama_pending_upsell')
+        router.push(
+          `/thank-you?order=${encodeURIComponent(response.order_number)}&total=${response.total}`,
+        )
       }
-
-      router.push(
-        `/thank-you?order=${encodeURIComponent(response.order_number)}&total=${response.total}`,
-      )
     } catch (err) {
       const message =
         err instanceof Error ? err.message : 'حدث خطأ، يرجى المحاولة مجدداً'
