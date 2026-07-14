@@ -848,3 +848,15 @@ export function trackPurchase(props: TrackingProps): void {
   })
   trackFirstParty('Purchase', props)
 }
+
+/** Fire Purchase once per order (prevents duplicate pixel events on retries/upsell). */
+export function trackPurchaseOnce(
+  props: TrackingProps & { order_id: string },
+): boolean {
+  if (typeof window === 'undefined') return false
+  const key = `nasama_purchase_fired_${props.order_id}`
+  if (sessionStorage.getItem(key)) return false
+  trackPurchase(props)
+  sessionStorage.setItem(key, props.event_id ?? '1')
+  return true
+}

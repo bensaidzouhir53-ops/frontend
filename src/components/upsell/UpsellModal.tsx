@@ -13,7 +13,7 @@ import {
   UPSELL_OFFER_COUNTDOWN_SECONDS,
   clearPendingUpsell,
 } from '@/lib/upsell'
-import { trackPurchase, generateEventId } from '@/lib/tracking'
+import { trackPurchaseOnce } from '@/lib/tracking'
 import { cn } from '@/lib/utils'
 
 export default function UpsellModal() {
@@ -55,6 +55,7 @@ export default function UpsellModal() {
   type StoredOrder = {
     order_id: string
     order_number: string
+    event_id?: string
     subtotal?: number
     upsell_total?: number
     total: number
@@ -92,7 +93,24 @@ export default function UpsellModal() {
     router.push(thankYouPath)
   }
 
+  const fireFinalPurchase = (order: StoredOrder) => {
+    const contentIds = [
+      ...(order.items?.map((item) => item.slug) ?? []),
+      ...(order.upsell_item?.slug ? [order.upsell_item.slug] : []),
+    ]
+    trackPurchaseOnce({
+      value: order.total,
+      content_ids: contentIds,
+      event_id: order.event_id,
+      order_id: order.order_id,
+    })
+  }
+
   const finishUpsell = async (orderNumber: string, orderTotal: number) => {
+    const order = getOrderFromSession()
+    if (order) {
+      fireFinalPurchase({ ...order, total: orderTotal })
+    }
     clearPendingUpsell()
     closeUpsell()
     navigateToThankYou(orderNumber, orderTotal)
@@ -112,21 +130,12 @@ export default function UpsellModal() {
     setIsAccepting(true)
 
     const order = getOrderFromSession()
-    const eventId = generateEventId()
 
     try {
       if (order) {
         await acceptUpsell(order.order_id, {
           product_slug: upsellProduct.product_slug,
           quantity: 1,
-          event_id: eventId,
-        })
-
-        trackPurchase({
-          value: UPSELL_PRICE,
-          content_ids: [upsellProduct.product_slug],
-          event_id: eventId,
-          order_id: order.order_id,
         })
 
         const upsellProductData = getProductBySlug(upsellProduct.product_slug)

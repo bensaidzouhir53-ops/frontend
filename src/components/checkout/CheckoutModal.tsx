@@ -20,7 +20,7 @@ import {
   captureAttribution,
   generateEventId,
   trackInitiateCheckout,
-  trackPurchase,
+  trackPurchaseOnce,
 } from '@/lib/tracking'
 import { cn } from '@/lib/utils'
 
@@ -107,22 +107,24 @@ export default function CheckoutModal() {
         user_agent: typeof navigator !== 'undefined' ? navigator.userAgent : '',
       })
 
-      trackPurchase({
-        value: response.total,
-        content_ids: items.map((i) => i.product.slug),
-        event_id: eventId,
-        order_id: response.order_id,
-      })
-
       clearCart()
       closeCheckout()
       reset()
+
+      const orderItems = items.map((i) => ({
+        product_slug: i.product.slug,
+        quantity: i.qty,
+      }))
+      const upsell =
+        response.upsell ??
+        getUpsellOffer(orderItems)
 
       sessionStorage.setItem(
         'nasama_order',
         JSON.stringify({
           order_id: response.order_id,
           order_number: response.order_number,
+          event_id: eventId,
           subtotal: response.subtotal ?? cartTotal,
           upsell_total: 0,
           total: response.total,
@@ -140,18 +142,16 @@ export default function CheckoutModal() {
         }),
       )
 
-      const orderItems = items.map((i) => ({
-        product_slug: i.product.slug,
-        quantity: i.qty,
-      }))
-      const upsell =
-        response.upsell ??
-        getUpsellOffer(orderItems)
-
       if (upsell) {
         storePendingUpsell(upsell)
         openUpsell(upsell)
       } else {
+        trackPurchaseOnce({
+          value: response.total,
+          content_ids: items.map((i) => i.product.slug),
+          event_id: eventId,
+          order_id: response.order_id,
+        })
         sessionStorage.removeItem('nasama_pending_upsell')
         router.push(
           `/thank-you?order=${encodeURIComponent(response.order_number)}&total=${response.total}`,
