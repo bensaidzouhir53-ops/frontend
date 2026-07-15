@@ -5,7 +5,7 @@ import { getUpsellOffer } from '@/lib/upsell'
 function getItemPrice(productSlug: string, quantity: number): number {
   const offer = getOfferForProductQty(productSlug, quantity)
   if (offer) return offer.price
-  const base = getOffersForProduct(productSlug)[0]?.price ?? 169
+  const base = getOffersForProduct(productSlug)[0]?.price ?? 179
   return quantity * base
 }
 
