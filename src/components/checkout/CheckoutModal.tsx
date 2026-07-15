@@ -64,9 +64,21 @@ export default function CheckoutModal() {
 
     const eventId = generateEventId()
     const attribution = captureAttribution()
+
+    if (!isWhitelistedPhone(data.phone)) {
+      const normalized = normalizeSaudiPhone(data.phone)
+      if (!normalized) {
+        setServerError(
+          'رقم الجوال يجب أن يكون 10 أرقام ويبدأ بـ 05 أو +966 (مثال: 0512345678)',
+        )
+        setIsSubmitting(false)
+        return
+      }
+    }
+
     const normalizedPhone = isWhitelistedPhone(data.phone)
       ? data.phone.trim()
-      : (normalizeSaudiPhone(data.phone) ?? data.phone)
+      : (normalizeSaudiPhone(data.phone) as string)
 
     try {
       trackInitiateCheckout({
@@ -297,6 +309,9 @@ export default function CheckoutModal() {
                   inputMode="numeric"
                   autoComplete="tel"
                   placeholder="05XXXXXXXX"
+                  minLength={10}
+                  maxLength={13}
+                  required
                   className={cn(
                     'w-full rounded-xl border-2 bg-white px-4 py-3 text-sm text-charcoal placeholder-charcoal/30 outline-none transition-colors ltr text-right',
                     errors.phone
@@ -305,6 +320,9 @@ export default function CheckoutModal() {
                   )}
                   {...register('phone')}
                 />
+                <p className="mt-1 text-[11px] text-charcoal/45">
+                  10 أرقام — يبدأ بـ 05 أو +966
+                </p>
                 {errors.phone && (
                   <p className="mt-1.5 flex items-center gap-1 text-xs text-red-500">
                     <AlertCircle className="h-3.5 w-3.5 shrink-0" />
