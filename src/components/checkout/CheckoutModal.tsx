@@ -183,7 +183,7 @@ export default function CheckoutModal() {
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm animate-fade-in" />
         <Dialog.Content
-          className="fixed left-1/2 top-1/2 z-50 w-full max-w-md -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded-3xl bg-ivory shadow-2xl outline-none max-h-[95vh]"
+          className="fixed inset-x-0 bottom-0 z-50 mx-auto w-full max-w-md max-h-[92dvh] overflow-y-auto rounded-t-3xl bg-ivory shadow-2xl outline-none sm:inset-x-auto sm:bottom-auto sm:left-1/2 sm:top-1/2 sm:max-h-[95dvh] sm:-translate-x-1/2 sm:-translate-y-1/2 sm:rounded-3xl"
           dir="rtl"
           aria-describedby="checkout-description"
         >
@@ -280,7 +280,7 @@ export default function CheckoutModal() {
                   autoComplete="name"
                   placeholder="أدخل اسمك"
                   className={cn(
-                    'w-full rounded-xl border-2 bg-white px-4 py-3 text-sm text-charcoal placeholder-charcoal/30 outline-none transition-colors',
+                    'w-full rounded-xl border-2 bg-white px-4 py-3 text-base text-charcoal placeholder-charcoal/30 outline-none transition-colors',
                     errors.name
                       ? 'border-red-400 focus:border-red-400'
                       : 'border-sage/40 focus:border-teal',
@@ -313,7 +313,7 @@ export default function CheckoutModal() {
                   maxLength={13}
                   required
                   className={cn(
-                    'w-full rounded-xl border-2 bg-white px-4 py-3 text-sm text-charcoal placeholder-charcoal/30 outline-none transition-colors ltr text-right',
+                    'w-full rounded-xl border-2 bg-white px-4 py-3 text-base text-charcoal placeholder-charcoal/30 outline-none transition-colors ltr text-right',
                     errors.phone
                       ? 'border-red-400 focus:border-red-400'
                       : 'border-sage/40 focus:border-teal',

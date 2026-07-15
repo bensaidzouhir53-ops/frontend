@@ -105,6 +105,23 @@ img {
   animation: scaleIn 150ms ease-out;
 }
 
+@media (max-width: 639px) {
+  [data-radix-dialog-content] {
+    animation: slideUp 200ms ease-out;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
