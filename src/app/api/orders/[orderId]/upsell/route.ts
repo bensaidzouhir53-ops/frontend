@@ -1,10 +1,9 @@
 import { NextResponse } from 'next/server'
 import { getBackendCandidates } from '@/lib/orders.server'
+import { UPSELL_PRICE } from '@/lib/upsell'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
-
-const UPSELL_PRICE = 99
 
 type RouteContext = { params: Promise<{ orderId: string }> }
 
