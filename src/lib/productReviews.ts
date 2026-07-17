@@ -189,6 +189,12 @@ export const MOLIEN_DROPS_REVIEWS: ProductReview[] = [
     city: 'الرياض',
     image: '/images/reviews/molien/8.png',
   },
+  {
+    name: 'بندر السبيعي',
+    text: 'وصلني الطرد اليوم وفكيته في البيت — علبتين مولين أصلية مغلفة بالبلاستيك زي ما في الموقع بالضبط، ما انكسر ولا انفتح. فتحت وحدة وجربت 3 قطرات تحت اللسان، من أول يوم حسيت حلقي أنظف والبلغم بدأ يلين. طلبت عرض العلبتين وما ندمت، الدفع عند الاستلام ريحني.',
+    city: 'الرياض',
+    image: '/images/reviews/molien/9.png',
+  },
 ]
 
 export const DEFAULT_PRODUCT_REVIEWS: ProductReview[] = [
