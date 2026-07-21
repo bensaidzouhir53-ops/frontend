@@ -162,6 +162,7 @@ export interface ProductPageSections {
   mechanismSteps: MechanismStep[]
   mechanismImage: string
   mechanismImageAlt: string
+  mechanismVideo?: string
   ingredientsMainImage: string
   ingredientsMainImageAlt: string
   howToUseSteps: HowToUseStep[]
@@ -608,6 +609,7 @@ const MOLIEN_DROPS_SECTIONS: ProductPageSections = {
   ],
   mechanismImage: '/images/molien-mechanism.png',
   mechanismImageAlt: 'قطرات مولين BreathDetox — مستخلص عشبي مركّز لتنظيف الرئة وفتح الصدر',
+  mechanismVideo: '/videos/molien-mechanism.mp4',
   statsSection: {
     badge: 'نتائج حقيقية — يوم بعد يوم',
     title: 'ينفع لكل اللي يعانون من مشاكل التنفس',

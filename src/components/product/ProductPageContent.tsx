@@ -383,13 +383,27 @@ export default function ProductPageContent({
 
             <div className="order-1 w-full lg:order-2 lg:w-1/2">
               <div className="relative aspect-[4/5] overflow-hidden rounded-[2rem] border-8 border-white bg-gradient-to-b from-slate-100 to-slate-200 shadow-2xl lg:min-h-[420px]">
-                <img
-                  src={sections.mechanismImage}
-                  alt={sections.mechanismImageAlt}
-                  className="h-full w-full object-cover"
-                  loading="lazy"
-                  decoding="async"
-                />
+                {sections.mechanismVideo ? (
+                  <video
+                    src={`${sections.mechanismVideo}#t=0.001`}
+                    autoPlay
+                    playsInline
+                    muted
+                    loop
+                    preload="metadata"
+                    poster={sections.mechanismImage}
+                    className="h-full w-full object-cover"
+                    aria-label={sections.mechanismImageAlt}
+                  />
+                ) : (
+                  <img
+                    src={sections.mechanismImage}
+                    alt={sections.mechanismImageAlt}
+                    className="h-full w-full object-cover"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                )}
               </div>
             </div>
 
