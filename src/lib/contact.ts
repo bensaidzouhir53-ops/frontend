@@ -2,10 +2,10 @@
 export const BRAND_NAME_AR = 'نَفَس'
 
 /** Local display number for WhatsApp */
-export const WHATSAPP_PHONE_DISPLAY = '+1 (970) 325-8330'
+export const WHATSAPP_PHONE_DISPLAY = '0687129971'
 
 /** International digits for wa.me / tel (no + prefix) */
-export const WHATSAPP_PHONE_WA = '19703258330'
+export const WHATSAPP_PHONE_WA = '212687129971'
 
 export function buildWhatsAppUrl(text?: string): string {
   const base = `https://wa.me/${WHATSAPP_PHONE_WA}`
