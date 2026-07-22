@@ -210,6 +210,15 @@ export const HERBAL_LUNG_SPRAY_OFFERS: Offer[] = [
 export const MOLIEN_DROPS_OFFERS: Offer[] = HERBAL_LUNG_SPRAY_OFFERS.map((offer, index) => ({
   ...offer,
   volumeLabel: ['60 مل', '120 مل', '180 مل'][index],
+  ...(offer.qty === 3
+    ? {
+        price: 349,
+        savings: 188,
+        percentOff: 35,
+        cardSubtitle:
+          'أقل سعر للعبوة (116 ر.س). اللي يكملون الكورس الكامل يودّعون الكتمة والبلغم للأبد.',
+      }
+    : {}),
 }))
 
 /** @deprecated Use getOffersForProduct(slug) */
