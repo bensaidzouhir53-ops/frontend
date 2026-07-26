@@ -1,7 +1,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import type { Metadata } from 'next'
-import { PRODUCTS } from '@/lib/products'
+import { getCatalogProducts } from '@/lib/products'
 import TrustBadges from '@/components/shared/TrustBadges'
 
 export const metadata: Metadata = {
@@ -10,6 +10,8 @@ export const metadata: Metadata = {
 }
 
 export default function ProductsPage() {
+  const catalogProducts = getCatalogProducts()
+
   return (
     <main dir="rtl" className="bg-ivory min-h-screen">
       {/* Page Header */}
@@ -34,7 +36,7 @@ export default function ProductsPage() {
             </div>
             <div className="flex items-center gap-3">
               <div className="bg-white rounded-xl px-4 py-2 border border-sage/30 text-sm text-charcoal/70">
-                <span className="font-semibold text-charcoal">{PRODUCTS.length}</span> منتجات متاحة
+                <span className="font-semibold text-charcoal">{catalogProducts.length}</span> منتجات متاحة
               </div>
             </div>
           </div>
@@ -73,7 +75,7 @@ export default function ProductsPage() {
       <section className="py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {PRODUCTS.map((product, index) => (
+            {catalogProducts.map((product, index) => (
               <Link
                 key={product.slug}
                 href={`/products/${product.slug}`}

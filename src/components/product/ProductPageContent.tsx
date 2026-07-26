@@ -7,7 +7,7 @@ import {
   BellRing, Truck, HeartHandshake, CircleCheckBig, CircleX, ShoppingCart
 } from 'lucide-react'
 import type { Product } from '@/types'
-import { getDefaultOffer, getMaxOfferSavings } from '@/lib/products'
+import { getDefaultOffer, getMaxOfferSavings, isMolienDropsProduct } from '@/lib/products'
 import OfferSelector from '@/components/product/OfferSelector'
 import ProductDayProcessSection from '@/components/product/ProductDayProcessSection'
 import ProductResultsSection from '@/components/product/ProductResultsSection'
@@ -21,7 +21,7 @@ import HowToUseStep from '@/components/product/HowToUseStep'
 import ProductReviewsGrid from '@/components/product/ProductReviewsGrid'
 import TrustBadges from '@/components/shared/TrustBadges'
 import FAQAccordion from '@/components/shared/FAQAccordion'
-import { DEFAULT_PRODUCT_REVIEWS, HERBAL_LUNG_SPRAY_REVIEWS, MOLIEN_DROPS_REVIEWS } from '@/lib/productReviews'
+import { DEFAULT_PRODUCT_REVIEWS, HERBAL_LUNG_SPRAY_REVIEWS, MOLIEN_DROPS_REVIEWS, MOLIEN_DROPS_WOMEN_REVIEWS } from '@/lib/productReviews'
 import { getProductPageSections, hasFullProductPage } from '@/lib/productPageSections'
 
 interface ProductPageContentProps {
@@ -38,7 +38,7 @@ export default function ProductPageContent({
   crossSellProducts,
 }: ProductPageContentProps) {
   const sections = getProductPageSections(product.slug)
-  const isMolien = product.slug === 'molien-drops'
+  const isMolien = isMolienDropsProduct(product.slug)
   const solutionIcons = [
     { icon: ShieldCheck, color: 'text-teal' },
     { icon: Zap, color: 'text-gold' },
@@ -83,12 +83,16 @@ export default function ProductPageContent({
         ? HERBAL_LUNG_SPRAY_REVIEWS
         : sections.reviewsKey === 'molien-drops'
           ? MOLIEN_DROPS_REVIEWS
-          : DEFAULT_PRODUCT_REVIEWS
+          : sections.reviewsKey === 'molien-drops-women'
+            ? MOLIEN_DROPS_WOMEN_REVIEWS
+            : DEFAULT_PRODUCT_REVIEWS
       : []
 
   const imageReviewsAfterTrust =
     sections.imageReviewsSection && sections.reviewsKey === 'molien-drops'
       ? MOLIEN_DROPS_REVIEWS
+      : sections.imageReviewsSection && sections.reviewsKey === 'molien-drops-women'
+        ? MOLIEN_DROPS_WOMEN_REVIEWS
       : sections.imageReviewsSection && sections.reviewsKey === 'herbal-lung-spray'
         ? HERBAL_LUNG_SPRAY_REVIEWS
         : []

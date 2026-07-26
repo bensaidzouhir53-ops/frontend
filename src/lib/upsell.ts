@@ -7,6 +7,7 @@ export const UPSELL_OFFER_COUNTDOWN_SECONDS = 10
 export const UPSELL_CROSS_SELL: Record<string, string> = {
   'herbal-lung-spray': 'molien-drops',
   'molien-drops': 'herbal-lung-spray',
+  'molien-drops-women': 'herbal-lung-spray',
 }
 
 export const UPSELL_OFFER_TEXT =
