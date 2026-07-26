@@ -83,6 +83,8 @@ export function buildMolienDropsWomenSections(
         },
       ],
       gifAlt: 'عواقب إهمال كتمة الصدر عند السيدات — غبار، بخور، ومكيف',
+      gif: '',
+      gifVideo: '/videos/molien-drops-women-pain.mp4',
       overlay: 'لا تستنين لين "تتعودين" على الكحة.. نظّفي رئتكِ اليوم!',
     },
     solutionBadge: 'ليش المولين للسيدات؟ 🌿',
