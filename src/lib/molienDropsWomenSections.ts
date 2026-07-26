@@ -200,12 +200,12 @@ export function buildMolienDropsWomenSections(
       title: 'شوفي الفرق — قبل وبعد قطرات المولين',
       subtitle:
         'حرّكي الخط يمين ويسار. الفرق مو بس بالصورة — بالتنفس، النوم، والراحة اللي تحسينها.',
-      beforeImage: '/images/molien-before.png',
-      afterImage: '/images/molien-after.png',
+      beforeImage: '/images/molien-drops-women-before.png',
+      afterImage: '/images/molien-drops-women-after.png',
       beforeLabel: 'قبل',
       afterLabel: 'بعد',
-      beforeAlt: 'سيدة تعاني من كتمة وبلغم قبل قطرات المولين',
-      afterAlt: 'سيدة تتنفس براحة بعد قطرات المولين',
+      beforeAlt: 'سيدة سعودية تعاني من كحة وكتمة صدر قبل قطرات المولين',
+      afterAlt: 'سيدة سعودية مرتاحة تتنفس بعمق بعد قطرات المولين',
     },
     trustOrigin: {
       badge: 'ثقة ومصدر واضح',
