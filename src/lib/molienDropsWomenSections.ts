@@ -61,6 +61,8 @@ export function buildMolienDropsWomenSections(
       },
     ],
     painImageAlt: 'سيدة سعودية تعاني من كتمة الصدر والبلغم بعد البخور والمكيف',
+    painImage: '/images/molien-drops-women-before.png',
+    painVideo: '/videos/molien-drops-women-pain.mp4',
     painOverlay: 'لا تخلي الكتمة والبلغم يسيطرون على يومكِ ومجالسكِ',
     agitation: {
       ...base.agitation!,
