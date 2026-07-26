@@ -189,7 +189,8 @@ export function buildMolienDropsWomenSections(
     ],
     dayProcess: {
       ...base.dayProcess,
-      imageAlt: 'سيدة سعودية مرتاحة بعد روتين قطرات المولين',
+      image: '/images/molien-drops-women-day-process.png',
+      imageAlt: 'سيدة مرتاحة تتنفس بعمق بعد روتين قطرات المولين — نَفَس',
       overlayTitle: '28 يوم — وصدركِ يرجع ينشرح',
       overlayDesc:
         'روتين بسيط للسيدات اللي يعانين من الغبار، البخور، والمكيف — بدون كيماويات.',
