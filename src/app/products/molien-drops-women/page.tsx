@@ -3,9 +3,9 @@ import { getProductBySlug, getCrossSellProducts } from '@/lib/products'
 import ProductPageContent from '@/components/product/ProductPageContent'
 
 export const metadata: Metadata = {
-  title: 'صدركِ مكتوم وبلغمكِ ما يوقف؟ قطرات المولين للسيدات تنظّف رئتكِ من جوّا | نَفَس',
+  title: 'تكحين بالمجلس؟ قطرات المولين للسيدات تنظّف صدركِ من جوّا | نَفَس',
   description:
-    'مع الغبار والبخور والمكيف — صدركِ مو سليم! قطرات المولين للسيدات من نَفَس لتنظيف الرئة من جوّا وتطرد بلغم السنين. توصيل لجميع مناطق المملكة والدفع عند الاستلام.',
+    'بلغم الصبح، كتمة المكيف، وبخور البيت يضايق صدركِ؟ قطرات المولين للسيدات من نَفَس — تنظيف طبيعي للرئة، مصرّح SFDA، توصيل لكل السعودية والدفع عند الاستلام.',
 }
 
 export default function MolienDropsWomenPage() {
