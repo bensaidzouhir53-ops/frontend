@@ -52,7 +52,12 @@ export default function HomeProductCard({ product, className }: HomeProductCardP
         />
         <div className="absolute inset-0 bg-gradient-to-t from-teal-dark/20 via-transparent to-transparent" />
 
-        <div className="absolute right-4 top-4">
+        <div className="absolute right-4 top-4 flex flex-col items-end gap-2">
+          {product.slug === 'molien-drops-women' && (
+            <span className="inline-flex max-w-[200px] items-center rounded-full bg-apothecary px-3 py-1.5 text-[11px] font-extrabold leading-snug text-white shadow-lg">
+              للسيدات
+            </span>
+          )}
           <span className="inline-flex max-w-[200px] items-center rounded-full bg-gold px-3 py-1.5 text-[11px] font-extrabold leading-snug text-white shadow-lg">
             {defaultOffer.badge}
           </span>

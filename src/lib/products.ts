@@ -318,8 +318,8 @@ const OFFERS_BY_PRODUCT: Record<string, Offer[]> = {
   'molien-drops-women': MOLIEN_DROPS_OFFERS,
 }
 
-/** Landing-page variants (e.g. women-targeted) — hidden from shop catalog grids. */
-const CATALOG_HIDDEN_SLUGS = new Set(['molien-drops-women'])
+/** Products shown on homepage and /products catalog. */
+const CATALOG_HIDDEN_SLUGS = new Set<string>()
 
 export function isMolienDropsProduct(slug: string): boolean {
   return slug === 'molien-drops' || slug === 'molien-drops-women'
