@@ -75,6 +75,8 @@ type SnapEntry = [string, string?, Record<string, unknown>?]
 const _metaQueue: FbqEntry[] = []
 const _ttqQueue: TtqEntry[] = []
 const _snapQueue: SnapEntry[] = []
+/** When true, Meta Purchase is sent via backend CAPI — do not duplicate in browser. */
+let _metaPurchaseViaCapi = false
 
 let _metaReady = false
 let _metaPageViewTracked = false
@@ -103,7 +105,7 @@ export function registerMetaPixelIds(ids: string[]): void {
 
 function fireFbqTrack(event: string, params?: Record<string, unknown>): void {
   if (typeof window === 'undefined' || !window.fbq) return
-  const ids = getMetaPixelRegistry()
+  const ids = [...new Set(getMetaPixelRegistry())]
   if (ids.length === 0) {
     window.fbq('track', event, params)
     return
@@ -442,6 +444,7 @@ interface PixelConfig {
   meta_pixel_ids: string[]
   tiktok_pixel_id: string
   snap_pixel_id: string
+  capi_enabled: boolean
 }
 
 function collectMetaIdsFromEnv(): string[] {
@@ -463,6 +466,7 @@ function configFromEnv(): PixelConfig | null {
     meta_pixel_ids: metaIds,
     tiktok_pixel_id: tiktok,
     snap_pixel_id: snap,
+    capi_enabled: false,
   }
 }
 
@@ -472,6 +476,7 @@ function parsePixelConfigResponse(data: {
   meta_pixel_ids?: string[] | null
   tiktok_pixel_id?: string | null
   snap_pixel_id?: string | null
+  capi_enabled?: boolean
 }): PixelConfig | null {
   if (!data.enabled) return null
 
@@ -495,6 +500,7 @@ function parsePixelConfigResponse(data: {
     meta_pixel_ids: metaIds,
     tiktok_pixel_id: tiktok,
     snap_pixel_id: snap,
+    capi_enabled: Boolean(data.capi_enabled),
   }
 }
 
@@ -542,6 +548,7 @@ function applyPixelConfig(config: PixelConfig): void {
   const snap = config.snap_pixel_id?.trim()
   if (tiktok) loadTikTokPixel(tiktok)
   if (snap) loadSnapPixel(snap)
+  _metaPurchaseViaCapi = config.capi_enabled
   syncMetaReadyState()
 }
 
@@ -551,11 +558,14 @@ export interface ServerPixelConfigInput {
   meta_pixel_ids?: string[]
   tiktok_pixel_id: string | null
   snap_pixel_id: string | null
+  capi_enabled?: boolean
 }
 
 /** Called from layout — pixels may already be injected via PixelScripts. */
 export function initPixelsFromServerConfig(config: ServerPixelConfigInput): void {
   if (typeof window === 'undefined' || !config.enabled) return
+
+  _metaPurchaseViaCapi = Boolean(config.capi_enabled)
 
   const metaIds =
     config.meta_pixel_ids && config.meta_pixel_ids.length > 0
@@ -574,6 +584,7 @@ export function initPixelsFromServerConfig(config: ServerPixelConfigInput): void
     meta_pixel_ids: metaIds,
     tiktok_pixel_id: tiktok ?? '',
     snap_pixel_id: snap ?? '',
+    capi_enabled: Boolean(config.capi_enabled),
   })
 }
 
@@ -826,14 +837,17 @@ export function trackPurchase(props: TrackingProps): void {
     order_id,
   } = props
 
-  safeFbq('track', 'Purchase', {
-    value,
-    currency,
-    content_ids,
-    content_type,
-    eventID: event_id,
-    order_id,
-  })
+  // Meta Purchase: server CAPI only when enabled (avoids double-counting with browser pixel).
+  if (!_metaPurchaseViaCapi) {
+    safeFbq('track', 'Purchase', {
+      value,
+      currency,
+      content_ids,
+      content_type,
+      eventID: event_id,
+      order_id,
+    })
+  }
   safeTtq('PlaceAnOrder', {
     value,
     currency,
@@ -855,8 +869,13 @@ export function trackPurchaseOnce(
 ): boolean {
   if (typeof window === 'undefined') return false
   const key = `nasama_purchase_fired_${props.order_id}`
-  if (sessionStorage.getItem(key)) return false
+  try {
+    if (sessionStorage.getItem(key) || localStorage.getItem(key)) return false
+    sessionStorage.setItem(key, props.event_id ?? '1')
+    localStorage.setItem(key, props.event_id ?? '1')
+  } catch {
+    return false
+  }
   trackPurchase(props)
-  sessionStorage.setItem(key, props.event_id ?? '1')
   return true
 }

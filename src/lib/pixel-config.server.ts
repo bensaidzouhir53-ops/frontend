@@ -9,6 +9,8 @@ export interface ServerPixelConfig {
   meta_pixel_ids: string[]
   tiktok_pixel_id: string | null
   snap_pixel_id: string | null
+  /** Meta Purchase handled by backend CAPI — skip browser fbq Purchase */
+  capi_enabled: boolean
 }
 
 const EMPTY: ServerPixelConfig = {
@@ -17,6 +19,7 @@ const EMPTY: ServerPixelConfig = {
   meta_pixel_ids: [],
   tiktok_pixel_id: null,
   snap_pixel_id: null,
+  capi_enabled: false,
 }
 
 function isValidPixelId(value: string | null | undefined): value is string {
@@ -55,6 +58,7 @@ export function normalizePixelConfig(raw: {
   meta_pixel_ids?: string[] | null
   tiktok_pixel_id?: string | null
   snap_pixel_id?: string | null
+  capi_enabled?: boolean
 }): ServerPixelConfig {
   const metaIds = collectMetaPixelIds(raw)
   const tiktok = resolveTikTokPixelId(raw.tiktok_pixel_id)
@@ -67,10 +71,13 @@ export function normalizePixelConfig(raw: {
     meta_pixel_ids: metaIds,
     tiktok_pixel_id: tiktok,
     snap_pixel_id: snap,
+    capi_enabled: Boolean(raw.capi_enabled),
   }
 }
 
-type PixelConfigInput = Parameters<typeof normalizePixelConfig>[0]
+type PixelConfigInput = Parameters<typeof normalizePixelConfig>[0] & {
+  capi_enabled?: boolean
+}
 
 /** Legacy TikTok pixel IDs — ignored when unset in env. */
 const STALE_TIKTOK_PIXEL_IDS = new Set(['D6FOFO3C77U2V3Q5MST0'])
@@ -144,6 +151,10 @@ export function mergePixelConfigs(...sources: PixelConfigInput[]): ServerPixelCo
     meta_pixel_ids: metaIds,
     tiktok_pixel_id: tiktok,
     snap_pixel_id: snap,
+    capi_enabled: Boolean(
+      backendSource?.capi_enabled ??
+        sources.some((source) => source.capi_enabled),
+    ),
   }
 }
 

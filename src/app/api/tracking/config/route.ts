@@ -11,6 +11,7 @@ export interface PublicTrackingConfig {
   meta_pixel_ids?: string[] | null
   tiktok_pixel_id?: string | null
   snap_pixel_id?: string | null
+  capi_enabled?: boolean
 }
 
 export async function GET() {
