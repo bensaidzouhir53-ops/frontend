@@ -52,6 +52,29 @@ export default function UpsellModal() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isUpsellOpen])
 
+  // If the customer closes the tab during upsell, still notify backend (COD sync).
+  useEffect(() => {
+    if (!isUpsellOpen) return
+
+    const beaconDecline = () => {
+      try {
+        const raw = sessionStorage.getItem('nasama_order')
+        if (!raw) return
+        const order = JSON.parse(raw) as { order_id?: string; upsell_item?: unknown }
+        if (!order.order_id || order.upsell_item) return
+        navigator.sendBeacon?.(
+          `/api/orders/${order.order_id}/upsell/decline`,
+          new Blob([], { type: 'application/json' }),
+        )
+      } catch {
+        // Best-effort only — periodic backend sync catches stragglers.
+      }
+    }
+
+    window.addEventListener('pagehide', beaconDecline)
+    return () => window.removeEventListener('pagehide', beaconDecline)
+  }, [isUpsellOpen])
+
   type StoredOrder = {
     order_id: string
     order_number: string
