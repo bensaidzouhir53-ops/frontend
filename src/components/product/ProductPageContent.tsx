@@ -21,6 +21,7 @@ import HowToUseStep from '@/components/product/HowToUseStep'
 import ProductReviewsGrid from '@/components/product/ProductReviewsGrid'
 import TrustBadges from '@/components/shared/TrustBadges'
 import FAQAccordion from '@/components/shared/FAQAccordion'
+import ProductViewTracker from '@/components/shared/ProductViewTracker'
 import { DEFAULT_PRODUCT_REVIEWS, HERBAL_LUNG_SPRAY_REVIEWS, MOLIEN_DROPS_REVIEWS, MOLIEN_DROPS_WOMEN_REVIEWS } from '@/lib/productReviews'
 import { getProductPageSections, hasFullProductPage } from '@/lib/productPageSections'
 
@@ -99,6 +100,10 @@ export default function ProductPageContent({
 
   return (
     <main dir="rtl" className="bg-ivory min-h-screen pb-24 lg:pb-0">
+      <ProductViewTracker
+        slug={product.slug}
+        value={getDefaultOffer(product.slug).price}
+      />
       {/* ── Breadcrumb ── */}
       <div className="bg-white border-b border-sage/20 py-3 sticky top-[60px] lg:top-[72px] z-40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

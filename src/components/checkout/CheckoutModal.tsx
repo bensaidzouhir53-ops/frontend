@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import * as Dialog from '@radix-ui/react-dialog'
@@ -19,7 +19,7 @@ import { getUpsellOffer, storePendingUpsell } from '@/lib/upsell'
 import {
   captureAttribution,
   generateEventId,
-  trackInitiateCheckout,
+  trackInitiateCheckoutOnce,
   trackPurchaseOnce,
 } from '@/lib/tracking'
 import { cn } from '@/lib/utils'
@@ -39,6 +39,15 @@ export default function CheckoutModal() {
   const [serverError, setServerError] = useState<string | null>(null)
 
   const cartTotal = total()
+
+  useEffect(() => {
+    if (!isCheckoutOpen || items.length === 0) return
+    trackInitiateCheckoutOnce({
+      value: cartTotal,
+      content_ids: items.map((i) => i.product.slug),
+      event_id: generateEventId(),
+    })
+  }, [isCheckoutOpen, items, cartTotal])
 
   const {
     register,
@@ -81,12 +90,6 @@ export default function CheckoutModal() {
       : (normalizeSaudiPhone(data.phone) as string)
 
     try {
-      trackInitiateCheckout({
-        value: cartTotal,
-        content_ids: items.map((i) => i.product.slug),
-        event_id: eventId,
-      })
-
       const response = await createOrder({
         customer_name: data.name,
         phone: normalizedPhone,

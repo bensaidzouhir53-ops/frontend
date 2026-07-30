@@ -30,6 +30,7 @@ import {
   buildWhatsAppUrl,
 } from '@/lib/contact'
 import { cn } from '@/lib/utils'
+import { trackPurchaseOnce } from '@/lib/tracking'
 
 type StoredOrderItem = {
   slug: string
@@ -49,6 +50,7 @@ type StoredUpsellItem = {
 type StoredOrder = {
   order_id: string
   order_number: string
+  event_id?: string
   subtotal?: number
   upsell_total?: number
   total: number
@@ -122,6 +124,27 @@ export default function ThankYouView({
       setOrder(null)
     }
   }, [])
+
+  useEffect(() => {
+    try {
+      const raw = sessionStorage.getItem('nasama_order')
+      if (!raw) return
+      const parsed = JSON.parse(raw) as StoredOrder
+      if (!parsed.order_id) return
+      const contentIds = [
+        ...(parsed.items?.map((item) => item.slug) ?? []),
+        ...(parsed.upsell_item?.slug ? [parsed.upsell_item.slug] : []),
+      ]
+      trackPurchaseOnce({
+        value: parsed.total ?? fallbackTotal ?? 0,
+        content_ids: contentIds,
+        event_id: parsed.event_id,
+        order_id: parsed.order_id,
+      })
+    } catch {
+      // Purchase may already have fired from checkout/upsell flow.
+    }
+  }, [fallbackTotal])
 
   useEffect(() => {
     const id = setInterval(() => setTick((value) => value + 1), 30_000)

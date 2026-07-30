@@ -75,9 +75,6 @@ type SnapEntry = [string, string?, Record<string, unknown>?]
 const _metaQueue: FbqEntry[] = []
 const _ttqQueue: TtqEntry[] = []
 const _snapQueue: SnapEntry[] = []
-/** When true, Meta Purchase is sent via backend CAPI — do not duplicate in browser. */
-let _metaPurchaseViaCapi = false
-
 let _metaReady = false
 let _metaPageViewTracked = false
 const _metaInitializedIds = new Set<string>()
@@ -106,7 +103,8 @@ export function registerMetaPixelIds(ids: string[]): void {
 function fireFbqTrack(event: string, params?: Record<string, unknown>): void {
   if (typeof window === 'undefined' || !window.fbq) return
   const ids = [...new Set(getMetaPixelRegistry())]
-  if (ids.length === 0) {
+  // Single pixel: `track` is most reliable in Ads Manager / Events Manager.
+  if (ids.length <= 1) {
     window.fbq('track', event, params)
     return
   }
@@ -548,7 +546,6 @@ function applyPixelConfig(config: PixelConfig): void {
   const snap = config.snap_pixel_id?.trim()
   if (tiktok) loadTikTokPixel(tiktok)
   if (snap) loadSnapPixel(snap)
-  _metaPurchaseViaCapi = config.capi_enabled
   syncMetaReadyState()
 }
 
@@ -564,8 +561,6 @@ export interface ServerPixelConfigInput {
 /** Called from layout — pixels may already be injected via PixelScripts. */
 export function initPixelsFromServerConfig(config: ServerPixelConfigInput): void {
   if (typeof window === 'undefined' || !config.enabled) return
-
-  _metaPurchaseViaCapi = Boolean(config.capi_enabled)
 
   const metaIds =
     config.meta_pixel_ids && config.meta_pixel_ids.length > 0
@@ -615,17 +610,45 @@ export async function initPixels(): Promise<void> {
 // Safe track helpers — queue events if pixel not yet loaded
 // ---------------------------------------------------------------------------
 
+function metaEventParams(props: TrackingProps): Record<string, unknown> {
+  const contentIds = props.content_ids ?? []
+  return {
+    value: props.value,
+    currency: props.currency ?? 'SAR',
+    content_ids: contentIds,
+    content_type: props.content_type ?? 'product',
+    contents: contentIds.map((id) => ({ id, quantity: 1 })),
+    eventID: props.event_id,
+    order_id: props.order_id,
+  }
+}
+
 function safeFbq(action: string, event: string, params?: Record<string, unknown>): void {
   syncMetaReadyState()
-  if (typeof window !== 'undefined' && window.fbq) {
+  const dispatch = () => {
+    if (typeof window === 'undefined' || !window.fbq) return false
     if (action === 'track') {
       fireFbqTrack(event, params)
     } else {
       window.fbq(action, event, params)
     }
-    return
+    return true
   }
+
+  if (dispatch()) return
+
   _metaQueue.push([action, event, params])
+  // Retry after pixel script loads (head bootstrap + fbevents.js).
+  if (typeof window !== 'undefined') {
+    let attempts = 0
+    const retry = window.setInterval(() => {
+      attempts += 1
+      syncMetaReadyState()
+      if (dispatch() || attempts >= 50) {
+        window.clearInterval(retry)
+      }
+    }, 200)
+  }
 }
 
 /** Sync with PixelScripts when it inits ttq before tracking.ts sets _ttqReady. */
@@ -762,21 +785,7 @@ export function trackPageView(): void {
 }
 
 export function trackViewContent(props: TrackingProps): void {
-  const {
-    value,
-    currency = 'SAR',
-    content_ids = [],
-    content_type = 'product',
-    event_id,
-  } = props
-
-  safeFbq('track', 'ViewContent', {
-    value,
-    currency,
-    content_ids,
-    content_type,
-    eventID: event_id,
-  })
+  safeFbq('track', 'ViewContent', metaEventParams(props))
   safeTtq('ViewContent', {
     value,
     currency,
@@ -793,16 +802,9 @@ export function trackAddToCart(props: TrackingProps): void {
     currency = 'SAR',
     content_ids = [],
     content_type = 'product',
-    event_id,
   } = props
 
-  safeFbq('track', 'AddToCart', {
-    value,
-    currency,
-    content_ids,
-    content_type,
-    eventID: event_id,
-  })
+  safeFbq('track', 'AddToCart', metaEventParams(props))
   safeTtq('AddToCart', {
     value,
     currency,
@@ -813,15 +815,28 @@ export function trackAddToCart(props: TrackingProps): void {
   trackFirstParty('AddToCart', props)
 }
 
-export function trackInitiateCheckout(props: TrackingProps): void {
-  const { value, currency = 'SAR', content_ids = [], event_id } = props
+/** Fire InitiateCheckout once per checkout session (modal open). */
+export function trackInitiateCheckoutOnce(
+  props: TrackingProps & { session_key?: string },
+): boolean {
+  if (typeof window === 'undefined') return false
+  const key =
+    props.session_key ??
+    `nasama_checkout_${(props.content_ids ?? []).join('-')}_${props.value ?? 0}`
+  try {
+    if (sessionStorage.getItem(key)) return false
+    sessionStorage.setItem(key, props.event_id ?? '1')
+  } catch {
+    return false
+  }
+  trackInitiateCheckout(props)
+  return true
+}
 
-  safeFbq('track', 'InitiateCheckout', {
-    value,
-    currency,
-    content_ids,
-    eventID: event_id,
-  })
+export function trackInitiateCheckout(props: TrackingProps): void {
+  const { value, currency = 'SAR', content_ids = [] } = props
+
+  safeFbq('track', 'InitiateCheckout', metaEventParams(props))
   safeTtq('InitiateCheckout', { value, currency, content_id: content_ids[0] })
   safeSnaptr('track', 'START_CHECKOUT', { price: value, currency })
   trackFirstParty('InitiateCheckout', props)
@@ -833,21 +848,11 @@ export function trackPurchase(props: TrackingProps): void {
     currency = 'SAR',
     content_ids = [],
     content_type = 'product',
-    event_id,
     order_id,
   } = props
 
-  // Meta Purchase: server CAPI only when enabled (avoids double-counting with browser pixel).
-  if (!_metaPurchaseViaCapi) {
-    safeFbq('track', 'Purchase', {
-      value,
-      currency,
-      content_ids,
-      content_type,
-      eventID: event_id,
-      order_id,
-    })
-  }
+  // Always fire browser Purchase. Backend CAPI uses the same event_id for deduplication.
+  safeFbq('track', 'Purchase', metaEventParams(props))
   safeTtq('PlaceAnOrder', {
     value,
     currency,
