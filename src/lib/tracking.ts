@@ -785,6 +785,13 @@ export function trackPageView(): void {
 }
 
 export function trackViewContent(props: TrackingProps): void {
+  const {
+    value,
+    currency = 'SAR',
+    content_ids = [],
+    content_type = 'product',
+  } = props
+
   safeFbq('track', 'ViewContent', metaEventParams(props))
   safeTtq('ViewContent', {
     value,
