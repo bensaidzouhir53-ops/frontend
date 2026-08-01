@@ -241,8 +241,7 @@ export const REGULAR_UNIT_PRICE = 179
 /** @deprecated Use REGULAR_UNIT_PRICE */
 export const BOGO_UNIT_PRICE = REGULAR_UNIT_PRICE
 
-/** @deprecated Use REGULAR_UNIT_PRICE */
-export const MOLIEN_REGULAR_UNIT_PRICE = REGULAR_UNIT_PRICE
+export const MOLIEN_REGULAR_UNIT_PRICE = 189
 
 export const HERBAL_LUNG_SPRAY_OFFERS: Offer[] = [
   {
@@ -303,13 +302,19 @@ export const HERBAL_LUNG_SPRAY_OFFERS: Offer[] = [
 export const MOLIEN_DROPS_OFFERS: Offer[] = HERBAL_LUNG_SPRAY_OFFERS.map((offer, index) => ({
   ...offer,
   volumeLabel: ['60 مل', '120 مل', '180 مل'][index],
+  price: [189, 265, 365][index],
+  ...(offer.qty === 2
+    ? {
+        savings: 113,
+        percentOff: 30,
+      }
+    : {}),
   ...(offer.qty === 3
     ? {
-        price: 349,
-        savings: 188,
-        percentOff: 35,
+        savings: 202,
+        percentOff: 36,
         cardSubtitle:
-          'أقل سعر للعبوة (116 ر.س). اللي يكملون الكورس الكامل يودّعون الكتمة والبلغم للأبد.',
+          'أقل سعر للعبوة (122 ر.س). اللي يكملون الكورس الكامل يودّعون الكتمة والبلغم للأبد.',
       }
     : {}),
 }))
@@ -397,10 +402,11 @@ export function getOfferTotalUnits(offer: Offer): number {
 }
 
 export function getOfferOriginalPrice(slug: string, offer: Offer): number {
+  const unitPrice = isMolienDropsProduct(slug) ? MOLIEN_REGULAR_UNIT_PRICE : REGULAR_UNIT_PRICE
   if (offer.totalUnits) {
-    return REGULAR_UNIT_PRICE * getOfferTotalUnits(offer)
+    return unitPrice * getOfferTotalUnits(offer)
   }
-  return REGULAR_UNIT_PRICE * offer.qty
+  return unitPrice * offer.qty
 }
 
 export function getMaxOfferSavings(slug: string): number {
