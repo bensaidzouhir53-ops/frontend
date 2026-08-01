@@ -15,16 +15,72 @@ interface OfferSelectorProps {
 
 type RibbonVariant = NonNullable<Offer['ribbonVariant']>
 
-function formatSar(amount: number) {
-  return `${amount} ر.س`
+type OfferTierStyle = {
+  price: string
+  priceMuted: string
+  priceBg: string
+  priceBgSelected: string
+  currency: string
+  border: string
+  borderSelected: string
+  selectedBg: string
+  savings: string
+  radioSelected: string
 }
 
-function OfferRadio({ selected }: { selected: boolean }) {
+const OFFER_TIER_STYLES: Record<number, OfferTierStyle> = {
+  1: {
+    price: 'text-teal-dark',
+    priceMuted: 'text-teal/80',
+    priceBg: 'bg-teal/8',
+    priceBgSelected: 'bg-teal/12',
+    currency: 'text-teal/75',
+    border: 'border-teal/20',
+    borderSelected: 'border-teal',
+    selectedBg: 'bg-teal/[0.06]',
+    savings: 'border-teal/20 bg-teal/10 text-teal-dark',
+    radioSelected: 'border-teal bg-teal',
+  },
+  2: {
+    price: 'text-[#A66B1F]',
+    priceMuted: 'text-offer-amber/80',
+    priceBg: 'bg-offer-amber-light',
+    priceBgSelected: 'bg-[#F5E8D0]',
+    currency: 'text-offer-amber',
+    border: 'border-offer-amber-border',
+    borderSelected: 'border-offer-amber',
+    selectedBg: 'bg-offer-amber-light/70',
+    savings: 'border-offer-amber-border bg-offer-amber-light text-offer-amber',
+    radioSelected: 'border-offer-amber bg-offer-amber',
+  },
+  3: {
+    price: 'text-apothecary-dark',
+    priceMuted: 'text-apothecary/80',
+    priceBg: 'bg-pine-light',
+    priceBgSelected: 'bg-[#DDF0EA]',
+    currency: 'text-apothecary',
+    border: 'border-teal/25',
+    borderSelected: 'border-apothecary',
+    selectedBg: 'bg-pine-light/90',
+    savings: 'border-gold/35 bg-gold/15 text-gold-dark',
+    radioSelected: 'border-apothecary bg-apothecary',
+  },
+}
+
+function getOfferTierStyle(qty: number): OfferTierStyle {
+  return OFFER_TIER_STYLES[qty] ?? OFFER_TIER_STYLES[1]
+}
+
+function formatOfferPrice(amount: number) {
+  return amount.toLocaleString('en-US')
+}
+
+function OfferRadio({ selected, tier }: { selected: boolean; tier: OfferTierStyle }) {
   return (
     <div
       className={cn(
         'mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 transition-colors sm:h-[22px] sm:w-[22px]',
-        selected ? 'border-teal bg-teal' : 'border-charcoal/20 bg-white',
+        selected ? tier.radioSelected : 'border-charcoal/20 bg-white',
       )}
       aria-hidden="true"
     >
@@ -130,6 +186,7 @@ function OfferCard({
   const badges = getCardBadges(offer)
   const hasRibbon = Boolean(offer.ribbonBadge || offer.stageRibbonBadge)
   const title = offer.cardTitle ?? offer.qtyLabel ?? `${offer.qty} قطع`
+  const tier = getOfferTierStyle(offer.qty)
 
   return (
     <button
@@ -140,8 +197,8 @@ function OfferCard({
         'relative w-full rounded-xl px-3 text-right transition-all duration-150 sm:px-4',
         hasRibbon ? 'pt-4 pb-3 sm:py-3.5' : 'py-3 sm:py-3.5',
         selected
-          ? 'border-2 border-teal bg-pine-light/50 shadow-[0_2px_12px_rgba(15,118,110,0.08)]'
-          : 'border border-border/70 bg-white hover:border-teal/25',
+          ? cn('border-2 shadow-[0_4px_16px_rgba(15,118,110,0.1)]', tier.borderSelected, tier.selectedBg)
+          : cn('border bg-white hover:border-teal/25', tier.border),
       )}
     >
       {hasRibbon && (
@@ -162,29 +219,10 @@ function OfferCard({
       )}
 
       <div className="flex items-start gap-2.5 sm:gap-3">
-        <OfferRadio selected={selected} />
+        <OfferRadio selected={selected} tier={tier} />
 
         <div className="min-w-0 flex-1">
-          <div className="flex items-center gap-2">
-            <p className="min-w-0 flex-1 text-[13px] font-bold leading-tight text-charcoal sm:text-[15px]">
-              {title}
-            </p>
-            <div className="flex shrink-0 items-baseline gap-1.5">
-              {hasSavings && (
-                <span className="text-[10px] font-medium text-charcoal/35 line-through tabular-nums sm:text-xs">
-                  {formatSar(originalPrice)}
-                </span>
-              )}
-              <span
-                className={cn(
-                  'text-base font-bold tabular-nums leading-none sm:text-lg',
-                  selected ? 'text-teal' : 'text-charcoal',
-                )}
-              >
-                {formatSar(offer.price)}
-              </span>
-            </div>
-          </div>
+          <p className="text-[13px] font-bold leading-tight text-charcoal sm:text-[15px]">{title}</p>
 
           {badges.length > 0 && (
             <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
@@ -208,16 +246,45 @@ function OfferCard({
             </p>
           )}
 
-          <div className="mt-1.5 flex items-center justify-between gap-2">
-            <p className="text-[10px] font-medium tabular-nums text-charcoal/45 sm:text-[11px]">
-              {formatSar(perUnit)} / للعبوة
+          <div className="mt-1.5 flex flex-wrap items-center justify-between gap-2">
+            <p className={cn('text-[10px] font-semibold tabular-nums sm:text-[11px]', tier.currency)}>
+              {formatOfferPrice(perUnit)} ريال سعودي / للعبوة
             </p>
             {hasSavings && (
-              <span className="inline-flex shrink-0 items-center rounded-md border border-offer-amber-border bg-offer-amber-light px-2 py-0.5 text-[10px] font-bold text-offer-amber sm:text-[11px]">
-                وفر {offer.savings} ر.س
+              <span
+                className={cn(
+                  'inline-flex shrink-0 items-center rounded-md border px-2 py-0.5 text-[10px] font-bold sm:text-[11px]',
+                  tier.savings,
+                )}
+              >
+                وفر {formatOfferPrice(offer.savings ?? 0)} ريال سعودي
               </span>
             )}
           </div>
+        </div>
+
+        <div
+          className={cn(
+            'flex shrink-0 flex-col items-center justify-center rounded-xl px-2.5 py-2 text-center sm:min-w-[92px] sm:px-3',
+            selected ? tier.priceBgSelected : tier.priceBg,
+          )}
+        >
+          {hasSavings && (
+            <span className="text-[10px] font-medium text-charcoal/35 line-through tabular-nums sm:text-[11px]">
+              {formatOfferPrice(originalPrice)}
+            </span>
+          )}
+          <span
+            className={cn(
+              'text-xl font-extrabold tabular-nums leading-none sm:text-2xl',
+              selected ? tier.price : tier.priceMuted,
+            )}
+          >
+            {formatOfferPrice(offer.price)}
+          </span>
+          <span className={cn('mt-1 text-[9px] font-bold leading-tight sm:text-[10px]', tier.currency)}>
+            ريال سعودي
+          </span>
         </div>
       </div>
     </button>
@@ -239,7 +306,7 @@ function FreeShippingBanner() {
             شحن مجاني — 2-4 أيام داخل السعودية
           </p>
           <p className="mt-0.5 text-[11px] font-medium leading-relaxed text-charcoal/55 sm:text-xs">
-            العبوة الأولى تعطيك النتيجة. العبوتين والثلاث تثبّتها — وفّر حتى 208 ر.س
+            العبوة الأولى تعطيك النتيجة. العبوتين والثلاث تثبّتها — وفّر حتى 208 ريال سعودي
           </p>
         </div>
       </div>

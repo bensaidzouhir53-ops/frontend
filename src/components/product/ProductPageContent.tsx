@@ -183,7 +183,7 @@ export default function ProductPageContent({
                 </span>
                 {getMaxOfferSavings(product.slug) > 0 && (
                   <span className="rounded-full bg-teal/10 px-2.5 py-0.5 text-xs font-extrabold text-teal-dark">
-                    💰 وفّر حتى {getMaxOfferSavings(product.slug)} ر.س
+                    💰 وفّر حتى {getMaxOfferSavings(product.slug)} ريال سعودي
                   </span>
                 )}
               </div>
