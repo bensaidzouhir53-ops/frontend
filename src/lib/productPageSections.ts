@@ -634,6 +634,7 @@ const MOLIEN_DROPS_SECTIONS: ProductPageSections = {
     ],
     image: '/images/molien-breathe-stats.png',
     imageAlt: 'رجل يتنفس براحة مع رئتين سليمتين',
+    video: '/videos/molien-results-day-by-day.mp4',
     imageCaption: '«أخيراً صرت أصحى بدون بلغم ناشب — قطرات المولين غيّرت تنفسي»',
     footnote: '* بناءً على تقييمات عملاء نَفَس — النتائج تختلف حسب الالتزام بالروتين اليومي.',
   },
