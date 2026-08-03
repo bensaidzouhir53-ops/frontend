@@ -1,6 +1,5 @@
 import { randomUUID } from 'crypto'
 import { getOfferForProductQty, getOffersForProduct } from '@/lib/products'
-import { getUpsellOffer } from '@/lib/upsell'
 
 function getItemPrice(productSlug: string, quantity: number): number {
   const offer = getOfferForProductQty(productSlug, quantity)
@@ -76,7 +75,6 @@ export function parseBackendError(body: unknown): string {
 
 export function createDevFallbackOrder(payload: CreateOrderPayload): CreateOrderResult {
   const total = calculateOrderTotal(payload.items)
-  const upsell = getUpsellOffer(payload.items)
 
   return {
     order_id: randomUUID(),
@@ -84,7 +82,6 @@ export function createDevFallbackOrder(payload: CreateOrderPayload): CreateOrder
     subtotal: total,
     total,
     currency: 'SAR',
-    ...(upsell ? { upsell } : {}),
   }
 }
 

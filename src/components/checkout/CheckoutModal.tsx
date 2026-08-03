@@ -15,7 +15,6 @@ import {
   type CheckoutFormData,
 } from '@/lib/validation'
 import { createOrder } from '@/lib/api'
-import { getUpsellOffer, storePendingUpsell } from '@/lib/upsell'
 import {
   captureAttribution,
   generateEventId,
@@ -32,7 +31,6 @@ export default function CheckoutModal() {
     items,
     total,
     clearCart,
-    openUpsell,
   } = useCartStore()
 
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -130,9 +128,6 @@ export default function CheckoutModal() {
         product_slug: i.product.slug,
         quantity: i.qty,
       }))
-      const upsell =
-        response.upsell ??
-        getUpsellOffer(orderItems)
 
       sessionStorage.setItem(
         'nasama_order',
@@ -157,21 +152,16 @@ export default function CheckoutModal() {
         }),
       )
 
-      if (upsell) {
-        storePendingUpsell(upsell)
-        openUpsell(upsell)
-      } else {
-        trackPurchaseOnce({
-          value: response.total,
-          content_ids: items.map((i) => i.product.slug),
-          event_id: eventId,
-          order_id: response.order_id,
-        })
-        sessionStorage.removeItem('nasama_pending_upsell')
-        router.push(
-          `/thank-you?order=${encodeURIComponent(response.order_number)}&total=${response.total}`,
-        )
-      }
+      trackPurchaseOnce({
+        value: response.total,
+        content_ids: orderItems.map((i) => i.product_slug),
+        event_id: eventId,
+        order_id: response.order_id,
+      })
+      sessionStorage.removeItem('nasama_pending_upsell')
+      router.push(
+        `/thank-you?order=${encodeURIComponent(response.order_number)}&total=${response.total}`,
+      )
     } catch (err) {
       const message =
         err instanceof Error ? err.message : 'حدث خطأ، يرجى المحاولة مجدداً'
