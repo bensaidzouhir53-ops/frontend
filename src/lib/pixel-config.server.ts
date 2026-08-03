@@ -79,15 +79,10 @@ type PixelConfigInput = Parameters<typeof normalizePixelConfig>[0] & {
   capi_enabled?: boolean
 }
 
-/** Legacy TikTok pixel IDs — ignored when unset in env. */
-const STALE_TIKTOK_PIXEL_IDS = new Set(['D6FOFO3C77U2V3Q5MST0'])
-
 function resolveTikTokPixelId(...candidates: Array<string | null | undefined>): string | null {
   for (const raw of candidates) {
     if (!isValidPixelId(raw)) continue
-    const id = raw.trim()
-    if (STALE_TIKTOK_PIXEL_IDS.has(id)) continue
-    return id
+    return raw.trim()
   }
   return null
 }
