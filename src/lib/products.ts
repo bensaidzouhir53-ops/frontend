@@ -301,7 +301,7 @@ export const HERBAL_LUNG_SPRAY_OFFERS: Offer[] = [
 
 export const MOLIEN_DROPS_OFFERS: Offer[] = HERBAL_LUNG_SPRAY_OFFERS.map((offer, index) => ({
   ...offer,
-  volumeLabel: ['60 مل', '120 مل', '180 مل'][index],
+  volumeLabel: ['(60) مل', '(120) مل', '(180) مل'][index],
   price: [189, 265, 365][index],
   ...(offer.qty === 2
     ? {

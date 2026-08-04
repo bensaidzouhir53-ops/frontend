@@ -26,6 +26,8 @@ type OfferTierStyle = {
   selectedBg: string
   savings: string
   radioSelected: string
+  volumeBadge: string
+  volumeBadgeSelected: string
 }
 
 const OFFER_TIER_STYLES: Record<number, OfferTierStyle> = {
@@ -40,6 +42,10 @@ const OFFER_TIER_STYLES: Record<number, OfferTierStyle> = {
     selectedBg: 'bg-teal/[0.06]',
     savings: 'border-teal/20 bg-teal/10 text-teal-dark',
     radioSelected: 'border-teal bg-teal',
+    volumeBadge:
+      'border border-sage/50 bg-mist text-teal/70 shadow-sm',
+    volumeBadgeSelected:
+      'border border-teal/35 bg-teal/10 text-teal-dark shadow-sm',
   },
   2: {
     price: 'text-[#A66B1F]',
@@ -52,6 +58,10 @@ const OFFER_TIER_STYLES: Record<number, OfferTierStyle> = {
     selectedBg: 'bg-offer-amber-light/70',
     savings: 'border-offer-amber-border bg-offer-amber-light text-offer-amber',
     radioSelected: 'border-offer-amber bg-offer-amber',
+    volumeBadge:
+      'border border-offer-amber/40 bg-gradient-to-l from-offer-amber-light to-[#FFF8EE] text-[#A66B1F] shadow-[0_2px_8px_rgba(198,138,59,0.2)]',
+    volumeBadgeSelected:
+      'border border-offer-amber bg-gradient-to-l from-offer-amber to-[#B87333] text-white shadow-[0_3px_12px_rgba(198,138,59,0.35)]',
   },
   3: {
     price: 'text-apothecary-dark',
@@ -59,11 +69,15 @@ const OFFER_TIER_STYLES: Record<number, OfferTierStyle> = {
     priceBg: 'bg-pine-light',
     priceBgSelected: 'bg-[#DDF0EA]',
     currency: 'text-apothecary',
-    border: 'border-teal/25',
+    border: 'border-gold/45',
     borderSelected: 'border-apothecary',
-    selectedBg: 'bg-pine-light/90',
+    selectedBg: 'bg-gradient-to-l from-pine-light via-gold/10 to-pine-light/90',
     savings: 'border-gold/35 bg-gold/15 text-gold-dark',
     radioSelected: 'border-apothecary bg-apothecary',
+    volumeBadge:
+      'border-2 border-gold/55 bg-gradient-to-l from-gold/25 via-[#FFF9EE] to-apothecary/10 text-apothecary-dark shadow-[0_3px_14px_rgba(215,168,92,0.38)] ring-1 ring-gold/25',
+    volumeBadgeSelected:
+      'border-2 border-gold bg-gradient-to-l from-apothecary via-apothecary-dark to-[#062E28] text-gold shadow-[0_4px_16px_rgba(11,79,74,0.35)]',
   },
 }
 
@@ -196,6 +210,7 @@ function OfferCard({
       className={cn(
         'relative w-full rounded-xl px-3 text-right transition-all duration-150 sm:px-4',
         hasRibbon ? 'pt-4 pb-3 sm:py-3.5' : 'py-3 sm:py-3.5',
+        offer.isBestValue && !selected && 'ring-1 ring-gold/35',
         selected
           ? cn('border-2 shadow-[0_4px_16px_rgba(15,118,110,0.1)]', tier.borderSelected, tier.selectedBg)
           : cn('border bg-white hover:border-teal/25', tier.border),
@@ -223,6 +238,26 @@ function OfferCard({
 
         <div className="min-w-0 flex-1">
           <p className="text-[13px] font-bold leading-tight text-charcoal sm:text-[15px]">{title}</p>
+
+          {offer.volumeLabel && (
+            <div className="mt-1.5 flex flex-wrap items-center gap-2">
+              <span
+                className={cn(
+                  'inline-flex shrink-0 items-center rounded-lg px-2.5 py-1 font-extrabold tabular-nums tracking-tight',
+                  offer.qty === 3 ? 'text-xs sm:text-sm' : 'text-[11px] sm:text-xs',
+                  selected ? tier.volumeBadgeSelected : tier.volumeBadge,
+                )}
+              >
+                {offer.volumeLabel}
+              </span>
+              {offer.qty === 2 && (
+                <span className="text-[9px] font-bold text-offer-amber sm:text-[10px]">الأكثر طلباً</span>
+              )}
+              {offer.qty === 3 && (
+                <span className="text-[9px] font-bold text-gold-dark sm:text-[10px]">أفضل قيمة — وفّر أكثر</span>
+              )}
+            </div>
+          )}
 
           {badges.length > 0 && (
             <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
