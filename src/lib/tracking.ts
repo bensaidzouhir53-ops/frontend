@@ -62,13 +62,15 @@ declare global {
     __nasamaSyncMetaReady?: () => void
     __nasamaInitializedPixelIds?: string[]
     __nasamaPageViewTracked?: boolean
+    /** Set from layout when backend CAPI handles Meta Purchase — skip browser duplicate. */
+    __nasamaCapiEnabled?: boolean
   }
 }
 
 // ---------------------------------------------------------------------------
 // Internal event queues (flushed when each pixel is initialised)
 // ---------------------------------------------------------------------------
-type FbqEntry = [string, string, Record<string, unknown>?]
+type FbqEntry = [string, string, Record<string, unknown>?, string?]
 type TtqEntry = [string, Record<string, unknown>?]
 type SnapEntry = [string, string?, Record<string, unknown>?]
 
@@ -80,6 +82,20 @@ let _metaPageViewTracked = false
 const _metaInitializedIds = new Set<string>()
 let _ttqReady = false
 let _snapReady = false
+let _capiEnabled = false
+
+function isCapiEnabled(): boolean {
+  if (_capiEnabled) return true
+  if (typeof window !== 'undefined' && window.__nasamaCapiEnabled) return true
+  return false
+}
+
+export function setCapiEnabled(enabled: boolean): void {
+  _capiEnabled = enabled
+  if (typeof window !== 'undefined') {
+    window.__nasamaCapiEnabled = enabled
+  }
+}
 
 function getMetaPixelRegistry(): string[] {
   if (typeof window === 'undefined') return []
@@ -100,16 +116,30 @@ export function registerMetaPixelIds(ids: string[]): void {
   flushMetaQueue()
 }
 
-function fireFbqTrack(event: string, params?: Record<string, unknown>): void {
+function fireFbqTrack(
+  event: string,
+  params?: Record<string, unknown>,
+  eventId?: string,
+): void {
   if (typeof window === 'undefined' || !window.fbq) return
   const ids = [...new Set(getMetaPixelRegistry())]
+  const options = eventId ? { eventID: eventId } : undefined
+
   // Single pixel: `track` is most reliable in Ads Manager / Events Manager.
   if (ids.length <= 1) {
-    window.fbq('track', event, params)
+    if (options) {
+      window.fbq('track', event, params, options)
+    } else {
+      window.fbq('track', event, params)
+    }
     return
   }
   for (const id of ids) {
-    window.fbq('trackSingle', id, event, params)
+    if (options) {
+      window.fbq('trackSingle', id, event, params, options)
+    } else {
+      window.fbq('trackSingle', id, event, params)
+    }
   }
 }
 
@@ -268,9 +298,9 @@ function isValidPixelId(value: string | null | undefined): value is string {
 }
 
 function flushMetaQueue(): void {
-  _metaQueue.forEach(([action, event, params]) => {
+  _metaQueue.forEach(([action, event, params, eventId]) => {
     if (action === 'track') {
-      fireFbqTrack(event, params)
+      fireFbqTrack(event, params, eventId)
     } else {
       window.fbq?.(action, event, params)
     }
@@ -529,6 +559,8 @@ async function fetchPixelConfig(): Promise<PixelConfig | null> {
 }
 
 function applyPixelConfig(config: PixelConfig): void {
+  setCapiEnabled(Boolean(config.capi_enabled))
+
   const metaIds =
     config.meta_pixel_ids.length > 0
       ? config.meta_pixel_ids.filter((id) => isValidPixelId(id))
@@ -561,6 +593,8 @@ export interface ServerPixelConfigInput {
 /** Called from layout — pixels may already be injected via PixelScripts. */
 export function initPixelsFromServerConfig(config: ServerPixelConfigInput): void {
   if (typeof window === 'undefined' || !config.enabled) return
+
+  setCapiEnabled(Boolean(config.capi_enabled))
 
   const metaIds =
     config.meta_pixel_ids && config.meta_pixel_ids.length > 0
@@ -618,17 +652,21 @@ function metaEventParams(props: TrackingProps): Record<string, unknown> {
     content_ids: contentIds,
     content_type: props.content_type ?? 'product',
     contents: contentIds.map((id) => ({ id, quantity: 1 })),
-    eventID: props.event_id,
     order_id: props.order_id,
   }
 }
 
-function safeFbq(action: string, event: string, params?: Record<string, unknown>): void {
+function safeFbq(
+  action: string,
+  event: string,
+  params?: Record<string, unknown>,
+  eventId?: string,
+): void {
   syncMetaReadyState()
   const dispatch = () => {
     if (typeof window === 'undefined' || !window.fbq) return false
     if (action === 'track') {
-      fireFbqTrack(event, params)
+      fireFbqTrack(event, params, eventId)
     } else {
       window.fbq(action, event, params)
     }
@@ -637,7 +675,7 @@ function safeFbq(action: string, event: string, params?: Record<string, unknown>
 
   if (dispatch()) return
 
-  _metaQueue.push([action, event, params])
+  _metaQueue.push([action, event, params, eventId])
   // Retry after pixel script loads (head bootstrap + fbevents.js).
   if (typeof window !== 'undefined') {
     let attempts = 0
@@ -856,10 +894,14 @@ export function trackPurchase(props: TrackingProps): void {
     content_ids = [],
     content_type = 'product',
     order_id,
+    event_id,
   } = props
 
-  // Always fire browser Purchase. Backend CAPI uses the same event_id for deduplication.
-  safeFbq('track', 'Purchase', metaEventParams(props))
+  // When CAPI is enabled, backend sends Meta Purchase — skip browser to avoid double counting.
+  // Otherwise pass event_id as fbq options (4th arg) so browser + CAPI dedupe if both run.
+  if (!isCapiEnabled()) {
+    safeFbq('track', 'Purchase', metaEventParams(props), event_id)
+  }
   safeTtq('PlaceAnOrder', {
     value,
     currency,

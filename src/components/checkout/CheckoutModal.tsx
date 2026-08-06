@@ -19,7 +19,6 @@ import {
   captureAttribution,
   generateEventId,
   trackInitiateCheckoutOnce,
-  trackPurchaseOnce,
 } from '@/lib/tracking'
 import { cn } from '@/lib/utils'
 
@@ -124,11 +123,6 @@ export default function CheckoutModal() {
       closeCheckout()
       reset()
 
-      const orderItems = items.map((i) => ({
-        product_slug: i.product.slug,
-        quantity: i.qty,
-      }))
-
       sessionStorage.setItem(
         'nasama_order',
         JSON.stringify({
@@ -152,12 +146,6 @@ export default function CheckoutModal() {
         }),
       )
 
-      trackPurchaseOnce({
-        value: response.total,
-        content_ids: orderItems.map((i) => i.product_slug),
-        event_id: eventId,
-        order_id: response.order_id,
-      })
       sessionStorage.removeItem('nasama_pending_upsell')
       router.push(
         `/thank-you?order=${encodeURIComponent(response.order_number)}&total=${response.total}`,

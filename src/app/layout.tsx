@@ -81,6 +81,13 @@ export default async function RootLayout({
   return (
     <html lang="ar" dir="rtl" className={tajawal.variable}>
       <body className="font-arabic bg-ivory text-charcoal antialiased">
+        {pixelConfig.capi_enabled ? (
+          <script
+            dangerouslySetInnerHTML={{
+              __html: 'window.__nasamaCapiEnabled=true',
+            }}
+          />
+        ) : null}
         <MetaPixelHeadScripts pixelId={metaPixelId} />
         <MetaPixel pixelId={metaPixelId} />
         <PixelScripts config={pixelConfig} />
