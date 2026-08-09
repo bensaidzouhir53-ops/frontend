@@ -349,6 +349,24 @@ function FreeShippingBanner() {
   )
 }
 
+function OfferStockUrgency() {
+  return (
+    <div
+      className="mt-3 flex items-center justify-center gap-2 rounded-xl border border-red-200/80 bg-red-50/90 px-3 py-2.5"
+      role="status"
+      aria-live="polite"
+    >
+      <span className="relative flex h-2.5 w-2.5 shrink-0">
+        <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-500 opacity-80" />
+        <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-red-600" />
+      </span>
+      <p className="text-[13px] font-extrabold leading-snug text-red-600 sm:text-sm">
+        أوشكت تخلص — الكمية على آخرها!
+      </p>
+    </div>
+  )
+}
+
 export default function OfferSelector({ product, className }: OfferSelectorProps) {
   const offers = getOffersForProduct(product.slug)
   const defaultIdx = offers.findIndex((o) => o.isDefault)
@@ -389,6 +407,7 @@ export default function OfferSelector({ product, className }: OfferSelectorProps
             />
           ))}
         </div>
+        <OfferStockUrgency />
       </div>
 
       <button
