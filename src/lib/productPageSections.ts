@@ -127,7 +127,7 @@ export interface AgitationPoint {
 }
 
 export interface AgitationSectionContent {
-  theme?: 'dark' | 'light'
+  theme?: 'dark' | 'light' | 'clinical'
   alert: string
   title: string
   body: string
@@ -318,6 +318,7 @@ const HERBAL_LUNG_SPRAY_SECTIONS: ProductPageSections = {
   painGif: '/images/herbal-lung-spray-pain.gif',
   painOverlay: 'لا تخلي الكتمة تسرق أجمل لحظاتك',
   agitation: {
+    theme: 'clinical',
     alert: 'لا تلف وجهك عن الصورة.. لأن هذا مستقبلك القريب إذا كملت تكابر! ⏳',
     title: 'تحسب الكتمة اللي فيك الحين مجرد "كحة مدخن" وبتروح؟ أنت جالس تدفن رئتك بالحيا!',
     body:
@@ -333,10 +334,10 @@ const HERBAL_LUNG_SPRAY_SECTIONS: ProductPageSections = {
         text: 'بعد سنتين: بتعيش نفس معاناة الشايب اللي بالصورة.. أجهزة أكسجين، مستشفيات، وتدفع اللي وراك ودونك بس عشان تشتري "نسمة هوا" وممكن ما تفيد!',
       },
     ],
-    gif: '/images/herbal-lung-spray-agitation.gif',
+    gif: '',
     gifVideo: '/videos/herbal-lung-spray-agitation.mp4',
     gifAlt: 'مدخن كبير بالسن مع أنبوب أكسجين — عواقب تجاهل الكتمة والتدخين',
-    overlay: 'طالع الصورة زين، وشوف وش ينتظرك لو استمريت تعاند',
+    overlay: 'طالع الصورة زين، وشوف وش ينتظرك لو استمرت تعاند',
   },
   solutionBadge: 'طوق النجاة اللي بينقذ رئتك 🌿',
   solutionTitle: '"غسيل فوري" لصدرك.. بختين بس وتطرد قطران وبلغم السنين!',
