@@ -142,16 +142,18 @@ export default function ProductAgitationSection({ content }: ProductAgitationSec
 
           {/* Copy — right visually in RTL */}
           <div className="order-2 w-full text-right lg:w-1/2">
-            <div
-              className={`mb-5 inline-flex items-center gap-3 rounded-full border px-5 py-2.5 text-sm font-extrabold ${
-                isPlain
-                  ? 'border-red-200 bg-red-50 text-red-600'
-                  : 'border-gold/40 bg-gold/20 text-gold shadow-[0_4px_24px_rgba(215,168,92,0.25)]'
-              }`}
-            >
-              <BellRing className="h-5 w-5 shrink-0" />
-              {content.alert}
-            </div>
+            {content.alert?.trim() ? (
+              <div
+                className={`mb-5 inline-flex items-center gap-3 rounded-full border px-5 py-2.5 text-sm font-extrabold ${
+                  isPlain
+                    ? 'border-red-200 bg-red-50 text-red-600'
+                    : 'border-gold/40 bg-gold/20 text-gold shadow-[0_4px_24px_rgba(215,168,92,0.25)]'
+                }`}
+              >
+                <BellRing className="h-5 w-5 shrink-0" />
+                {content.alert}
+              </div>
+            ) : null}
 
             <h2
               className={`mb-6 text-3xl font-extrabold leading-tight tracking-tight md:text-4xl ${
