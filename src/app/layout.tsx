@@ -81,7 +81,7 @@ export default async function RootLayout({
   return (
     <html lang="ar" dir="rtl" className={tajawal.variable}>
       <body className="font-arabic bg-ivory text-charcoal antialiased">
-        {pixelConfig.capi_enabled ? (
+        {metaPixelId ? (
           <script
             dangerouslySetInnerHTML={{
               __html: 'window.__nasamaCapiEnabled=true',

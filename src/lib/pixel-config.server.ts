@@ -147,8 +147,9 @@ export function mergePixelConfigs(...sources: PixelConfigInput[]): ServerPixelCo
     tiktok_pixel_id: tiktok,
     snap_pixel_id: snap,
     capi_enabled: Boolean(
-      backendSource?.capi_enabled ??
-        sources.some((source) => source.capi_enabled),
+      backendSource?.capi_enabled ||
+        sources.some((source) => source.capi_enabled) ||
+        (metaIds.length > 0 && process.env.NEXT_PUBLIC_META_BROWSER_PURCHASE !== 'true'),
     ),
   }
 }
@@ -208,6 +209,9 @@ export async function fetchTrackingConfigFromBackend(): Promise<ServerPixelConfi
       return {
         ...backendConfig,
         enabled: backendConfig.enabled || webPixelsEnabled,
+        capi_enabled:
+          backendConfig.capi_enabled ||
+          process.env.NEXT_PUBLIC_META_BROWSER_PURCHASE !== 'true',
       }
     }
     return mergePixelConfigs(backendConfig, envFallback)
@@ -219,7 +223,15 @@ export async function fetchTrackingConfigFromBackend(): Promise<ServerPixelConfi
     )
   }
 
-  return envFallback.enabled ? envFallback : EMPTY
+  return envFallback.enabled
+    ? {
+        ...envFallback,
+        capi_enabled:
+          envFallback.capi_enabled ||
+          (envFallback.meta_pixel_ids.length > 0 &&
+            process.env.NEXT_PUBLIC_META_BROWSER_PURCHASE !== 'true'),
+      }
+    : EMPTY
 }
 
 export function getMetaPixelIds(config: ServerPixelConfig): string[] {

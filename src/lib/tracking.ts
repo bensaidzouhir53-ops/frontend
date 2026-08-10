@@ -894,13 +894,15 @@ export function trackPurchase(props: TrackingProps): void {
     content_ids = [],
     content_type = 'product',
     order_id,
-    event_id,
   } = props
 
-  // When CAPI is enabled, backend sends Meta Purchase — skip browser to avoid double counting.
-  // Otherwise pass event_id as fbq options (4th arg) so browser + CAPI dedupe if both run.
-  if (!isCapiEnabled()) {
-    safeFbq('track', 'Purchase', metaEventParams(props), event_id)
+  // Meta Purchase is server-side only (CAPI on order create). Browser Purchase
+  // duplicated conversions in Ads Manager even with event_id dedup.
+  const allowBrowserMetaPurchase =
+    typeof process !== 'undefined' &&
+    process.env.NEXT_PUBLIC_META_BROWSER_PURCHASE === 'true'
+  if (allowBrowserMetaPurchase && !isCapiEnabled()) {
+    safeFbq('track', 'Purchase', metaEventParams(props), props.event_id)
   }
   safeTtq('PlaceAnOrder', {
     value,
