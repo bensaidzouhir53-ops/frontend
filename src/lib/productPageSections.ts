@@ -318,7 +318,7 @@ const HERBAL_LUNG_SPRAY_SECTIONS: ProductPageSections = {
   painGif: '/images/herbal-lung-spray-pain.gif',
   painOverlay: 'لا تخلي الكتمة تسرق أجمل لحظاتك',
   agitation: {
-    theme: 'clinical',
+    theme: 'light',
     alert: 'لا تلف وجهك عن الصورة.. لأن هذا مستقبلك القريب إذا كملت تكابر! ⏳',
     title: 'تحسب الكتمة اللي فيك الحين مجرد "كحة مدخن" وبتروح؟ أنت جالس تدفن رئتك بالحيا!',
     body:
