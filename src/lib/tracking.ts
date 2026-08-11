@@ -894,15 +894,14 @@ export function trackPurchase(props: TrackingProps): void {
     content_ids = [],
     content_type = 'product',
     order_id,
+    event_id,
   } = props
 
-  // Meta Purchase is server-side only (CAPI on order create). Browser Purchase
-  // duplicated conversions in Ads Manager even with event_id dedup.
-  const allowBrowserMetaPurchase =
-    typeof process !== 'undefined' &&
-    process.env.NEXT_PUBLIC_META_BROWSER_PURCHASE === 'true'
-  if (allowBrowserMetaPurchase && !isCapiEnabled()) {
-    safeFbq('track', 'Purchase', metaEventParams(props), props.event_id)
+  // Share event_id with backend CAPI — Meta dedupes browser + server to one Purchase.
+  if (event_id) {
+    safeFbq('track', 'Purchase', metaEventParams(props), event_id)
+  } else if (!isCapiEnabled()) {
+    safeFbq('track', 'Purchase', metaEventParams(props))
   }
   safeTtq('PlaceAnOrder', {
     value,
@@ -916,7 +915,8 @@ export function trackPurchase(props: TrackingProps): void {
     currency,
     transaction_id: order_id,
   })
-  trackFirstParty('Purchase', props)
+  // Use OrderCompleted for first-party analytics — not "Purchase" (that blocked CAPI dedup).
+  trackFirstParty('OrderCompleted', props)
 }
 
 /** Fire Purchase once per order (prevents duplicate pixel events on retries/upsell). */
