@@ -75,6 +75,7 @@ type TtqEntry = [string, Record<string, unknown>?]
 type SnapEntry = [string, string?, Record<string, unknown>?]
 
 const _metaQueue: FbqEntry[] = []
+const _metaSentKeys = new Set<string>()
 const _ttqQueue: TtqEntry[] = []
 const _snapQueue: SnapEntry[] = []
 let _metaReady = false
@@ -85,6 +86,9 @@ let _snapReady = false
 let _capiEnabled = false
 
 function isCapiEnabled(): boolean {
+  const envFlag = process.env.NEXT_PUBLIC_CAPI_ENABLED
+  if (envFlag === 'true') return true
+  if (envFlag === 'false') return false
   if (_capiEnabled) return true
   if (typeof window !== 'undefined' && window.__nasamaCapiEnabled) return true
   return false
@@ -116,12 +120,24 @@ export function registerMetaPixelIds(ids: string[]): void {
   flushMetaQueue()
 }
 
+function metaTrackKey(event: string, eventId?: string): string | null {
+  if (event !== 'Purchase' || !eventId) return null
+  return `Purchase:${eventId}`
+}
+
 function fireFbqTrack(
   event: string,
   params?: Record<string, unknown>,
   eventId?: string,
 ): void {
   if (typeof window === 'undefined' || !window.fbq) return
+
+  const dedupeKey = metaTrackKey(event, eventId)
+  if (dedupeKey) {
+    if (_metaSentKeys.has(dedupeKey)) return
+    _metaSentKeys.add(dedupeKey)
+  }
+
   const ids = [...new Set(getMetaPixelRegistry())]
   const options = eventId ? { eventID: eventId } : undefined
 
@@ -682,7 +698,13 @@ function safeFbq(
     const retry = window.setInterval(() => {
       attempts += 1
       syncMetaReadyState()
-      if (dispatch() || attempts >= 50) {
+      if (dispatch()) {
+        const idx = _metaQueue.findIndex(
+          ([a, e, , id]) => a === action && e === event && id === eventId,
+        )
+        if (idx >= 0) _metaQueue.splice(idx, 1)
+        window.clearInterval(retry)
+      } else if (attempts >= 50) {
         window.clearInterval(retry)
       }
     }, 200)
@@ -897,7 +919,7 @@ export function trackPurchase(props: TrackingProps): void {
     event_id,
   } = props
 
-  // When CAPI is enabled, Meta Purchase is sent server-side only — skip browser duplicate.
+  // Meta Purchase: server CAPI only when enabled — never duplicate in browser.
   if (!isCapiEnabled()) {
     if (event_id) {
       safeFbq('track', 'Purchase', metaEventParams(props), event_id)
@@ -905,6 +927,20 @@ export function trackPurchase(props: TrackingProps): void {
       safeFbq('track', 'Purchase', metaEventParams(props))
     }
   }
+
+  trackPurchaseSideEffects(props)
+}
+
+/** TikTok, Snap, and first-party order analytics (no Meta fbq Purchase). */
+export function trackPurchaseSideEffects(props: TrackingProps): void {
+  const {
+    value,
+    currency = 'SAR',
+    content_ids = [],
+    content_type = 'product',
+    order_id,
+  } = props
+
   safeTtq('PlaceAnOrder', {
     value,
     currency,
@@ -917,7 +953,6 @@ export function trackPurchase(props: TrackingProps): void {
     currency,
     transaction_id: order_id,
   })
-  // Use OrderCompleted for first-party analytics — not "Purchase" (that blocked CAPI dedup).
   trackFirstParty('OrderCompleted', props)
 }
 

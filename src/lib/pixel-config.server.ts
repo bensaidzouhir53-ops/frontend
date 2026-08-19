@@ -147,15 +147,16 @@ export function mergePixelConfigs(...sources: PixelConfigInput[]): ServerPixelCo
     tiktok_pixel_id: tiktok,
     snap_pixel_id: snap,
     capi_enabled: Boolean(
-      backendSource?.capi_enabled ||
-        sources.some((source) => source.capi_enabled) ||
-        (metaIds.length > 0 && process.env.NEXT_PUBLIC_META_BROWSER_PURCHASE !== 'true'),
+      process.env.NEXT_PUBLIC_CAPI_ENABLED === 'true' ||
+        backendSource?.capi_enabled ||
+        sources.some((source) => source.capi_enabled),
     ),
   }
 }
 
 /** Runtime env fallback when backend fetch fails during Docker build or network blip. */
 export function getEnvPixelFallback(): ServerPixelConfig {
+  const capiFromEnv = process.env.NEXT_PUBLIC_CAPI_ENABLED === 'true'
   return normalizePixelConfig({
     enabled: process.env.ENABLE_WEB_PIXELS !== 'false',
     meta_pixel_id:
@@ -169,6 +170,7 @@ export function getEnvPixelFallback(): ServerPixelConfig {
     ),
     snap_pixel_id:
       process.env.NEXT_PUBLIC_SNAP_PIXEL_ID ?? process.env.SNAP_PIXEL_ID ?? null,
+    capi_enabled: capiFromEnv,
   })
 }
 
@@ -210,8 +212,8 @@ export async function fetchTrackingConfigFromBackend(): Promise<ServerPixelConfi
         ...backendConfig,
         enabled: backendConfig.enabled || webPixelsEnabled,
         capi_enabled:
-          backendConfig.capi_enabled ||
-          process.env.NEXT_PUBLIC_META_BROWSER_PURCHASE !== 'true',
+          process.env.NEXT_PUBLIC_CAPI_ENABLED === 'true' ||
+          backendConfig.capi_enabled,
       }
     }
     return mergePixelConfigs(backendConfig, envFallback)
@@ -227,9 +229,9 @@ export async function fetchTrackingConfigFromBackend(): Promise<ServerPixelConfi
     ? {
         ...envFallback,
         capi_enabled:
+          process.env.NEXT_PUBLIC_CAPI_ENABLED === 'true' ||
           envFallback.capi_enabled ||
-          (envFallback.meta_pixel_ids.length > 0 &&
-            process.env.NEXT_PUBLIC_META_BROWSER_PURCHASE !== 'true'),
+          backendRaw?.capi_enabled === true,
       }
     : EMPTY
 }
