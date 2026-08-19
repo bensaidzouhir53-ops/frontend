@@ -3,7 +3,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { 
   ShieldCheck, Star, CheckCircle2, ChevronLeft, ArrowLeft, 
-  Leaf, Zap, Wind, HeartPulse, XCircle,
+  Leaf, Zap, Wind, HeartPulse,
   BellRing, Truck, HeartHandshake, CircleCheckBig, CircleX, ShoppingCart
 } from 'lucide-react'
 import type { Product } from '@/types'
@@ -17,6 +17,7 @@ import ProductTrustOriginSection from '@/components/product/ProductTrustOriginSe
 import ProductFacebookSocialProofSection from '@/components/product/ProductFacebookSocialProofSection'
 import ProductAgitationSection from '@/components/product/ProductAgitationSection'
 import ProductImageReviewsSection from '@/components/product/ProductImageReviewsSection'
+import ProductComparisonSection from '@/components/product/ProductComparisonSection'
 import HowToUseStep from '@/components/product/HowToUseStep'
 import ProductReviewsGrid from '@/components/product/ProductReviewsGrid'
 import TrustBadges from '@/components/shared/TrustBadges'
@@ -483,6 +484,15 @@ export default function ProductPageContent({
         </section>
       )}
 
+      {isMolien && sections.comparisonRows.length > 0 && (
+        <ProductComparisonSection
+          rows={sections.comparisonRows}
+          content={sections.comparisonSection}
+          productTitle={product.cardTitleAr}
+          variant="after-ingredients"
+        />
+      )}
+
       {/* ── 4.55 Before / After Comparison ── */}
       {sections.beforeAfterComparison && (
         <ProductBeforeAfterSection content={sections.beforeAfterComparison} />
@@ -554,55 +564,14 @@ export default function ProductPageContent({
         />
       )}
 
-      {/* ── 5. Comparison Table (Us vs. Them) ── */}
-      <section className="bg-white py-14 md:py-24">
-        <div className="mx-auto max-w-container px-4 sm:px-6 lg:px-8 text-center">
-          <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-teal/20 bg-teal/10 px-5 py-2 text-sm font-bold text-teal shadow-sm">
-            <ShieldCheck className="h-4 w-4" />
-            ليش نفس هي خيارك الصح؟
-          </div>
-          <h2 className="mb-10 text-3xl font-extrabold tracking-tight text-charcoal md:text-4xl">
-            مقارنة سريعة توضح لك الفرق
-          </h2>
-
-          <div className="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {sections.comparisonRows.slice(0, 4).map((row, i) => (
-              <div
-                key={i}
-                className="rounded-2xl border border-warm-border bg-white p-5 text-right shadow-sm"
-              >
-                <p className="mb-3 text-sm font-extrabold text-charcoal">{row.feature}</p>
-                <ul className="space-y-2.5">
-                  <li className="flex items-start gap-2 text-sm font-medium text-charcoal/55">
-                    <XCircle className="mt-0.5 h-4 w-4 shrink-0 text-red-400" />
-                    <span>{row.them}</span>
-                  </li>
-                  <li className="flex items-start gap-2 text-sm font-bold text-teal-dark">
-                    <CircleCheckBig className="mt-0.5 h-4 w-4 shrink-0 text-teal" />
-                    <span>{row.us}</span>
-                  </li>
-                </ul>
-              </div>
-            ))}
-          </div>
-          <div className="relative overflow-hidden rounded-3xl bg-gradient-to-l from-teal-dark to-charcoal p-6 text-right text-white shadow-xl sm:p-8">
-            <div
-              className="pointer-events-none absolute -left-8 -top-8 h-32 w-32 rounded-full border-4 border-gold/30"
-              aria-hidden="true"
-            />
-            <div
-              className="pointer-events-none absolute -bottom-10 -right-6 h-40 w-40 rounded-full border-4 border-gold/20"
-              aria-hidden="true"
-            />
-            <p className="relative mb-2 text-xl font-extrabold text-gold sm:text-2xl">
-              {product.cardTitleAr}
-            </p>
-            <p className="relative text-sm font-medium text-white/80 sm:text-base">
-              {sections.comparisonRows[4]?.us ?? 'ضمان 30 يوم · مرخّص SFDA · طبيعي 100%'}
-            </p>
-          </div>
-        </div>
-      </section>
+      {/* ── 5. Comparison Table (Us vs. Them) — herbal spray only; molien shows after ingredients ── */}
+      {!isMolien && sections.comparisonRows.length > 0 && (
+        <ProductComparisonSection
+          rows={sections.comparisonRows}
+          content={sections.comparisonSection}
+          productTitle={product.cardTitleAr}
+        />
+      )}
 
       {/* ── 6. SFDA & Quality Guarantee ── */}
       <section className="py-16 bg-white border-y border-sage/20 overflow-hidden relative">

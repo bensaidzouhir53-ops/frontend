@@ -26,6 +26,15 @@ export interface ComparisonRow {
   them: string
 }
 
+export interface ComparisonSectionContent {
+  badge: string
+  title: string
+  subtitle: string
+  usLabel: string
+  themLabel: string
+  footerHighlight?: string
+}
+
 export interface DayProcessPhase {
   period: string
   title: string
@@ -169,6 +178,7 @@ export interface ProductPageSections {
   howToUseTitle: string
   howToUseSubtitle: string
   comparisonRows: ComparisonRow[]
+  comparisonSection?: ComparisonSectionContent
   dayProcess: DayProcessContent
   results?: ResultsSectionContent
   beforeAfterComparison?: BeforeAfterContent
@@ -660,12 +670,41 @@ const MOLIEN_DROPS_SECTIONS: ProductPageSections = {
   howToUseTitle: '3 قطرات — مرتين باليوم',
   howToUseSubtitle:
     'تركيبتنا مركّزة — كل اللي تحتاجه من 2 إلى 3 قطرات بس! استخدمها مرتين يومياً — صباحاً ومساءً — ولا تنسى الالتزام عشان تشوف الفرق.',
+  comparisonSection: {
+    badge: 'قارن واختر صح',
+    title: 'ليش قطرات نَفَس أقوى من الباقي؟',
+    subtitle:
+      'قارنا تركيبتنا مع أشهر الحلول اللي الناس تستخدمها — العسل، البخار، حلاو الحلق، والمنتجات العشوائية — وشوف الفرق بنفسك.',
+    usLabel: 'قطرات نَفَس (المولين)',
+    themLabel: 'المنافسين والحلول التقليدية',
+    footerHighlight: 'ضمان 30 يوم · مرخّص SFDA · تركيز 420,000 ملغ مستخلص مولين',
+  },
   comparisonRows: [
-    { feature: 'المفعول والنتيجة', us: 'تنظّف الرئة من جوّا، تفك الكتمة، وتعطيك نَفَس عميق ومريح طول اليوم.', them: 'تريّحك ساعة.. وترجع لك الكتمة والضيقة (العسل والزنجبيل)' },
-    { feature: 'التحضير والوقت', us: 'جاهزة بجيبك! قطرات سريعة تاخذها بأي وقت وبأي مكان بدون قروشة.', them: 'حوسة، وتعب بالتحضير، ومفعولها يروح بسرعة (البخار والمشروبات)' },
-    { feature: 'التركيبة والتركيز', us: 'خلاصة عشبة المولين المركّزة، تطرد السموم والبلغم وتصفي صدرك صح.', them: 'سكر ونكهات على الفاضي، مجرد تسكين مؤقت (حلاو الحلق العادي)' },
-    { feature: 'الترخيص والأمان', us: 'مصرّحة من هيئة الغذاء والدواء السعودية (SFDA).. تطمّن واستخدمها وأنت مرتاح.', them: 'مجهولة المصدر وما تدري وش مكوناتها (المنتجات العشوائية)' },
-    { feature: 'الضمان', us: 'ضمان ذهبي 30 يوم (استرداد كامل بدون قروشة)', them: 'تدفع وتخاطر بفلوسك بدون أي ضمان' },
+    {
+      feature: 'المفعول والنتيجة',
+      us: 'تنظّف الرئة من جوّا، تفك الكتمة، وتعطيك نَفَس عميق ومريح طول اليوم — مو بس تسكين.',
+      them: 'تريّحك ساعة وترجع الكتمة أقوى (عسل، زنجبيل، ومشروبات «طبيعية» خفيفة)',
+    },
+    {
+      feature: 'التحضير والوقت',
+      us: '3 قطرات بجيبك — بالسيارة، الدوام، أو السفر. بدون مغلي ولا بخار ولا حوسة.',
+      them: 'بخار، مغلي، كمادات — تعب بالتحضير ومفعولها يروح بسرعة',
+    },
+    {
+      feature: 'التركيبة والتركيز',
+      us: '420,000 ملغ مستخلص مولين مركّز + 7 أعشاب داعمة — يطرد البلغم وينظّف صدرك من الجذور.',
+      them: 'سكر ونكهات على الفاضي — حلاو الحلق والسعوط ما يوصلون لجذور المشكلة',
+    },
+    {
+      feature: 'الترخيص والأمان',
+      us: 'مصرّحة SFDA — مكونات واضحة، فحص مخبري، وتستخدمها وأنت مطمئن.',
+      them: 'منتجات أمازون ومتاجر عشوائية — مصدر مجهول وما تدري وش داخلها',
+    },
+    {
+      feature: 'الضمان والثقة',
+      us: 'ضمان ذهبي 30 يوم — ما ناسبك؟ فلوسك ترجع كاملة بدون قروشة.',
+      them: 'بدون ضمان — تدفع وتخاطر بفلوسك وصحتك',
+    },
   ],
   dayProcess: {
     image: '/images/molien-day-process.png',
