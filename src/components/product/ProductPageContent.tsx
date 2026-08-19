@@ -488,7 +488,7 @@ export default function ProductPageContent({
         <ProductComparisonSection
           rows={sections.comparisonRows}
           content={sections.comparisonSection}
-          productTitle={product.cardTitleAr}
+          productTitle={product.cardTitleAr ?? product.nameAr}
           variant="after-ingredients"
         />
       )}
@@ -569,7 +569,7 @@ export default function ProductPageContent({
         <ProductComparisonSection
           rows={sections.comparisonRows}
           content={sections.comparisonSection}
-          productTitle={product.cardTitleAr}
+          productTitle={product.cardTitleAr ?? product.nameAr}
         />
       )}
 
