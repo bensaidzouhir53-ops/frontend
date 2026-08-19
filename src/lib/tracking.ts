@@ -897,11 +897,13 @@ export function trackPurchase(props: TrackingProps): void {
     event_id,
   } = props
 
-  // Share event_id with backend CAPI — Meta dedupes browser + server to one Purchase.
-  if (event_id) {
-    safeFbq('track', 'Purchase', metaEventParams(props), event_id)
-  } else if (!isCapiEnabled()) {
-    safeFbq('track', 'Purchase', metaEventParams(props))
+  // When CAPI is enabled, Meta Purchase is sent server-side only — skip browser duplicate.
+  if (!isCapiEnabled()) {
+    if (event_id) {
+      safeFbq('track', 'Purchase', metaEventParams(props), event_id)
+    } else {
+      safeFbq('track', 'Purchase', metaEventParams(props))
+    }
   }
   safeTtq('PlaceAnOrder', {
     value,

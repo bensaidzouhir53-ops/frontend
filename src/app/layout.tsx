@@ -84,7 +84,7 @@ export default async function RootLayout({
         {metaPixelId ? (
           <script
             dangerouslySetInnerHTML={{
-              __html: 'window.__nasamaCapiEnabled=true',
+              __html: `window.__nasamaCapiEnabled=${pixelConfig.capi_enabled ? 'true' : 'false'}`,
             }}
           />
         ) : null}
