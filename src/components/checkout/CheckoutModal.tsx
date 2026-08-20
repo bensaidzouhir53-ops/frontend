@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import * as Dialog from '@radix-ui/react-dialog'
@@ -22,6 +22,8 @@ import {
 } from '@/lib/tracking'
 import { cn } from '@/lib/utils'
 
+const CHECKOUT_EVENT_ID_KEY = 'nasama_checkout_event_id'
+
 export default function CheckoutModal() {
   const router = useRouter()
   const {
@@ -34,15 +36,37 @@ export default function CheckoutModal() {
 
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [serverError, setServerError] = useState<string | null>(null)
+  const submitLockRef = useRef(false)
 
   const cartTotal = total()
 
   useEffect(() => {
-    if (!isCheckoutOpen || items.length === 0) return
+    if (!isCheckoutOpen) {
+      try {
+        sessionStorage.removeItem(CHECKOUT_EVENT_ID_KEY)
+      } catch {
+        // ignore
+      }
+      submitLockRef.current = false
+      return
+    }
+    if (items.length === 0) return
+
+    let checkoutEventId = ''
+    try {
+      checkoutEventId = sessionStorage.getItem(CHECKOUT_EVENT_ID_KEY) ?? ''
+      if (!checkoutEventId) {
+        checkoutEventId = generateEventId()
+        sessionStorage.setItem(CHECKOUT_EVENT_ID_KEY, checkoutEventId)
+      }
+    } catch {
+      checkoutEventId = generateEventId()
+    }
+
     trackInitiateCheckoutOnce({
       value: cartTotal,
       content_ids: items.map((i) => i.product.slug),
-      event_id: generateEventId(),
+      event_id: checkoutEventId,
     })
   }, [isCheckoutOpen, items, cartTotal])
 
@@ -64,11 +88,20 @@ export default function CheckoutModal() {
   }
 
   const onSubmit = async (data: CheckoutFormData) => {
-    if (isSubmitting || items.length === 0) return
+    if (submitLockRef.current || isSubmitting || items.length === 0) return
+    submitLockRef.current = true
     setIsSubmitting(true)
     setServerError(null)
 
-    const eventId = generateEventId()
+    let eventId = generateEventId()
+    try {
+      eventId = sessionStorage.getItem(CHECKOUT_EVENT_ID_KEY) ?? eventId
+      if (!sessionStorage.getItem(CHECKOUT_EVENT_ID_KEY)) {
+        sessionStorage.setItem(CHECKOUT_EVENT_ID_KEY, eventId)
+      }
+    } catch {
+      // use generated eventId
+    }
     const attribution = captureAttribution()
 
     if (!isWhitelistedPhone(data.phone)) {
@@ -155,6 +188,7 @@ export default function CheckoutModal() {
         err instanceof Error ? err.message : 'حدث خطأ، يرجى المحاولة مجدداً'
       setServerError(message)
     } finally {
+      submitLockRef.current = false
       setIsSubmitting(false)
     }
   }
