@@ -230,8 +230,7 @@ export async function fetchTrackingConfigFromBackend(): Promise<ServerPixelConfi
         ...envFallback,
         capi_enabled:
           process.env.NEXT_PUBLIC_CAPI_ENABLED === 'true' ||
-          envFallback.capi_enabled ||
-          backendRaw?.capi_enabled === true,
+          envFallback.capi_enabled,
       }
     : EMPTY
 }
