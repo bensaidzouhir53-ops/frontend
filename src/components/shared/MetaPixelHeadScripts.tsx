@@ -25,7 +25,7 @@ fbq('track','PageView');
 window.__nasamaPageViewTracked=true;
 window.__nasamaMetaReady=true;
 window.__nasamaInitializedPixelIds=['${id}'];
-if(typeof window.__nasamaSyncMetaReady==='function'){window.__nasamaSyncMetaReady();}
+window.__nasamaSyncMetaReady?.();
 `.trim()
 
   return (

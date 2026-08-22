@@ -86,9 +86,6 @@ let _snapReady = false
 let _capiEnabled = false
 
 function isCapiEnabled(): boolean {
-  const envFlag = process.env.NEXT_PUBLIC_CAPI_ENABLED
-  if (envFlag === 'true') return true
-  if (envFlag === 'false') return false
   if (_capiEnabled) return true
   if (typeof window !== 'undefined' && window.__nasamaCapiEnabled) return true
   return false
@@ -129,12 +126,12 @@ function fireFbqTrack(
   event: string,
   params?: Record<string, unknown>,
   eventId?: string,
-): void {
-  if (typeof window === 'undefined' || !window.fbq) return
+): boolean {
+  if (typeof window === 'undefined' || !window.fbq) return false
 
   const dedupeKey = metaTrackKey(event, eventId)
   if (dedupeKey) {
-    if (_metaSentKeys.has(dedupeKey)) return
+    if (_metaSentKeys.has(dedupeKey)) return true
     _metaSentKeys.add(dedupeKey)
   }
 
@@ -148,7 +145,7 @@ function fireFbqTrack(
     } else {
       window.fbq('track', event, params)
     }
-    return
+    return true
   }
   for (const id of ids) {
     if (options) {
@@ -157,6 +154,7 @@ function fireFbqTrack(
       window.fbq('trackSingle', id, event, params)
     }
   }
+  return true
 }
 
 function initMetaPixelId(id: string): void {
@@ -327,12 +325,7 @@ function flushMetaQueue(): void {
 /** Sync with PixelScripts when it inits fbq before tracking.ts sets _metaReady. */
 export function syncMetaReadyState(): void {
   if (typeof window === 'undefined' || !window.fbq) return
-  const pixelReady =
-    window.__nasamaMetaReady ||
-    _metaReady ||
-    Boolean(window.fbq.loaded) ||
-    Boolean(window.fbq.callMethod)
-  if (!pixelReady) return
+  if (!window.__nasamaMetaReady && !_metaReady) return
   if (!_metaReady) {
     _metaReady = true
     if (window.__nasamaMetaReady) _metaPageViewTracked = true
@@ -613,7 +606,7 @@ export interface ServerPixelConfigInput {
 
 /** Called from layout — pixels may already be injected via PixelScripts. */
 export function initPixelsFromServerConfig(config: ServerPixelConfigInput): void {
-  if (typeof window === 'undefined' || !config.enabled) return
+  if (typeof window === 'undefined') return
 
   setCapiEnabled(Boolean(config.capi_enabled))
 
@@ -623,6 +616,8 @@ export function initPixelsFromServerConfig(config: ServerPixelConfigInput): void
       : isValidPixelId(config.meta_pixel_id)
         ? [config.meta_pixel_id.trim()]
         : []
+
+  if (!config.enabled && metaIds.length === 0) return
   const tiktok = isValidPixelId(config.tiktok_pixel_id)
     ? config.tiktok_pixel_id.trim()
     : null
@@ -677,6 +672,11 @@ function metaEventParams(props: TrackingProps): Record<string, unknown> {
   }
 }
 
+function isMetaPixelReady(): boolean {
+  if (typeof window === 'undefined' || !window.fbq) return false
+  return Boolean(window.__nasamaMetaReady || _metaReady || window.fbq.callMethod)
+}
+
 function safeFbq(
   action: string,
   event: string,
@@ -684,13 +684,12 @@ function safeFbq(
   eventId?: string,
 ): void {
   syncMetaReadyState()
-  const dispatch = () => {
-    if (typeof window === 'undefined' || !window.fbq) return false
+  const dispatch = (): boolean => {
+    if (!isMetaPixelReady()) return false
     if (action === 'track') {
-      fireFbqTrack(event, params, eventId)
-    } else {
-      window.fbq(action, event, params)
+      return fireFbqTrack(event, params, eventId)
     }
+    window.fbq!(action, event, params)
     return true
   }
 
@@ -874,10 +873,9 @@ export function trackAddToCart(props: TrackingProps): void {
     currency = 'SAR',
     content_ids = [],
     content_type = 'product',
-    event_id,
   } = props
 
-  safeFbq('track', 'AddToCart', metaEventParams(props), event_id)
+  safeFbq('track', 'AddToCart', metaEventParams(props))
   safeTtq('AddToCart', {
     value,
     currency,
@@ -907,9 +905,9 @@ export function trackInitiateCheckoutOnce(
 }
 
 export function trackInitiateCheckout(props: TrackingProps): void {
-  const { value, currency = 'SAR', content_ids = [], event_id } = props
+  const { value, currency = 'SAR', content_ids = [] } = props
 
-  safeFbq('track', 'InitiateCheckout', metaEventParams(props), event_id)
+  safeFbq('track', 'InitiateCheckout', metaEventParams(props))
   safeTtq('InitiateCheckout', { value, currency, content_id: content_ids[0] })
   safeSnaptr('track', 'START_CHECKOUT', { price: value, currency })
   trackFirstParty('InitiateCheckout', props)
@@ -925,7 +923,7 @@ export function trackPurchase(props: TrackingProps): void {
     event_id,
   } = props
 
-  // Browser + CAPI share event_id — Meta dedupes to one Purchase in Ads Manager.
+  // Share event_id with backend CAPI — Meta dedupes browser + server to one Purchase.
   if (event_id) {
     safeFbq('track', 'Purchase', metaEventParams(props), event_id)
   } else if (!isCapiEnabled()) {
