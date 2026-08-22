@@ -327,7 +327,12 @@ function flushMetaQueue(): void {
 /** Sync with PixelScripts when it inits fbq before tracking.ts sets _metaReady. */
 export function syncMetaReadyState(): void {
   if (typeof window === 'undefined' || !window.fbq) return
-  if (!window.__nasamaMetaReady && !_metaReady) return
+  const pixelReady =
+    window.__nasamaMetaReady ||
+    _metaReady ||
+    Boolean(window.fbq.loaded) ||
+    Boolean(window.fbq.callMethod)
+  if (!pixelReady) return
   if (!_metaReady) {
     _metaReady = true
     if (window.__nasamaMetaReady) _metaPageViewTracked = true
@@ -869,9 +874,10 @@ export function trackAddToCart(props: TrackingProps): void {
     currency = 'SAR',
     content_ids = [],
     content_type = 'product',
+    event_id,
   } = props
 
-  safeFbq('track', 'AddToCart', metaEventParams(props))
+  safeFbq('track', 'AddToCart', metaEventParams(props), event_id)
   safeTtq('AddToCart', {
     value,
     currency,
@@ -901,9 +907,9 @@ export function trackInitiateCheckoutOnce(
 }
 
 export function trackInitiateCheckout(props: TrackingProps): void {
-  const { value, currency = 'SAR', content_ids = [] } = props
+  const { value, currency = 'SAR', content_ids = [], event_id } = props
 
-  safeFbq('track', 'InitiateCheckout', metaEventParams(props))
+  safeFbq('track', 'InitiateCheckout', metaEventParams(props), event_id)
   safeTtq('InitiateCheckout', { value, currency, content_id: content_ids[0] })
   safeSnaptr('track', 'START_CHECKOUT', { price: value, currency })
   trackFirstParty('InitiateCheckout', props)
@@ -919,13 +925,11 @@ export function trackPurchase(props: TrackingProps): void {
     event_id,
   } = props
 
-  // Meta Purchase: server CAPI only when enabled — never duplicate in browser.
-  if (!isCapiEnabled()) {
-    if (event_id) {
-      safeFbq('track', 'Purchase', metaEventParams(props), event_id)
-    } else {
-      safeFbq('track', 'Purchase', metaEventParams(props))
-    }
+  // Browser + CAPI share event_id — Meta dedupes to one Purchase in Ads Manager.
+  if (event_id) {
+    safeFbq('track', 'Purchase', metaEventParams(props), event_id)
+  } else if (!isCapiEnabled()) {
+    safeFbq('track', 'Purchase', metaEventParams(props))
   }
 
   trackPurchaseSideEffects(props)
