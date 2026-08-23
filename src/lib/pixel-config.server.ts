@@ -1,5 +1,5 @@
 import { getBackendCandidates } from '@/lib/orders.server'
-import { DEFAULT_META_PIXEL_ID } from '@/lib/meta-pixel'
+import { DEFAULT_META_PIXEL_ID, getCanonicalMetaPixelId } from '@/lib/meta-pixel'
 
 export interface ServerPixelConfig {
   enabled: boolean
@@ -101,23 +101,23 @@ function getSnapPixelOverride(): string | null {
   return isValidPixelId(raw) ? raw.trim() : null
 }
 
+/** Force a single Meta pixel so browser + Ads Manager always match. */
+export function applyCanonicalMetaPixel(config: ServerPixelConfig): ServerPixelConfig {
+  const canonical = getCanonicalMetaPixelId()
+  const webPixelsEnabled = process.env.ENABLE_WEB_PIXELS !== 'false'
+  return {
+    ...config,
+    enabled: config.enabled || webPixelsEnabled,
+    meta_pixel_id: canonical,
+    meta_pixel_ids: [canonical],
+  }
+}
+
 /** Merge configs — backend meta pixel wins; env fallback only when backend has none. */
 export function mergePixelConfigs(...sources: PixelConfigInput[]): ServerPixelConfig {
   const backendSource = sources[0]
-  const backendMetaIds = collectMetaPixelIds({
-    meta_pixel_id: backendSource?.meta_pixel_id,
-    meta_pixel_ids: backendSource?.meta_pixel_ids,
-  })
 
-  const metaIds =
-    backendMetaIds.length > 0
-      ? backendMetaIds
-      : collectMetaPixelIds({
-          extra: sources.flatMap((source) => [
-            source.meta_pixel_id,
-            ...(source.meta_pixel_ids ?? []),
-          ]),
-        })
+  const metaIds = [getCanonicalMetaPixelId()]
 
   let tiktok: string | null = null
   let snap: string | null = null
@@ -184,7 +184,8 @@ export async function fetchTrackingConfigFromBackend(): Promise<ServerPixelConfi
 
   // Backend is unreachable during Docker/CI builds — env vars are baked in via build args.
   if (isProductionBuild()) {
-    return envFallback.enabled ? envFallback : EMPTY
+    const built = envFallback.enabled ? envFallback : EMPTY
+    return applyCanonicalMetaPixel(built)
   }
 
   let backendRaw: PixelConfigInput | null = null
@@ -208,15 +209,15 @@ export async function fetchTrackingConfigFromBackend(): Promise<ServerPixelConfi
     const backendConfig = normalizePixelConfig(backendRaw)
     if (backendConfig.meta_pixel_ids.length > 0) {
       const webPixelsEnabled = process.env.ENABLE_WEB_PIXELS !== 'false'
-      return {
+      return applyCanonicalMetaPixel({
         ...backendConfig,
         enabled: backendConfig.enabled || webPixelsEnabled,
         capi_enabled:
           process.env.NEXT_PUBLIC_CAPI_ENABLED === 'true' ||
           backendConfig.capi_enabled,
-      }
+      })
     }
-    return mergePixelConfigs(backendConfig, envFallback)
+    return applyCanonicalMetaPixel(mergePixelConfigs(backendConfig, envFallback))
   }
 
   if (envFallback.meta_pixel_ids.length > 0 || envFallback.tiktok_pixel_id) {
@@ -225,14 +226,16 @@ export async function fetchTrackingConfigFromBackend(): Promise<ServerPixelConfi
     )
   }
 
-  return envFallback.enabled
-    ? {
-        ...envFallback,
-        capi_enabled:
-          process.env.NEXT_PUBLIC_CAPI_ENABLED === 'true' ||
-          envFallback.capi_enabled,
-      }
-    : EMPTY
+  return applyCanonicalMetaPixel(
+    envFallback.enabled
+      ? {
+          ...envFallback,
+          capi_enabled:
+            process.env.NEXT_PUBLIC_CAPI_ENABLED === 'true' ||
+            envFallback.capi_enabled,
+        }
+      : EMPTY,
+  )
 }
 
 export function getMetaPixelIds(config: ServerPixelConfig): string[] {

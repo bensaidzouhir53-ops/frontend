@@ -1,8 +1,9 @@
 /**
  * Deferred pixel tracking for Meta, TikTok, and Snapchat.
- * Pixels are loaded after initial render using requestIdleCallback (or setTimeout fallback).
  * Track functions are safe to call before pixels have loaded — events are queued and flushed on init.
  */
+
+import { getCanonicalMetaPixelId } from '@/lib/meta-pixel'
 
 export interface AttributionData {
   fbclid?: string
@@ -135,24 +136,14 @@ function fireFbqTrack(
     _metaSentKeys.add(dedupeKey)
   }
 
-  const ids = [...new Set(getMetaPixelRegistry())]
+  const pixelId = getMetaPixelRegistry()[0] ?? getCanonicalMetaPixelId()
   const options = eventId ? { eventID: eventId } : undefined
 
-  // Single pixel: `track` is most reliable in Ads Manager / Events Manager.
-  if (ids.length <= 1) {
-    if (options) {
-      window.fbq('track', event, params, options)
-    } else {
-      window.fbq('track', event, params)
-    }
-    return true
-  }
-  for (const id of ids) {
-    if (options) {
-      window.fbq('trackSingle', id, event, params, options)
-    } else {
-      window.fbq('trackSingle', id, event, params)
-    }
+  // Always target the canonical pixel explicitly — most reliable in Ads Manager.
+  if (options) {
+    window.fbq('trackSingle', pixelId, event, params, options)
+  } else {
+    window.fbq('trackSingle', pixelId, event, params)
   }
   return true
 }

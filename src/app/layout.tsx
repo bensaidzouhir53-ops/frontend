@@ -7,8 +7,8 @@ import PixelInit from '@/components/shared/PixelInit'
 import PixelScripts from '@/components/shared/PixelScripts'
 import MetaPixel from '@/components/shared/MetaPixel'
 import MetaPixelHeadScripts from '@/components/shared/MetaPixelHeadScripts'
-import { DEFAULT_META_PIXEL_ID } from '@/lib/meta-pixel'
-import { fetchTrackingConfigFromBackend, getMetaPixelIds } from '@/lib/pixel-config.server'
+import { getCanonicalMetaPixelId } from '@/lib/meta-pixel'
+import { fetchTrackingConfigFromBackend } from '@/lib/pixel-config.server'
 import { getPublicSiteUrl } from '@/lib/site-url'
 import './globals.css'
 
@@ -71,12 +71,7 @@ export default async function RootLayout({
   children: React.ReactNode
 }) {
   const pixelConfig = await fetchTrackingConfigFromBackend()
-  const metaPixelIds = getMetaPixelIds(pixelConfig)
-  const metaPixelId =
-    metaPixelIds[0] ??
-    process.env.NEXT_PUBLIC_META_PIXEL_ID ??
-    process.env.META_PIXEL_ID ??
-    DEFAULT_META_PIXEL_ID
+  const metaPixelId = getCanonicalMetaPixelId()
 
   return (
     <html lang="ar" dir="rtl" className={tajawal.variable}>

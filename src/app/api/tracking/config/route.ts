@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import { getBackendCandidates } from '@/lib/orders.server'
-import { getEnvPixelFallback, mergePixelConfigs } from '@/lib/pixel-config.server'
+import { applyCanonicalMetaPixel, getEnvPixelFallback, mergePixelConfigs } from '@/lib/pixel-config.server'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
@@ -29,7 +29,7 @@ export async function GET() {
           meta_pixel_id: process.env.NEXT_PUBLIC_META_PIXEL_ID ?? null,
           tiktok_pixel_id: getEnvPixelFallback().tiktok_pixel_id,
         })
-        return NextResponse.json(body, {
+        return NextResponse.json(applyCanonicalMetaPixel(body), {
           headers: { 'Cache-Control': 'no-store' },
         })
       }
@@ -38,7 +38,7 @@ export async function GET() {
     }
   }
 
-  return NextResponse.json(getEnvPixelFallback(), {
+  return NextResponse.json(applyCanonicalMetaPixel(getEnvPixelFallback()), {
     status: 200,
     headers: { 'Cache-Control': 'no-store' },
   })
