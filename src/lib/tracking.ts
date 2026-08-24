@@ -864,9 +864,12 @@ export function trackAddToCart(props: TrackingProps): void {
     currency = 'SAR',
     content_ids = [],
     content_type = 'product',
+    event_id,
   } = props
 
-  safeFbq('track', 'AddToCart', metaEventParams(props))
+  // Same event_id is sent to the backend below, which forwards to Meta CAPI —
+  // sharing it here lets Meta dedupe the browser + server events into one.
+  safeFbq('track', 'AddToCart', metaEventParams(props), event_id)
   safeTtq('AddToCart', {
     value,
     currency,
@@ -896,9 +899,11 @@ export function trackInitiateCheckoutOnce(
 }
 
 export function trackInitiateCheckout(props: TrackingProps): void {
-  const { value, currency = 'SAR', content_ids = [] } = props
+  const { value, currency = 'SAR', content_ids = [], event_id } = props
 
-  safeFbq('track', 'InitiateCheckout', metaEventParams(props))
+  // Same event_id is sent to the backend below, which forwards to Meta CAPI —
+  // sharing it here lets Meta dedupe the browser + server events into one.
+  safeFbq('track', 'InitiateCheckout', metaEventParams(props), event_id)
   safeTtq('InitiateCheckout', { value, currency, content_id: content_ids[0] })
   safeSnaptr('track', 'START_CHECKOUT', { price: value, currency })
   trackFirstParty('InitiateCheckout', props)
