@@ -259,7 +259,7 @@ export const HERBAL_LUNG_SPRAY_OFFERS: Offer[] = [
   },
   {
     qty: 2,
-    price: 249,
+    price: 279,
     qtyLabel: 'علبتان',
     volumeLabel: '60 مل',
     cardTitle: 'علبتان — باقة العناية المتقدمة',
@@ -271,14 +271,14 @@ export const HERBAL_LUNG_SPRAY_OFFERS: Offer[] = [
     badgeColor: 'gold',
     isDefault: true,
     freeShipping: true,
-    savings: 109,
-    percentOff: 30,
+    savings: 79,
+    percentOff: 22,
     cardSubtitleLead: '87% من عملائنا يختارون هذا —',
     cardSubtitle: 'شهرين يثبّتون فيهم النتيجة: البلغم يقل، الصدر ينشرح، والكتمة ما ترجع.',
   },
   {
     qty: 3,
-    price: 319,
+    price: 379,
     qtyLabel: '3 علب',
     volumeLabel: '90 مل',
     cardTitle: '3 علب — باقة التنظيف الشامل للرئة',
@@ -289,12 +289,12 @@ export const HERBAL_LUNG_SPRAY_OFFERS: Offer[] = [
     badge: 'أفضل توفير',
     badgeColor: 'apothecary',
     freeShipping: true,
-    savings: 218,
-    percentOff: 41,
+    savings: 158,
+    percentOff: 29,
     isBestValue: true,
     cardSubtitleLead: 'كورس 3 شهور —',
     cardSubtitle:
-      'أقل سعر للعبوة (106 ر.س). اللي يكملون الكورس الكامل يودّعون الكتمة والبلغم للأبد.',
+      'أقل سعر للعبوة (126 ر.س). اللي يكملون الكورس الكامل يودّعون الكتمة والبلغم للأبد.',
   },
 ]
 
@@ -302,19 +302,19 @@ export const HERBAL_LUNG_SPRAY_OFFERS: Offer[] = [
 export const MOLIEN_DROPS_OFFERS: Offer[] = HERBAL_LUNG_SPRAY_OFFERS.map((offer, index) => ({
   ...offer,
   volumeLabel: ['(60) مل', '(120) مل', '(180) مل'][index],
-  price: [189, 265, 365][index],
+  price: [189, 279, 379][index],
   ...(offer.qty === 2
     ? {
-        savings: 113,
-        percentOff: 30,
+        savings: 99,
+        percentOff: 26,
       }
     : {}),
   ...(offer.qty === 3
     ? {
-        savings: 202,
-        percentOff: 36,
+        savings: 188,
+        percentOff: 33,
         cardSubtitle:
-          'أقل سعر للعبوة (122 ر.س). اللي يكملون الكورس الكامل يودّعون الكتمة والبلغم للأبد.',
+          'أقل سعر للعبوة (126 ر.س). اللي يكملون الكورس الكامل يودّعون الكتمة والبلغم للأبد.',
       }
     : {}),
 }))
