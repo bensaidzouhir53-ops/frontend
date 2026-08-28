@@ -49,7 +49,11 @@ declare global {
     ttq?: {
       load?: (id: string) => void
       page?: () => void
-      track?: (event: string, params?: Record<string, unknown>) => void
+      track?: (
+        event: string,
+        params?: Record<string, unknown>,
+        options?: { event_id?: string },
+      ) => void
       push?: (...args: unknown[]) => void
       [key: string]: unknown
     }
@@ -72,7 +76,7 @@ declare global {
 // Internal event queues (flushed when each pixel is initialised)
 // ---------------------------------------------------------------------------
 type FbqEntry = [string, string, Record<string, unknown>?, string?]
-type TtqEntry = [string, Record<string, unknown>?]
+type TtqEntry = [string, Record<string, unknown>?, string?]
 type SnapEntry = [string, string?, Record<string, unknown>?]
 
 const _metaQueue: FbqEntry[] = []
@@ -431,8 +435,8 @@ function loadTikTokPixel(pixelId: string): void {
   window.ttq.load?.(pixelId)
   window.ttq.page?.()
 
-  _ttqQueue.forEach(([event, params]) => {
-    window.ttq?.track?.(event, params)
+  _ttqQueue.forEach(([event, params, eventId]) => {
+    fireTtqTrack(event, params, eventId)
   })
   _ttqQueue.length = 0
 }
@@ -706,23 +710,42 @@ function safeFbq(
   }
 }
 
+function fireTtqTrack(
+  event: string,
+  params?: Record<string, unknown>,
+  eventId?: string,
+): void {
+  // Third arg carries event_id so TikTok merges this browser event with the
+  // matching backend CAPI event instead of counting both (was double-firing
+  // Purchase — see fire_purchase_event in backend/app/services/capi/tiktok.py).
+  if (eventId) {
+    window.ttq?.track?.(event, params, { event_id: eventId })
+  } else {
+    window.ttq?.track?.(event, params)
+  }
+}
+
 /** Sync with PixelScripts when it inits ttq before tracking.ts sets _ttqReady. */
 export function syncTtqReadyState(): void {
   if (typeof window === 'undefined' || !window.ttq) return
   if (_ttqReady) return
   _ttqReady = true
-  _ttqQueue.forEach(([event, params]) => {
-    window.ttq?.track?.(event, params)
+  _ttqQueue.forEach(([event, params, eventId]) => {
+    fireTtqTrack(event, params, eventId)
   })
   _ttqQueue.length = 0
 }
 
-function safeTtq(event: string, params?: Record<string, unknown>): void {
+function safeTtq(
+  event: string,
+  params?: Record<string, unknown>,
+  eventId?: string,
+): void {
   syncTtqReadyState()
   if (typeof window !== 'undefined' && window.ttq?.track && _ttqReady) {
-    window.ttq.track(event, params)
+    fireTtqTrack(event, params, eventId)
   } else {
-    _ttqQueue.push([event, params])
+    _ttqQueue.push([event, params, eventId])
   }
 }
 
@@ -937,15 +960,22 @@ export function trackPurchaseSideEffects(props: TrackingProps): void {
     content_ids = [],
     content_type = 'product',
     order_id,
+    event_id,
   } = props
 
-  safeTtq('PlaceAnOrder', {
-    value,
-    currency,
-    content_id: content_ids[0],
-    content_type,
-    order_id,
-  })
+  // Same event_id as backend TikTok CAPI (fire_purchase_event) — lets TikTok
+  // merge browser + server Purchase into one instead of counting both.
+  safeTtq(
+    'PlaceAnOrder',
+    {
+      value,
+      currency,
+      content_id: content_ids[0],
+      content_type,
+      order_id,
+    },
+    event_id,
+  )
   safeSnaptr('track', 'PURCHASE', {
     price: value,
     currency,
