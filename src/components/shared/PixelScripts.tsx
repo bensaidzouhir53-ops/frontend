@@ -18,6 +18,11 @@ export default function PixelScripts({ config }: PixelScriptsProps) {
         <Script id="tiktok-pixel-stub" strategy="afterInteractive">
           {`
             !function (w, d, t) {
+              // Guard against tracking.ts's loadTikTokPixel() also calling ttq.load()/
+              // ttq.page() — running both doubles every TikTok event (PageView, AddToCart,
+              // Purchase, ...) since events.js ends up loaded/init'd twice.
+              if (w.__nasamaTtqReady) return;
+              w.__nasamaTtqReady = true;
               w.TiktokAnalyticsObject=t;
               var ttq=w[t]=w[t]||[];
               ttq.methods=["page","track","identify","instances","debug","on","off","once","ready","alias","group","enableCookie","disableCookie"];

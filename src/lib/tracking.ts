@@ -63,6 +63,9 @@ declare global {
       params?: Record<string, unknown>,
     ) => void
     TiktokAnalyticsObject?: string
+    /** Set by PixelScripts' inline bootstrap once it has loaded/init'd ttq — tracking.ts
+     *  must not load/init it again or TikTok counts every browser event twice. */
+    __nasamaTtqReady?: boolean
     __nasamaMetaReady?: boolean
     __nasamaSyncMetaReady?: () => void
     __nasamaInitializedPixelIds?: string[]
@@ -395,6 +398,17 @@ function loadMetaPixel(pixelId: string): void {
 function loadTikTokPixel(pixelId: string): void {
   if (_ttqReady || !pixelId || typeof window === 'undefined') return
   _ttqReady = true
+
+  if (window.__nasamaTtqReady) {
+    // PixelScripts' inline head script already called ttq.load()/ttq.page() and
+    // injected events.js — doing it again double-fires every event to TikTok.
+    _ttqQueue.forEach(([event, params, eventId]) => {
+      fireTtqTrack(event, params, eventId)
+    })
+    _ttqQueue.length = 0
+    return
+  }
+  window.__nasamaTtqReady = true
 
   window.TiktokAnalyticsObject = 'ttq'
 
