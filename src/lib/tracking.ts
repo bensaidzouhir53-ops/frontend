@@ -3,8 +3,6 @@
  * Track functions are safe to call before pixels have loaded — events are queued and flushed on init.
  */
 
-import { getCanonicalMetaPixelId } from '@/lib/meta-pixel'
-
 export interface AttributionData {
   fbclid?: string
   ttclid?: string
@@ -93,12 +91,6 @@ let _ttqReady = false
 let _snapReady = false
 let _capiEnabled = false
 
-function isCapiEnabled(): boolean {
-  if (_capiEnabled) return true
-  if (typeof window !== 'undefined' && window.__nasamaCapiEnabled) return true
-  return false
-}
-
 export function setCapiEnabled(enabled: boolean): void {
   _capiEnabled = enabled
   if (typeof window !== 'undefined') {
@@ -143,14 +135,13 @@ function fireFbqTrack(
     _metaSentKeys.add(dedupeKey)
   }
 
-  const pixelId = getMetaPixelRegistry()[0] ?? getCanonicalMetaPixelId()
   const options = eventId ? { eventID: eventId } : undefined
 
-  // Always target the canonical pixel explicitly — most reliable in Ads Manager.
+  // Standard `track` — same as PageView bootstrap; most reliable in Ads Manager.
   if (options) {
-    window.fbq('trackSingle', pixelId, event, params, options)
+    window.fbq('track', event, params, options)
   } else {
-    window.fbq('trackSingle', pixelId, event, params)
+    window.fbq('track', event, params)
   }
   return true
 }
@@ -323,10 +314,12 @@ function flushMetaQueue(): void {
 /** Sync with PixelScripts when it inits fbq before tracking.ts sets _metaReady. */
 export function syncMetaReadyState(): void {
   if (typeof window === 'undefined' || !window.fbq) return
-  if (!window.__nasamaMetaReady && !_metaReady) return
-  if (!_metaReady) {
+  if (!window.fbq.callMethod) return
+    if (!_metaReady) {
     _metaReady = true
-    if (window.__nasamaMetaReady) _metaPageViewTracked = true
+    window.__nasamaMetaReady = true
+    if (window.__nasamaPageViewTracked) _metaPageViewTracked = true
+    registerMetaPixelIds(getMetaPixelRegistry())
     flushMetaQueue()
   }
 }
@@ -683,7 +676,8 @@ function metaEventParams(props: TrackingProps): Record<string, unknown> {
 
 function isMetaPixelReady(): boolean {
   if (typeof window === 'undefined' || !window.fbq) return false
-  return Boolean(window.__nasamaMetaReady || _metaReady || window.fbq.callMethod)
+  // Require fbevents.js — stub-only fbq can drop trackSingle/track before the library loads.
+  return Boolean(window.fbq.callMethod)
 }
 
 function safeFbq(
@@ -717,7 +711,7 @@ function safeFbq(
         )
         if (idx >= 0) _metaQueue.splice(idx, 1)
         window.clearInterval(retry)
-      } else if (attempts >= 50) {
+      } else if (attempts >= 100) {
         window.clearInterval(retry)
       }
     }, 200)
@@ -947,21 +941,10 @@ export function trackInitiateCheckout(props: TrackingProps): void {
 }
 
 export function trackPurchase(props: TrackingProps): void {
-  const {
-    value,
-    currency = 'SAR',
-    content_ids = [],
-    content_type = 'product',
-    order_id,
-    event_id,
-  } = props
+  const { event_id } = props
 
-  // Share event_id with backend CAPI — Meta dedupes browser + server to one Purchase.
-  if (event_id) {
-    safeFbq('track', 'Purchase', metaEventParams(props), event_id)
-  } else if (!isCapiEnabled()) {
-    safeFbq('track', 'Purchase', metaEventParams(props))
-  }
+  // Always fire browser Purchase — CAPI dedupes via shared event_id when present.
+  safeFbq('track', 'Purchase', metaEventParams(props), event_id)
 
   trackPurchaseSideEffects(props)
 }

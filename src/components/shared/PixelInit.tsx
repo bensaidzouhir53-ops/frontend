@@ -26,7 +26,7 @@ export default function PixelInit({ config }: PixelInitProps) {
     let pageViewSent = false
     const tryTrackPageView = () => {
       if (pageViewSent) return
-      if (!window.__nasamaMetaReady && !window.fbq?.callMethod) return
+      if (!window.fbq?.callMethod) return
       pageViewSent = true
       trackPageView()
     }

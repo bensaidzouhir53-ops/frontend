@@ -17,7 +17,7 @@ export default function MetaPixel({ pixelId = DEFAULT_META_PIXEL_ID }: MetaPixel
     if (!/^\d+$/.test(id)) return
 
     const markReady = () => {
-      if (!window.fbq) return false
+      if (!window.fbq?.callMethod) return false
       window.__nasamaMetaReady = true
       if (!window.__nasamaInitializedPixelIds?.includes(id)) {
         window.fbq('init', id)
@@ -65,7 +65,6 @@ export default function MetaPixel({ pixelId = DEFAULT_META_PIXEL_ID }: MetaPixel
       window.fbq?.('track', 'PageView')
       window.__nasamaPageViewTracked = true
     }
-    window.__nasamaMetaReady = true
     window.__nasamaInitializedPixelIds = [id]
     registerMetaPixelIds([id])
     syncMetaReadyState()

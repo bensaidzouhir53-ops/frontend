@@ -5,8 +5,8 @@ interface MetaPixelHeadScriptsProps {
 }
 
 /**
- * Official Meta Pixel bootstrap as a raw inline <script>.
- * Avoids next/script __next_s queue delays that break Pixel Helper / Test Events.
+ * Official Meta Pixel bootstrap as a raw inline <script> in <head>.
+ * Marks ready only after fbevents.js loads so funnel events are not lost.
  */
 export default function MetaPixelHeadScripts({
   pixelId = DEFAULT_META_PIXEL_ID,
@@ -18,14 +18,13 @@ export default function MetaPixelHeadScripts({
 !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
 n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
 n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
-t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script',
+t.src=v;t.onload=function(){window.__nasamaMetaReady=true;window.__nasamaSyncMetaReady?.();};
+s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script',
 'https://connect.facebook.net/en_US/fbevents.js');
 fbq('init','${id}');
 fbq('track','PageView');
 window.__nasamaPageViewTracked=true;
-window.__nasamaMetaReady=true;
 window.__nasamaInitializedPixelIds=['${id}'];
-window.__nasamaSyncMetaReady?.();
 `.trim()
 
   return (
