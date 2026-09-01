@@ -76,7 +76,8 @@ export function normalizePixelConfig(raw: {
     tiktok_pixel_id: tiktok,
     snap_pixel_id: snap,
     capi_enabled: Boolean(raw.capi_enabled),
-    tiktok_capi_enabled: Boolean(raw.tiktok_capi_enabled),
+    tiktok_capi_enabled:
+      Boolean(raw.tiktok_capi_enabled) || Boolean(tiktok && raw.capi_enabled),
   }
 }
 

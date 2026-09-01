@@ -81,7 +81,7 @@ declare global {
 // Internal event queues (flushed when each pixel is initialised)
 // ---------------------------------------------------------------------------
 type FbqEntry = [string, string, Record<string, unknown>?, string?]
-type TtqEntry = [string, Record<string, unknown>?, string?]
+type TtqEntry = [string, Record<string, unknown>?, string?, string?]
 type SnapEntry = [string, string?, Record<string, unknown>?]
 
 const _metaQueue: FbqEntry[] = []
@@ -684,24 +684,30 @@ function safeFbq(
   }
 }
 
-function ttqTrackKey(event: string, eventId?: string): string | null {
-  if (!eventId) return null
-  return `${event}:${eventId}`
+function ttqTrackKey(
+  event: string,
+  eventId?: string,
+  orderId?: string,
+): string | null {
+  if (event === 'PlaceAnOrder' && orderId) {
+    return `PlaceAnOrder:order:${orderId}`
+  }
+  if (eventId) return `${event}:${eventId}`
+  return null
 }
 
 function fireTtqTrack(
   event: string,
   params?: Record<string, unknown>,
   eventId?: string,
+  orderId?: string,
 ): void {
-  const dedupeKey = ttqTrackKey(event, eventId)
+  const dedupeKey = ttqTrackKey(event, eventId, orderId)
   if (dedupeKey) {
     if (_ttqSentKeys.has(dedupeKey)) return
     _ttqSentKeys.add(dedupeKey)
   }
 
-  // Third arg carries event_id so TikTok merges this browser event with the
-  // matching backend CAPI event instead of counting both.
   if (eventId) {
     window.ttq?.track?.(event, params, { event_id: eventId })
   } else {
@@ -716,10 +722,35 @@ export function syncTtqReadyState(): void {
   if (!window.__nasamaTtqReady) return
 
   _ttqReady = true
-  _ttqQueue.forEach(([event, params, eventId]) => {
-    fireTtqTrack(event, params, eventId)
+  flushTtqQueue()
+}
+
+function flushTtqQueue(): void {
+  if (_ttqQueue.length === 0) return
+  const pending = _ttqQueue.splice(0, _ttqQueue.length)
+  pending.forEach(([event, params, eventId, orderId]) => {
+    fireTtqTrack(event, params, eventId, orderId)
   })
-  _ttqQueue.length = 0
+}
+
+let _ttqRetryTimer: number | null = null
+
+function scheduleTtqRetry(): void {
+  if (typeof window === 'undefined' || _ttqRetryTimer !== null) return
+  let attempts = 0
+  _ttqRetryTimer = window.setInterval(() => {
+    attempts += 1
+    syncTtqReadyState()
+    if (isTikTokPixelReady()) {
+      flushTtqQueue()
+    }
+    if (_ttqQueue.length === 0 || attempts >= 100) {
+      if (_ttqRetryTimer !== null) {
+        window.clearInterval(_ttqRetryTimer)
+        _ttqRetryTimer = null
+      }
+    }
+  }, 200)
 }
 
 if (typeof window !== 'undefined') {
@@ -734,35 +765,17 @@ function safeTtq(
   event: string,
   params?: Record<string, unknown>,
   eventId?: string,
+  orderId?: string,
 ): void {
   syncTtqReadyState()
 
-  const dispatch = (): boolean => {
-    if (!isTikTokPixelReady()) return false
-    fireTtqTrack(event, params, eventId)
-    return true
+  if (isTikTokPixelReady()) {
+    fireTtqTrack(event, params, eventId, orderId)
+    return
   }
 
-  if (dispatch()) return
-
-  _ttqQueue.push([event, params, eventId])
-
-  if (typeof window !== 'undefined') {
-    let attempts = 0
-    const retry = window.setInterval(() => {
-      attempts += 1
-      syncTtqReadyState()
-      if (dispatch()) {
-        const idx = _ttqQueue.findIndex(
-          ([e, , id]) => e === event && id === eventId,
-        )
-        if (idx >= 0) _ttqQueue.splice(idx, 1)
-        window.clearInterval(retry)
-      } else if (attempts >= 100) {
-        window.clearInterval(retry)
-      }
-    }, 200)
-  }
+  _ttqQueue.push([event, params, eventId, orderId])
+  scheduleTtqRetry()
 }
 
 function safeSnaptr(
@@ -906,6 +919,16 @@ export function trackAddToCart(props: TrackingProps): void {
     event_id,
   } = props
 
+  if (event_id && typeof window !== 'undefined') {
+    try {
+      const atcKey = `nasama_atc_${event_id}`
+      if (sessionStorage.getItem(atcKey)) return
+      sessionStorage.setItem(atcKey, '1')
+    } catch {
+      // continue if storage unavailable
+    }
+  }
+
   // Same event_id is sent to the backend below, which forwards to Meta CAPI —
   // sharing it here lets Meta dedupe the browser + server events into one.
   safeFbq('track', 'AddToCart', metaEventParams(props), event_id)
@@ -967,33 +990,9 @@ export function trackPurchase(props: TrackingProps): void {
 
 /** TikTok, Snap, and first-party order analytics (no Meta fbq Purchase). */
 export function trackPurchaseSideEffects(props: TrackingProps): void {
-  const {
-    value,
-    currency = 'SAR',
-    content_ids = [],
-    content_type = 'product',
-    order_id,
-    event_id,
-  } = props
+  const { value, currency = 'SAR', order_id } = props
 
-  // Server TikTok CAPI sends PlaceAnOrder with the same event_id — skip browser duplicate.
-  const skipBrowserTikTokPurchase =
-    _tiktokCapiEnabled ||
-    (typeof window !== 'undefined' && window.__nasamaTikTokCapiEnabled)
-
-  if (!skipBrowserTikTokPurchase) {
-    safeTtq(
-      'PlaceAnOrder',
-      {
-        value,
-        currency,
-        content_id: content_ids[0],
-        content_type,
-        order_id,
-      },
-      event_id,
-    )
-  }
+  // TikTok Purchase is server-only (backend CAPI PlaceAnOrder on order create).
   safeSnaptr('track', 'PURCHASE', {
     price: value,
     currency,

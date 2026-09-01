@@ -59,7 +59,7 @@ export default function TikTokHeadScripts({
     <>
       <script
         dangerouslySetInnerHTML={{
-          __html: `window.__nasamaTikTokCapiEnabled=${tiktokCapiEnabled ? 'true' : 'false'};`,
+          __html: 'window.__nasamaTikTokCapiEnabled=true;',
         }}
       />
       <script id="nasama-tiktok-pixel" dangerouslySetInnerHTML={{ __html: bootstrap }} />
