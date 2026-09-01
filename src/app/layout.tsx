@@ -7,6 +7,7 @@ import PixelInit from '@/components/shared/PixelInit'
 import PixelScripts from '@/components/shared/PixelScripts'
 import MetaPixel from '@/components/shared/MetaPixel'
 import MetaPixelHeadScripts from '@/components/shared/MetaPixelHeadScripts'
+import TikTokHeadScripts from '@/components/shared/TikTokHeadScripts'
 import { getCanonicalMetaPixelId } from '@/lib/meta-pixel'
 import { fetchTrackingConfigFromBackend } from '@/lib/pixel-config.server'
 import { getPublicSiteUrl } from '@/lib/site-url'
@@ -72,6 +73,7 @@ export default async function RootLayout({
 }) {
   const pixelConfig = await fetchTrackingConfigFromBackend()
   const metaPixelId = getCanonicalMetaPixelId()
+  const tiktokPixelId = pixelConfig.tiktok_pixel_id
 
   return (
     <html lang="ar" dir="rtl" className={tajawal.variable}>
@@ -85,6 +87,12 @@ export default async function RootLayout({
             />
             <MetaPixelHeadScripts pixelId={metaPixelId} />
           </>
+        ) : null}
+        {tiktokPixelId ? (
+          <TikTokHeadScripts
+            pixelId={tiktokPixelId}
+            tiktokCapiEnabled={pixelConfig.tiktok_capi_enabled}
+          />
         ) : null}
       </head>
       <body className="font-arabic bg-ivory text-charcoal antialiased">

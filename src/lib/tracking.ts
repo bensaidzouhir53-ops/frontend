@@ -64,12 +64,16 @@ declare global {
     /** Set by PixelScripts' inline bootstrap once it has loaded/init'd ttq — tracking.ts
      *  must not load/init it again or TikTok counts every browser event twice. */
     __nasamaTtqReady?: boolean
+    __nasamaTtqInitStarted?: boolean
+    __nasamaSyncTtqReady?: () => void
     __nasamaMetaReady?: boolean
     __nasamaSyncMetaReady?: () => void
     __nasamaInitializedPixelIds?: string[]
     __nasamaPageViewTracked?: boolean
     /** Set from layout when backend CAPI handles Meta Purchase — skip browser duplicate. */
     __nasamaCapiEnabled?: boolean
+    /** Set from layout when backend TikTok CAPI handles Purchase — skip browser PlaceAnOrder. */
+    __nasamaTikTokCapiEnabled?: boolean
   }
 }
 
@@ -83,6 +87,7 @@ type SnapEntry = [string, string?, Record<string, unknown>?]
 const _metaQueue: FbqEntry[] = []
 const _metaSentKeys = new Set<string>()
 const _ttqQueue: TtqEntry[] = []
+const _ttqSentKeys = new Set<string>()
 const _snapQueue: SnapEntry[] = []
 let _metaReady = false
 let _metaPageViewTracked = false
@@ -90,11 +95,19 @@ const _metaInitializedIds = new Set<string>()
 let _ttqReady = false
 let _snapReady = false
 let _capiEnabled = false
+let _tiktokCapiEnabled = false
 
 export function setCapiEnabled(enabled: boolean): void {
   _capiEnabled = enabled
   if (typeof window !== 'undefined') {
     window.__nasamaCapiEnabled = enabled
+  }
+}
+
+export function setTikTokCapiEnabled(enabled: boolean): void {
+  _tiktokCapiEnabled = enabled
+  if (typeof window !== 'undefined') {
+    window.__nasamaTikTokCapiEnabled = enabled
   }
 }
 
@@ -388,64 +401,9 @@ function loadMetaPixel(pixelId: string): void {
   loadMetaPixels([pixelId])
 }
 
-function loadTikTokPixel(pixelId: string): void {
-  if (_ttqReady || !pixelId || typeof window === 'undefined') return
-  _ttqReady = true
-
-  if (window.__nasamaTtqReady) {
-    // PixelScripts' inline head script already called ttq.load()/ttq.page() and
-    // injected events.js — doing it again double-fires every event to TikTok.
-    _ttqQueue.forEach(([event, params, eventId]) => {
-      fireTtqTrack(event, params, eventId)
-    })
-    _ttqQueue.length = 0
-    return
-  }
-  window.__nasamaTtqReady = true
-
-  window.TiktokAnalyticsObject = 'ttq'
-
-  if (!window.ttq) {
-    const queue: unknown[][] = []
-    const ttq: NonNullable<Window['ttq']> = {
-      push: (...args: unknown[]) => queue.push(args),
-    }
-
-    const methods = [
-      'page',
-      'track',
-      'identify',
-      'instances',
-      'debug',
-      'on',
-      'off',
-      'once',
-      'ready',
-      'alias',
-      'group',
-      'enableCookie',
-      'disableCookie',
-    ]
-
-    methods.forEach((method) => {
-      ttq[method] = (...args: unknown[]) => queue.push([method, ...args])
-    })
-
-    window.ttq = ttq
-  }
-
-  const script = document.createElement('script')
-  script.async = true
-  script.src = `https://analytics.tiktok.com/i18n/pixel/events.js?sdkid=${pixelId}&lib=ttq`
-  document.head.appendChild(script)
-
-  window.ttq.load?.(pixelId)
-  window.ttq.page?.()
-
-  _ttqQueue.forEach(([event, params, eventId]) => {
-    fireTtqTrack(event, params, eventId)
-  })
-  _ttqQueue.length = 0
+function loadTikTokPixel(_pixelId: string): void {
+  // TikTokHeadScripts in layout <head> owns a single ttq.load()/events.js — never init here.
+  syncTtqReadyState()
 }
 
 function loadSnapPixel(pixelId: string): void {
@@ -489,6 +447,7 @@ interface PixelConfig {
   tiktok_pixel_id: string
   snap_pixel_id: string
   capi_enabled: boolean
+  tiktok_capi_enabled: boolean
 }
 
 function collectMetaIdsFromEnv(): string[] {
@@ -511,6 +470,7 @@ function configFromEnv(): PixelConfig | null {
     tiktok_pixel_id: tiktok,
     snap_pixel_id: snap,
     capi_enabled: false,
+    tiktok_capi_enabled: false,
   }
 }
 
@@ -521,6 +481,7 @@ function parsePixelConfigResponse(data: {
   tiktok_pixel_id?: string | null
   snap_pixel_id?: string | null
   capi_enabled?: boolean
+  tiktok_capi_enabled?: boolean
 }): PixelConfig | null {
   if (!data.enabled) return null
 
@@ -545,6 +506,7 @@ function parsePixelConfigResponse(data: {
     tiktok_pixel_id: tiktok,
     snap_pixel_id: snap,
     capi_enabled: Boolean(data.capi_enabled),
+    tiktok_capi_enabled: Boolean(data.tiktok_capi_enabled),
   }
 }
 
@@ -576,6 +538,7 @@ async function fetchPixelConfig(): Promise<PixelConfig | null> {
 
 function applyPixelConfig(config: PixelConfig): void {
   setCapiEnabled(Boolean(config.capi_enabled))
+  setTikTokCapiEnabled(Boolean(config.tiktok_capi_enabled))
 
   const metaIds =
     config.meta_pixel_ids.length > 0
@@ -604,6 +567,7 @@ export interface ServerPixelConfigInput {
   tiktok_pixel_id: string | null
   snap_pixel_id: string | null
   capi_enabled?: boolean
+  tiktok_capi_enabled?: boolean
 }
 
 /** Called from layout — pixels may already be injected via PixelScripts. */
@@ -611,6 +575,7 @@ export function initPixelsFromServerConfig(config: ServerPixelConfigInput): void
   if (typeof window === 'undefined') return
 
   setCapiEnabled(Boolean(config.capi_enabled))
+  setTikTokCapiEnabled(Boolean(config.tiktok_capi_enabled))
 
   const metaIds =
     config.meta_pixel_ids && config.meta_pixel_ids.length > 0
@@ -632,6 +597,7 @@ export function initPixelsFromServerConfig(config: ServerPixelConfigInput): void
     tiktok_pixel_id: tiktok ?? '',
     snap_pixel_id: snap ?? '',
     capi_enabled: Boolean(config.capi_enabled),
+    tiktok_capi_enabled: Boolean(config.tiktok_capi_enabled),
   })
 }
 
@@ -718,14 +684,24 @@ function safeFbq(
   }
 }
 
+function ttqTrackKey(event: string, eventId?: string): string | null {
+  if (!eventId) return null
+  return `${event}:${eventId}`
+}
+
 function fireTtqTrack(
   event: string,
   params?: Record<string, unknown>,
   eventId?: string,
 ): void {
+  const dedupeKey = ttqTrackKey(event, eventId)
+  if (dedupeKey) {
+    if (_ttqSentKeys.has(dedupeKey)) return
+    _ttqSentKeys.add(dedupeKey)
+  }
+
   // Third arg carries event_id so TikTok merges this browser event with the
-  // matching backend CAPI event instead of counting both (was double-firing
-  // Purchase — see fire_purchase_event in backend/app/services/capi/tiktok.py).
+  // matching backend CAPI event instead of counting both.
   if (eventId) {
     window.ttq?.track?.(event, params, { event_id: eventId })
   } else {
@@ -733,15 +709,25 @@ function fireTtqTrack(
   }
 }
 
-/** Sync with PixelScripts when it inits ttq before tracking.ts sets _ttqReady. */
+/** Sync with TikTokHeadScripts once events.js has loaded. */
 export function syncTtqReadyState(): void {
-  if (typeof window === 'undefined' || !window.ttq) return
+  if (typeof window === 'undefined') return
   if (_ttqReady) return
+  if (!window.__nasamaTtqReady) return
+
   _ttqReady = true
   _ttqQueue.forEach(([event, params, eventId]) => {
     fireTtqTrack(event, params, eventId)
   })
   _ttqQueue.length = 0
+}
+
+if (typeof window !== 'undefined') {
+  window.__nasamaSyncTtqReady = syncTtqReadyState
+}
+
+function isTikTokPixelReady(): boolean {
+  return typeof window !== 'undefined' && Boolean(window.__nasamaTtqReady && window.ttq?.track)
 }
 
 function safeTtq(
@@ -750,10 +736,32 @@ function safeTtq(
   eventId?: string,
 ): void {
   syncTtqReadyState()
-  if (typeof window !== 'undefined' && window.ttq?.track && _ttqReady) {
+
+  const dispatch = (): boolean => {
+    if (!isTikTokPixelReady()) return false
     fireTtqTrack(event, params, eventId)
-  } else {
-    _ttqQueue.push([event, params, eventId])
+    return true
+  }
+
+  if (dispatch()) return
+
+  _ttqQueue.push([event, params, eventId])
+
+  if (typeof window !== 'undefined') {
+    let attempts = 0
+    const retry = window.setInterval(() => {
+      attempts += 1
+      syncTtqReadyState()
+      if (dispatch()) {
+        const idx = _ttqQueue.findIndex(
+          ([e, , id]) => e === event && id === eventId,
+        )
+        if (idx >= 0) _ttqQueue.splice(idx, 1)
+        window.clearInterval(retry)
+      } else if (attempts >= 100) {
+        window.clearInterval(retry)
+      }
+    }, 200)
   }
 }
 
@@ -866,7 +874,7 @@ export function trackPageView(): void {
     _metaPageViewTracked = true
     syncMetaReadyState()
   }
-  safeTtq('ViewContent')
+  // ttq.page() in TikTokHeadScripts already sent the page view — skip duplicate ViewContent.
   safeSnaptr('track', 'PAGE_VIEW')
 }
 
@@ -901,12 +909,16 @@ export function trackAddToCart(props: TrackingProps): void {
   // Same event_id is sent to the backend below, which forwards to Meta CAPI —
   // sharing it here lets Meta dedupe the browser + server events into one.
   safeFbq('track', 'AddToCart', metaEventParams(props), event_id)
-  safeTtq('AddToCart', {
-    value,
-    currency,
-    content_id: content_ids[0],
-    content_type,
-  })
+  safeTtq(
+    'AddToCart',
+    {
+      value,
+      currency,
+      content_id: content_ids[0],
+      content_type,
+    },
+    event_id,
+  )
   safeSnaptr('track', 'ADD_CART', { price: value, currency })
   trackFirstParty('AddToCart', props)
 }
@@ -918,7 +930,7 @@ export function trackInitiateCheckoutOnce(
   if (typeof window === 'undefined') return false
   const key =
     props.session_key ??
-    `nasama_checkout_${(props.content_ids ?? []).join('-')}_${props.value ?? 0}`
+    `nasama_checkout_${(props.content_ids ?? []).join('-')}`
   try {
     if (sessionStorage.getItem(key)) return false
     sessionStorage.setItem(key, props.event_id ?? '1')
@@ -935,7 +947,11 @@ export function trackInitiateCheckout(props: TrackingProps): void {
   // Same event_id is sent to the backend below, which forwards to Meta CAPI —
   // sharing it here lets Meta dedupe the browser + server events into one.
   safeFbq('track', 'InitiateCheckout', metaEventParams(props), event_id)
-  safeTtq('InitiateCheckout', { value, currency, content_id: content_ids[0] })
+  safeTtq(
+    'InitiateCheckout',
+    { value, currency, content_id: content_ids[0] },
+    event_id,
+  )
   safeSnaptr('track', 'START_CHECKOUT', { price: value, currency })
   trackFirstParty('InitiateCheckout', props)
 }
@@ -960,19 +976,24 @@ export function trackPurchaseSideEffects(props: TrackingProps): void {
     event_id,
   } = props
 
-  // Same event_id as backend TikTok CAPI (fire_purchase_event) — lets TikTok
-  // merge browser + server Purchase into one instead of counting both.
-  safeTtq(
-    'PlaceAnOrder',
-    {
-      value,
-      currency,
-      content_id: content_ids[0],
-      content_type,
-      order_id,
-    },
-    event_id,
-  )
+  // Server TikTok CAPI sends PlaceAnOrder with the same event_id — skip browser duplicate.
+  const skipBrowserTikTokPurchase =
+    _tiktokCapiEnabled ||
+    (typeof window !== 'undefined' && window.__nasamaTikTokCapiEnabled)
+
+  if (!skipBrowserTikTokPurchase) {
+    safeTtq(
+      'PlaceAnOrder',
+      {
+        value,
+        currency,
+        content_id: content_ids[0],
+        content_type,
+        order_id,
+      },
+      event_id,
+    )
+  }
   safeSnaptr('track', 'PURCHASE', {
     price: value,
     currency,

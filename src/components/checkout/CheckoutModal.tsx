@@ -67,6 +67,7 @@ export default function CheckoutModal() {
       value: cartTotal,
       content_ids: items.map((i) => i.product.slug),
       event_id: checkoutEventId,
+      session_key: CHECKOUT_EVENT_ID_KEY,
     })
   }, [isCheckoutOpen, items, cartTotal])
 
