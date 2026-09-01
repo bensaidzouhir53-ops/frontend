@@ -19,6 +19,7 @@ import {
   captureAttribution,
   generateEventId,
   trackInitiateCheckoutOnce,
+  checkoutInitiateCheckoutFiredKey,
 } from '@/lib/tracking'
 import { cn } from '@/lib/utils'
 
@@ -44,6 +45,7 @@ export default function CheckoutModal() {
     if (!isCheckoutOpen) {
       try {
         sessionStorage.removeItem(CHECKOUT_EVENT_ID_KEY)
+        sessionStorage.removeItem(checkoutInitiateCheckoutFiredKey(CHECKOUT_EVENT_ID_KEY))
       } catch {
         // ignore
       }
@@ -69,7 +71,7 @@ export default function CheckoutModal() {
       event_id: checkoutEventId,
       session_key: CHECKOUT_EVENT_ID_KEY,
     })
-  }, [isCheckoutOpen, items, cartTotal])
+  }, [isCheckoutOpen, items])
 
   const {
     register,

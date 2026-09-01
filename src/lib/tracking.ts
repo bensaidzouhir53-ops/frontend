@@ -696,6 +696,26 @@ function ttqTrackKey(
   return null
 }
 
+function hasTikTokDedupeKey(dedupeKey: string): boolean {
+  if (_ttqSentKeys.has(dedupeKey)) return true
+  if (typeof window === 'undefined') return false
+  try {
+    return Boolean(sessionStorage.getItem(`nasama_tiktok_${dedupeKey}`))
+  } catch {
+    return false
+  }
+}
+
+function markTikTokDedupeKey(dedupeKey: string): void {
+  _ttqSentKeys.add(dedupeKey)
+  if (typeof window === 'undefined') return
+  try {
+    sessionStorage.setItem(`nasama_tiktok_${dedupeKey}`, '1')
+  } catch {
+    // ignore storage failures
+  }
+}
+
 function fireTtqTrack(
   event: string,
   params?: Record<string, unknown>,
@@ -704,8 +724,8 @@ function fireTtqTrack(
 ): void {
   const dedupeKey = ttqTrackKey(event, eventId, orderId)
   if (dedupeKey) {
-    if (_ttqSentKeys.has(dedupeKey)) return
-    _ttqSentKeys.add(dedupeKey)
+    if (hasTikTokDedupeKey(dedupeKey)) return
+    markTikTokDedupeKey(dedupeKey)
   }
 
   if (eventId) {
@@ -767,6 +787,9 @@ function safeTtq(
   eventId?: string,
   orderId?: string,
 ): void {
+  const dedupeKey = ttqTrackKey(event, eventId, orderId)
+  if (dedupeKey && hasTikTokDedupeKey(dedupeKey)) return
+
   syncTtqReadyState()
 
   if (isTikTokPixelReady()) {
@@ -774,8 +797,27 @@ function safeTtq(
     return
   }
 
+  if (
+    dedupeKey &&
+    _ttqQueue.some(([queuedEvent, , queuedEventId, queuedOrderId]) => {
+      return ttqTrackKey(queuedEvent, queuedEventId, queuedOrderId) === dedupeKey
+    })
+  ) {
+    return
+  }
+
   _ttqQueue.push([event, params, eventId, orderId])
   scheduleTtqRetry()
+}
+
+/** TikTok funnel events — each action counts exactly once in Ads Manager. */
+function trackTikTokFunnel(
+  event: 'AddToCart' | 'InitiateCheckout',
+  params: Record<string, unknown>,
+  dedupeId: string,
+): void {
+  if (!dedupeId) return
+  safeTtq(event, params, dedupeId)
 }
 
 function safeSnaptr(
@@ -910,29 +952,25 @@ export function trackViewContent(props: TrackingProps): void {
   trackFirstParty('ViewContent', props)
 }
 
+export const CHECKOUT_IC_FIRED_SUFFIX = '_tiktok_ic_fired'
+
+export function checkoutInitiateCheckoutFiredKey(sessionKey: string): string {
+  return `${sessionKey}${CHECKOUT_IC_FIRED_SUFFIX}`
+}
+
 export function trackAddToCart(props: TrackingProps): void {
   const {
     value,
     currency = 'SAR',
     content_ids = [],
     content_type = 'product',
-    event_id,
   } = props
-
-  if (event_id && typeof window !== 'undefined') {
-    try {
-      const atcKey = `nasama_atc_${event_id}`
-      if (sessionStorage.getItem(atcKey)) return
-      sessionStorage.setItem(atcKey, '1')
-    } catch {
-      // continue if storage unavailable
-    }
-  }
+  const event_id = props.event_id ?? generateEventId()
 
   // Same event_id is sent to the backend below, which forwards to Meta CAPI —
   // sharing it here lets Meta dedupe the browser + server events into one.
-  safeFbq('track', 'AddToCart', metaEventParams(props), event_id)
-  safeTtq(
+  safeFbq('track', 'AddToCart', metaEventParams({ ...props, event_id }), event_id)
+  trackTikTokFunnel(
     'AddToCart',
     {
       value,
@@ -943,7 +981,7 @@ export function trackAddToCart(props: TrackingProps): void {
     event_id,
   )
   safeSnaptr('track', 'ADD_CART', { price: value, currency })
-  trackFirstParty('AddToCart', props)
+  trackFirstParty('AddToCart', { ...props, event_id })
 }
 
 /** Fire InitiateCheckout once per checkout session (modal open). */
@@ -951,32 +989,43 @@ export function trackInitiateCheckoutOnce(
   props: TrackingProps & { session_key?: string },
 ): boolean {
   if (typeof window === 'undefined') return false
-  const key =
+
+  const event_id = props.event_id ?? generateEventId()
+  const sessionKey =
     props.session_key ??
     `nasama_checkout_${(props.content_ids ?? []).join('-')}`
+  const firedKey = checkoutInitiateCheckoutFiredKey(sessionKey)
+
   try {
-    if (sessionStorage.getItem(key)) return false
-    sessionStorage.setItem(key, props.event_id ?? '1')
+    if (sessionStorage.getItem(firedKey)) return false
+    sessionStorage.setItem(firedKey, '1')
   } catch {
     return false
   }
-  trackInitiateCheckout(props)
+
+  trackInitiateCheckout({ ...props, event_id })
   return true
 }
 
 export function trackInitiateCheckout(props: TrackingProps): void {
   const { value, currency = 'SAR', content_ids = [], event_id } = props
+  const dedupeId = event_id ?? generateEventId()
 
   // Same event_id is sent to the backend below, which forwards to Meta CAPI —
   // sharing it here lets Meta dedupe the browser + server events into one.
-  safeFbq('track', 'InitiateCheckout', metaEventParams(props), event_id)
-  safeTtq(
+  safeFbq(
+    'track',
+    'InitiateCheckout',
+    metaEventParams({ ...props, event_id: dedupeId }),
+    dedupeId,
+  )
+  trackTikTokFunnel(
     'InitiateCheckout',
     { value, currency, content_id: content_ids[0] },
-    event_id,
+    dedupeId,
   )
   safeSnaptr('track', 'START_CHECKOUT', { price: value, currency })
-  trackFirstParty('InitiateCheckout', props)
+  trackFirstParty('InitiateCheckout', { ...props, event_id: dedupeId })
 }
 
 export function trackPurchase(props: TrackingProps): void {
