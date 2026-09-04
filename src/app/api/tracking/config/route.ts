@@ -28,7 +28,6 @@ export async function GET() {
         const body = mergePixelConfigs(backendRaw, {
           enabled: process.env.ENABLE_WEB_PIXELS !== 'false',
           meta_pixel_id: process.env.NEXT_PUBLIC_META_PIXEL_ID ?? null,
-          tiktok_pixel_id: getEnvPixelFallback().tiktok_pixel_id,
         })
         return NextResponse.json(applyCanonicalMetaPixel(body), {
           headers: { 'Cache-Control': 'no-store' },

@@ -88,6 +88,7 @@ const _metaQueue: FbqEntry[] = []
 const _metaSentKeys = new Set<string>()
 const _ttqQueue: TtqEntry[] = []
 const _ttqSentKeys = new Set<string>()
+const _ttqInflightKeys = new Set<string>()
 const _snapQueue: SnapEntry[] = []
 let _metaReady = false
 let _metaPageViewTracked = false
@@ -724,8 +725,12 @@ function fireTtqTrack(
 ): void {
   const dedupeKey = ttqTrackKey(event, eventId, orderId)
   if (dedupeKey) {
-    if (hasTikTokDedupeKey(dedupeKey)) return
+    if (hasTikTokDedupeKey(dedupeKey)) {
+      _ttqInflightKeys.delete(dedupeKey)
+      return
+    }
     markTikTokDedupeKey(dedupeKey)
+    _ttqInflightKeys.delete(dedupeKey)
   }
 
   if (eventId) {
@@ -788,7 +793,9 @@ function safeTtq(
   orderId?: string,
 ): void {
   const dedupeKey = ttqTrackKey(event, eventId, orderId)
-  if (dedupeKey && hasTikTokDedupeKey(dedupeKey)) return
+  if (dedupeKey) {
+    if (hasTikTokDedupeKey(dedupeKey) || _ttqInflightKeys.has(dedupeKey)) return
+  }
 
   syncTtqReadyState()
 
@@ -806,18 +813,20 @@ function safeTtq(
     return
   }
 
+  if (dedupeKey) _ttqInflightKeys.add(dedupeKey)
   _ttqQueue.push([event, params, eventId, orderId])
   scheduleTtqRetry()
 }
 
 /** TikTok funnel events — each action counts exactly once in Ads Manager. */
 function trackTikTokFunnel(
-  event: 'AddToCart' | 'InitiateCheckout',
+  event: 'AddToCart' | 'InitiateCheckout' | 'PlaceAnOrder',
   params: Record<string, unknown>,
   dedupeId: string,
+  orderId?: string,
 ): void {
   if (!dedupeId) return
-  safeTtq(event, params, dedupeId)
+  safeTtq(event, params, dedupeId, orderId)
 }
 
 function safeSnaptr(
@@ -1039,9 +1048,31 @@ export function trackPurchase(props: TrackingProps): void {
 
 /** TikTok, Snap, and first-party order analytics (no Meta fbq Purchase). */
 export function trackPurchaseSideEffects(props: TrackingProps): void {
-  const { value, currency = 'SAR', order_id } = props
+  const {
+    value,
+    currency = 'SAR',
+    content_ids = [],
+    content_type = 'product',
+    order_id,
+    event_id,
+  } = props
 
-  // TikTok Purchase is server-only (backend CAPI PlaceAnOrder on order create).
+  // Browser pixel only — one PlaceAnOrder per order (no TikTok server CAPI).
+  if (order_id) {
+    trackTikTokFunnel(
+      'PlaceAnOrder',
+      {
+        value,
+        currency,
+        content_id: content_ids[0],
+        content_type,
+        order_id,
+      },
+      event_id ?? order_id,
+      order_id,
+    )
+  }
+
   safeSnaptr('track', 'PURCHASE', {
     price: value,
     currency,

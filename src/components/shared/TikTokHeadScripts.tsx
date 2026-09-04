@@ -1,17 +1,12 @@
 interface TikTokHeadScriptsProps {
   pixelId: string
-  /** When true, Purchase is sent server-side only — browser must not duplicate PlaceAnOrder. */
-  tiktokCapiEnabled?: boolean
 }
 
 /**
- * Single TikTok Pixel bootstrap in <head>. Marks ready only after events.js loads
- * so tracking.ts never double-inits (which counted every event twice in Ads Manager).
+ * Single TikTok Pixel bootstrap in <head>. Browser pixel only — no server CAPI.
+ * Marks ready only after events.js loads so events are never double-fired.
  */
-export default function TikTokHeadScripts({
-  pixelId,
-  tiktokCapiEnabled = false,
-}: TikTokHeadScriptsProps) {
+export default function TikTokHeadScripts({ pixelId }: TikTokHeadScriptsProps) {
   const id = pixelId.trim()
   if (!/^[A-Za-z0-9_-]+$/.test(id)) return null
 
@@ -19,6 +14,7 @@ export default function TikTokHeadScripts({
 !function (w, d, t) {
   if (w.__nasamaTtqInitStarted) return;
   w.__nasamaTtqInitStarted = true;
+  w.__nasamaTikTokCapiEnabled = false;
   w.TiktokAnalyticsObject = t;
   var ttq = w[t] = w[t] || [];
   ttq.methods = ["page","track","identify","instances","debug","on","off","once","ready","alias","group","enableCookie","disableCookie"];
@@ -56,13 +52,6 @@ export default function TikTokHeadScripts({
 `.trim()
 
   return (
-    <>
-      <script
-        dangerouslySetInnerHTML={{
-          __html: 'window.__nasamaTikTokCapiEnabled=true;',
-        }}
-      />
-      <script id="nasama-tiktok-pixel" dangerouslySetInnerHTML={{ __html: bootstrap }} />
-    </>
+    <script id="nasama-tiktok-pixel" dangerouslySetInnerHTML={{ __html: bootstrap }} />
   )
 }

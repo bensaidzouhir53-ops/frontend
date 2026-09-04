@@ -76,8 +76,7 @@ export function normalizePixelConfig(raw: {
     tiktok_pixel_id: tiktok,
     snap_pixel_id: snap,
     capi_enabled: Boolean(raw.capi_enabled),
-    tiktok_capi_enabled:
-      Boolean(raw.tiktok_capi_enabled) || Boolean(tiktok && raw.capi_enabled),
+    tiktok_capi_enabled: false,
   }
 }
 
@@ -137,7 +136,7 @@ export function mergePixelConfigs(...sources: PixelConfigInput[]): ServerPixelCo
     if (nextSnap && !snap) snap = nextSnap
   }
 
-  tiktokCandidates.push(getTikTokPixelOverride())
+  // TikTok pixel ID comes from backend env only — never from frontend NEXT_PUBLIC_*.
   tiktok = resolveTikTokPixelId(...tiktokCandidates)
 
   const snapOverride = getSnapPixelOverride()
@@ -157,33 +156,24 @@ export function mergePixelConfigs(...sources: PixelConfigInput[]): ServerPixelCo
         backendSource?.capi_enabled ||
         sources.some((source) => source.capi_enabled),
     ),
-    tiktok_capi_enabled: Boolean(
-      process.env.NEXT_PUBLIC_TIKTOK_CAPI_ENABLED === 'true' ||
-        backendSource?.tiktok_capi_enabled ||
-        sources.some((source) => source.tiktok_capi_enabled),
-    ),
+    tiktok_capi_enabled: false,
   }
 }
 
 /** Runtime env fallback when backend fetch fails during Docker build or network blip. */
 export function getEnvPixelFallback(): ServerPixelConfig {
   const capiFromEnv = process.env.NEXT_PUBLIC_CAPI_ENABLED === 'true'
-  const tiktokCapiFromEnv = process.env.NEXT_PUBLIC_TIKTOK_CAPI_ENABLED === 'true'
   return normalizePixelConfig({
     enabled: process.env.ENABLE_WEB_PIXELS !== 'false',
     meta_pixel_id:
       process.env.NEXT_PUBLIC_META_PIXEL_ID ??
       process.env.META_PIXEL_ID ??
       DEFAULT_META_PIXEL_ID,
-    tiktok_pixel_id: resolveTikTokPixelId(
-      process.env.NEXT_PUBLIC_TIKTOK_PIXEL_ID,
-      process.env.TIKTOK_PIXEL_CODE,
-      process.env.TIKTOK_PIXEL_ID,
-    ),
+    tiktok_pixel_id: null,
     snap_pixel_id:
       process.env.NEXT_PUBLIC_SNAP_PIXEL_ID ?? process.env.SNAP_PIXEL_ID ?? null,
     capi_enabled: capiFromEnv,
-    tiktok_capi_enabled: tiktokCapiFromEnv,
+    tiktok_capi_enabled: false,
   })
 }
 
@@ -228,9 +218,7 @@ export async function fetchTrackingConfigFromBackend(): Promise<ServerPixelConfi
         capi_enabled:
           process.env.NEXT_PUBLIC_CAPI_ENABLED === 'true' ||
           backendConfig.capi_enabled,
-        tiktok_capi_enabled:
-          process.env.NEXT_PUBLIC_TIKTOK_CAPI_ENABLED === 'true' ||
-          backendConfig.tiktok_capi_enabled,
+        tiktok_capi_enabled: false,
       })
     }
     return applyCanonicalMetaPixel(mergePixelConfigs(backendConfig, envFallback))
@@ -249,9 +237,7 @@ export async function fetchTrackingConfigFromBackend(): Promise<ServerPixelConfi
           capi_enabled:
             process.env.NEXT_PUBLIC_CAPI_ENABLED === 'true' ||
             envFallback.capi_enabled,
-          tiktok_capi_enabled:
-            process.env.NEXT_PUBLIC_TIKTOK_CAPI_ENABLED === 'true' ||
-            envFallback.tiktok_capi_enabled,
+          tiktok_capi_enabled: false,
         }
       : EMPTY,
   )

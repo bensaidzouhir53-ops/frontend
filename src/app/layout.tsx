@@ -88,12 +88,7 @@ export default async function RootLayout({
             <MetaPixelHeadScripts pixelId={metaPixelId} />
           </>
         ) : null}
-        {tiktokPixelId ? (
-          <TikTokHeadScripts
-            pixelId={tiktokPixelId}
-            tiktokCapiEnabled={pixelConfig.tiktok_capi_enabled}
-          />
-        ) : null}
+        {tiktokPixelId ? <TikTokHeadScripts pixelId={tiktokPixelId} /> : null}
       </head>
       <body className="font-arabic bg-ivory text-charcoal antialiased">
         <MetaPixel pixelId={metaPixelId} />
