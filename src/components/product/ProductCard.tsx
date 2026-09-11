@@ -1,6 +1,5 @@
 'use client'
 
-/* eslint-disable @next/next/no-img-element */
 import Image from 'next/image'
 import Link from 'next/link'
 import { ShoppingCart, Star, Eye } from 'lucide-react'
@@ -39,10 +38,12 @@ export default function ProductCard({ product, className }: ProductCardProps) {
     >
       {/* Image — links to product page */}
       <Link href={`/products/${product.slug}`} className="relative block aspect-square overflow-hidden bg-mist">
-        <img
+        <Image
           src={product.image}
           alt={product.nameAr}
-          className="object-cover transition-transform duration-500 group-hover:scale-105 w-full h-full"
+          fill
+          sizes="(max-width: 768px) 50vw, 300px"
+          className="object-cover transition-transform duration-500 group-hover:scale-105"
         />
         {/* Badge */}
         <div className="absolute left-3 top-3">

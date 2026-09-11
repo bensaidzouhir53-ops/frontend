@@ -315,10 +315,12 @@ export default function ProductPageContent({
           <div className="flex flex-col items-center gap-12 lg:flex-row">
             <div className="order-1 w-full lg:w-1/2">
               <div className="relative aspect-[4/5] overflow-hidden rounded-[2rem] border-8 border-white bg-gray-100 shadow-2xl lg:min-h-[420px]">
-                <img
+                <Image
                   src={sections.solutionImage}
                   alt={sections.solutionImageAlt}
-                  className="h-full w-full object-cover"
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 50vw"
+                  className="object-cover"
                 />
               </div>
             </div>
@@ -433,10 +435,12 @@ export default function ProductPageContent({
             <div className="flex flex-col items-center gap-12 lg:flex-row lg:gap-16">
               <div className="order-1 w-full lg:order-2 lg:w-5/12">
                 <div className="group relative aspect-[4/5] overflow-hidden rounded-[2rem] border-8 border-white bg-white shadow-2xl">
-                  <img
+                  <Image
                     src={sections.ingredientsMainImage}
                     alt={sections.ingredientsMainImageAlt}
-                    className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    fill
+                    sizes="(max-width: 1024px) 100vw, 40vw"
+                    className="object-cover transition-transform duration-700 group-hover:scale-105"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-charcoal/50 to-transparent opacity-60" />
                 </div>
@@ -460,11 +464,13 @@ export default function ProductPageContent({
                       key={idx}
                       className="group flex gap-4 rounded-2xl border border-warm-border bg-white p-4 shadow-sm"
                     >
-                      <div className="h-14 w-14 flex-shrink-0 overflow-hidden rounded-xl border border-warm-border bg-surface-rose">
-                        <img
+                      <div className="relative h-14 w-14 flex-shrink-0 overflow-hidden rounded-xl border border-warm-border bg-surface-rose">
+                        <Image
                           src={ingredient.image}
                           alt={ingredient.name}
-                          className="h-full w-full object-cover"
+                          fill
+                          sizes="56px"
+                          className="object-cover"
                         />
                       </div>
                       <div>

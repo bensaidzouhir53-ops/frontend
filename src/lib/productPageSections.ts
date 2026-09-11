@@ -54,8 +54,8 @@ export interface ResultsSectionContent {
   badge: string
   title: string
   subtitle: string
-  /** Animated GIF — native img only (Next/Image breaks animation) */
-  gif: string
+  /** Optional animated GIF — prefer gifVideo (MP4) which is far smaller. */
+  gif?: string
   gifAlt: string
   gifVideo?: string
   overlayTitle: string
@@ -380,7 +380,9 @@ const HERBAL_LUNG_SPRAY_SECTIONS: ProductPageSections = {
       desc: 'تنظف صدرك الملتهب وتبني طبقة حماية.. بترجع تسحب هوا نظيف يملي رئتك وتحس بصدرك انشرح وطاقتك رجعت لك من جديد!',
     },
   ],
-  mechanismImage: '/images/mechanism-breathing.gif',
+  // Lightweight MP4 (~108KB) + tiny JPG poster instead of the 2.5MB animated GIF.
+  mechanismVideo: '/videos/mechanism-breathing.mp4',
+  mechanismImage: '/images/mechanism-breathing-poster.jpg',
   mechanismImageAlt: 'شرح آلية العمل — حركة التنفس والرئتين',
   statsSection: {
     badge: 'نتائج حقيقية لعملاء جربوا وارتاحوا',
@@ -467,7 +469,6 @@ const HERBAL_LUNG_SPRAY_SECTIONS: ProductPageSections = {
     title: 'هذا اللي راح تحس فيه لما تستخدم بخاخ نفس',
     subtitle:
       'مو وعود إعلانية — هذي النتائج اللي حققها آلاف السعوديين: تنفس مريح، صدر منشرح، ونوم بدون كتمة.',
-    gif: '/images/herbal-lung-spray-results.gif',
     gifVideo: '/videos/herbal-lung-spray-results.mp4',
     gifAlt: 'رجل يتنفس بعمق على قمة جبل — نتيجة تنفس مريح بعد بخاخ نفس',
     overlayTitle: 'تنفس مريح وصدر منشرح — هذي النتيجة اللي تستحقها',
