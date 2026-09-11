@@ -196,7 +196,9 @@ export async function fetchTrackingConfigFromBackend(): Promise<ServerPixelConfi
   for (const baseUrl of getBackendCandidates()) {
     try {
       const response = await fetch(`${baseUrl}/api/tracking/config`, {
-        cache: 'no-store',
+        // Cache the pixel config so we don't block every page render on a
+        // backend round-trip. Pixel IDs rarely change; refresh every 5 min.
+        next: { revalidate: 300 },
         signal: AbortSignal.timeout(5_000),
       })
       if (response.ok) {

@@ -13,7 +13,9 @@ import { fetchTrackingConfigFromBackend } from '@/lib/pixel-config.server'
 import { getPublicSiteUrl } from '@/lib/site-url'
 import './globals.css'
 
-export const dynamic = 'force-dynamic'
+// Storefront pages are built from static product data. Re-render (ISR) at most
+// every 5 minutes so pages are served from cache instead of rendered per-request.
+export const revalidate = 300
 
 const tajawal = Tajawal({
   subsets: ['arabic', 'latin'],

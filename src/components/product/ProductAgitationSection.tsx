@@ -25,7 +25,7 @@ function AnimatedGif({
       src={src}
       alt={alt}
       className={className}
-      loading="eager"
+      loading="lazy"
       decoding="async"
       draggable={false}
     />
@@ -89,7 +89,7 @@ export default function ProductAgitationSection({ content }: ProductAgitationSec
                       playsInline
                       muted
                       loop
-                      preload="auto"
+                      preload="metadata"
                       poster={hasGif ? gifSrc : undefined}
                       className="h-full w-full object-cover"
                       aria-label={content.gifAlt}
@@ -105,7 +105,7 @@ export default function ProductAgitationSection({ content }: ProductAgitationSec
                       src={gifSrc}
                       alt={content.gifAlt}
                       className="h-full w-full object-cover contrast-125"
-                      loading="eager"
+                      loading="lazy"
                       decoding="async"
                     />
                   )}

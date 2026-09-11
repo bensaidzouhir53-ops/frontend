@@ -273,7 +273,7 @@ export default function ProductPageContent({
                     src={sections.painGif}
                     alt={sections.painImageAlt}
                     className="h-full w-full object-cover grayscale-[30%] contrast-125"
-                    loading="eager"
+                    loading="lazy"
                     decoding="async"
                   />
                 ) : sections.painVideo ? (

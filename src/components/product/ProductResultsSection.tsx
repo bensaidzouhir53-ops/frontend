@@ -48,16 +48,8 @@ export default function ProductResultsSection({ content }: ProductResultsSection
             <div className="relative mx-auto aspect-[3/4] max-w-md overflow-hidden rounded-[2rem] border border-white/10 shadow-2xl lg:max-w-none lg:aspect-[4/5]">
               {hasMedia ? (
                 <>
-                  {hasGif && isGifPath(gifSrc) ? (
-                    <img
-                      key={gifSrc}
-                      src={gifSrc}
-                      alt={content.gifAlt}
-                      className="h-full w-full object-cover"
-                      loading="eager"
-                      decoding="async"
-                    />
-                  ) : hasVideo ? (
+                  {/* Prefer the MP4 (far smaller than an animated GIF) when available. */}
+                  {hasVideo ? (
                     <video
                       key={videoSrc}
                       src={`${videoSrc}#t=0.001`}
@@ -65,16 +57,25 @@ export default function ProductResultsSection({ content }: ProductResultsSection
                       playsInline
                       muted
                       loop
-                      preload="auto"
+                      preload="metadata"
                       className="h-full w-full object-cover"
                       aria-label={content.gifAlt}
+                    />
+                  ) : hasGif && isGifPath(gifSrc) ? (
+                    <img
+                      key={gifSrc}
+                      src={gifSrc}
+                      alt={content.gifAlt}
+                      className="h-full w-full object-cover"
+                      loading="lazy"
+                      decoding="async"
                     />
                   ) : (
                     <img
                       src={gifSrc}
                       alt={content.gifAlt}
                       className="h-full w-full object-cover"
-                      loading="eager"
+                      loading="lazy"
                       decoding="async"
                     />
                   )}

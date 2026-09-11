@@ -325,7 +325,8 @@ const HERBAL_LUNG_SPRAY_SECTIONS: ProductPageSections = {
   ],
   painImage: '/images/pain-point-lung.png',
   painImageAlt: 'رجل سعودي يتعب ويتلهث من كتمة الصدر أثناء نزول الدرج',
-  painGif: '/images/herbal-lung-spray-pain.gif',
+  // Use the lightweight MP4 (~3MB) instead of the 16MB GIF for the same animation.
+  painVideo: '/videos/herbal-lung-spray-pain-animated.mp4',
   painOverlay: 'لا تخلي الكتمة تسرق أجمل لحظاتك',
   agitation: {
     theme: 'light',
