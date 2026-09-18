@@ -236,7 +236,7 @@ export const PRODUCTS: Product[] = [
   },
 ]
 
-export const REGULAR_UNIT_PRICE = 179
+export const REGULAR_UNIT_PRICE = 169
 
 /** @deprecated Use REGULAR_UNIT_PRICE */
 export const BOGO_UNIT_PRICE = REGULAR_UNIT_PRICE
@@ -246,7 +246,7 @@ export const MOLIEN_REGULAR_UNIT_PRICE = 189
 export const HERBAL_LUNG_SPRAY_OFFERS: Offer[] = [
   {
     qty: 1,
-    price: 179,
+    price: 169,
     qtyLabel: 'علبة واحدة',
     volumeLabel: '30 مل',
     cardTitle: 'علبة واحدة — باقة التجربة',
@@ -259,7 +259,7 @@ export const HERBAL_LUNG_SPRAY_OFFERS: Offer[] = [
   },
   {
     qty: 2,
-    price: 279,
+    price: 249,
     qtyLabel: 'علبتان',
     volumeLabel: '60 مل',
     cardTitle: 'علبتان — باقة العناية المتقدمة',
@@ -271,14 +271,14 @@ export const HERBAL_LUNG_SPRAY_OFFERS: Offer[] = [
     badgeColor: 'gold',
     isDefault: true,
     freeShipping: true,
-    savings: 79,
-    percentOff: 22,
+    savings: 89,
+    percentOff: 26,
     cardSubtitleLead: '87% من عملائنا يختارون هذا —',
     cardSubtitle: 'شهرين يثبّتون فيهم النتيجة: البلغم يقل، الصدر ينشرح، والكتمة ما ترجع.',
   },
   {
     qty: 3,
-    price: 379,
+    price: 329,
     qtyLabel: '3 علب',
     volumeLabel: '90 مل',
     cardTitle: '3 علب — باقة التنظيف الشامل للرئة',
@@ -289,12 +289,12 @@ export const HERBAL_LUNG_SPRAY_OFFERS: Offer[] = [
     badge: 'أفضل توفير',
     badgeColor: 'apothecary',
     freeShipping: true,
-    savings: 158,
-    percentOff: 29,
+    savings: 178,
+    percentOff: 35,
     isBestValue: true,
     cardSubtitleLead: 'كورس 3 شهور —',
     cardSubtitle:
-      'أقل سعر للعبوة (126 ر.س). اللي يكملون الكورس الكامل يودّعون الكتمة والبلغم للأبد.',
+      'أقل سعر للعبوة (110 ر.س). اللي يكملون الكورس الكامل يودّعون الكتمة والبلغم للأبد.',
   },
 ]
 

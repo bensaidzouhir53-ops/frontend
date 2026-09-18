@@ -3,7 +3,11 @@
 import { useState } from 'react'
 import { ShoppingCart, ShieldCheck, Truck } from 'lucide-react'
 import type { Product, Offer } from '@/types'
-import { getOffersForProduct, getOfferOriginalPrice } from '@/lib/products'
+import {
+  getOffersForProduct,
+  getOfferOriginalPrice,
+  getMaxOfferSavings,
+} from '@/lib/products'
 import { useCartStore } from '@/store/cartStore'
 import { trackAddToCart, generateEventId } from '@/lib/tracking'
 import { cn } from '@/lib/utils'
@@ -326,7 +330,8 @@ function OfferCard({
   )
 }
 
-function FreeShippingBanner() {
+function FreeShippingBanner({ productSlug }: { productSlug: string }) {
+  const maxSavings = getMaxOfferSavings(productSlug)
   return (
     <div
       dir="rtl"
@@ -341,7 +346,8 @@ function FreeShippingBanner() {
             شحن مجاني — 2-4 أيام داخل السعودية
           </p>
           <p className="mt-0.5 text-[11px] font-medium leading-relaxed text-charcoal/55 sm:text-xs">
-            العبوة الأولى تعطيك النتيجة. العبوتين والثلاث تثبّتها — وفّر حتى 208 ريال سعودي
+            العبوة الأولى تعطيك النتيجة. العبوتين والثلاث تثبّتها — وفّر حتى{' '}
+            {maxSavings} ريال سعودي
           </p>
         </div>
       </div>
@@ -392,7 +398,7 @@ export default function OfferSelector({ product, className }: OfferSelectorProps
       className={cn('flex flex-col gap-3', className)}
       dir="rtl"
     >
-      <FreeShippingBanner />
+      <FreeShippingBanner productSlug={product.slug} />
 
       <div className="rounded-2xl border border-border/60 bg-offer-panel p-3 sm:p-4">
         <p className="mb-2.5 text-sm font-bold text-charcoal/80">اختر العرض المناسب لك:</p>
