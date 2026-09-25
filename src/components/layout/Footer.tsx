@@ -31,8 +31,8 @@ export default function Footer() {
         <div className="mb-16 flex flex-col gap-16 md:flex-row md:items-start md:justify-between">
           <div className="max-w-sm">
             <div className="group mb-8 flex cursor-default items-center gap-4 text-gold">
-              <div className="relative h-16 w-16 shrink-0 transition-transform duration-500 group-hover:scale-105">
-                <LungLogo className="h-full w-full" />
+              <div className="relative h-16 w-16 overflow-hidden rounded-full shadow-[0_0_30px_rgba(215,168,92,0.2)] ring-2 ring-gold/40 transition-all duration-500 group-hover:shadow-[0_0_40px_rgba(215,168,92,0.35)] group-hover:ring-gold">
+                <LungLogo className="h-full w-full scale-110" />
               </div>
               <div className="flex flex-col leading-none">
                 <span className="text-4xl font-extrabold tracking-tight text-white drop-shadow-sm">

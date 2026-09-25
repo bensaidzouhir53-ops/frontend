@@ -26,8 +26,8 @@ export default function Header() {
       <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
         {/* Logo */}
         <Link href="/" className="group flex items-center gap-3 text-teal">
-          <div className="relative h-12 w-12 shrink-0 transition-transform duration-300 group-hover:scale-105">
-            <LungLogo className="h-full w-full" priority />
+          <div className="relative h-11 w-11 overflow-hidden rounded-full shadow-md ring-1 ring-gold/40 transition-all duration-300 group-hover:ring-gold/70 group-hover:shadow-lg group-hover:shadow-gold/20">
+            <LungLogo className="h-full w-full scale-110" priority />
           </div>
           <div className="flex flex-col leading-none">
             <span className="text-xl font-bold tracking-tight text-apothecary">
