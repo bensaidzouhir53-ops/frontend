@@ -486,23 +486,20 @@ function loadSnapPixel(pixelId: string): void {
   }
 
   window.__nasamaSnapInitStarted = true
-  const snaptrFn = function (
-    action: string,
-    event?: string,
-    params?: Record<string, unknown>,
-  ) {
-    const fn = window.snaptr as typeof snaptrFn & {
-      handleRequest?: (...args: unknown[]) => void
-      queue: unknown[]
-    }
-    if (fn.handleRequest) {
-      fn.handleRequest(action, event, params)
-    } else {
-      fn.queue.push([action, event, params])
-    }
-  }
-  ;(snaptrFn as typeof snaptrFn & { queue: unknown[] }).queue = []
-  window.snaptr = snaptrFn as Window['snaptr']
+  type SnaptrFn = NonNullable<Window['snaptr']>
+  const queued: unknown[][] = []
+  const snaptrFn: SnaptrFn = Object.assign(
+    (action: string, event?: string, params?: Record<string, unknown>) => {
+      const live = window.snaptr as SnaptrFn | undefined
+      if (live?.handleRequest) {
+        live.handleRequest(action, event, params)
+        return
+      }
+      queued.push([action, event, params])
+    },
+    { queue: queued },
+  )
+  window.snaptr = snaptrFn
 
   const script = document.createElement('script')
   script.async = true
@@ -513,9 +510,9 @@ function loadSnapPixel(pixelId: string): void {
   }
   document.head.appendChild(script)
 
-  window.snaptr('init', pixelId)
+  snaptrFn('init', pixelId)
   if (!window.__nasamaSnapPageViewTracked) {
-    window.snaptr('track', 'PAGE_VIEW')
+    snaptrFn('track', 'PAGE_VIEW')
     window.__nasamaSnapPageViewTracked = true
   }
   syncSnapReadyState()
