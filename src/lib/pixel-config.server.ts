@@ -1,5 +1,10 @@
 import { getBackendCandidates } from '@/lib/orders.server'
-import { DEFAULT_META_PIXEL_ID, getCanonicalMetaPixelId } from '@/lib/meta-pixel'
+import {
+  DEFAULT_META_PIXEL_ID,
+  getCanonicalMetaPixelId,
+  getDefaultMetaPixelIds,
+} from '@/lib/meta-pixel'
+import { DEFAULT_SNAP_PIXEL_ID, getCanonicalSnapPixelId } from '@/lib/snap-pixel'
 
 export interface ServerPixelConfig {
   enabled: boolean
@@ -66,7 +71,9 @@ export function normalizePixelConfig(raw: {
 }): ServerPixelConfig {
   const metaIds = collectMetaPixelIds(raw)
   const tiktok = resolveTikTokPixelId(raw.tiktok_pixel_id)
-  const snap = isValidPixelId(raw.snap_pixel_id) ? raw.snap_pixel_id!.trim() : null
+  const snap = isValidPixelId(raw.snap_pixel_id)
+    ? raw.snap_pixel_id!.trim()
+    : getCanonicalSnapPixelId()
   const hasAny = Boolean(metaIds.length || tiktok || snap)
 
   return {
@@ -101,28 +108,40 @@ export function getTikTokPixelOverride(): string | null {
   )
 }
 
-function getSnapPixelOverride(): string | null {
-  const raw = process.env.NEXT_PUBLIC_SNAP_PIXEL_ID ?? process.env.SNAP_PIXEL_ID ?? null
-  return isValidPixelId(raw) ? raw.trim() : null
+function getSnapPixelOverride(): string {
+  return getCanonicalSnapPixelId()
 }
 
-/** Force a single Meta pixel so browser + Ads Manager always match. */
+/** Keep backend Meta pixel list; ensure the primary pixel is always included. */
 export function applyCanonicalMetaPixel(config: ServerPixelConfig): ServerPixelConfig {
-  const canonical = getCanonicalMetaPixelId()
   const webPixelsEnabled = process.env.ENABLE_WEB_PIXELS !== 'false'
+  const ids = collectMetaPixelIds({
+    meta_pixel_id: config.meta_pixel_id,
+    meta_pixel_ids: config.meta_pixel_ids,
+    extra: [getCanonicalMetaPixelId(), ...getDefaultMetaPixelIds()],
+  })
   return {
     ...config,
     enabled: config.enabled || webPixelsEnabled,
-    meta_pixel_id: canonical,
-    meta_pixel_ids: [canonical],
+    meta_pixel_id: ids[0] ?? null,
+    meta_pixel_ids: ids,
+    snap_pixel_id: isValidPixelId(config.snap_pixel_id)
+      ? config.snap_pixel_id.trim()
+      : getCanonicalSnapPixelId(),
   }
 }
 
-/** Merge configs — backend meta pixel wins; env fallback only when backend has none. */
+/** Merge configs — backend meta pixels first, then env fallbacks. */
 export function mergePixelConfigs(...sources: PixelConfigInput[]): ServerPixelConfig {
   const backendSource = sources[0]
 
-  const metaIds = [getCanonicalMetaPixelId()]
+  const extra: Array<string | null | undefined> = [getCanonicalMetaPixelId()]
+  for (const source of sources) {
+    extra.push(source.meta_pixel_id)
+    extra.push(...(source.meta_pixel_ids ?? []))
+  }
+  extra.push(...getDefaultMetaPixelIds())
+  const metaIds = collectMetaPixelIds({ extra })
 
   let tiktok: string | null = null
   let snap: string | null = null
@@ -169,9 +188,9 @@ export function getEnvPixelFallback(): ServerPixelConfig {
       process.env.NEXT_PUBLIC_META_PIXEL_ID ??
       process.env.META_PIXEL_ID ??
       DEFAULT_META_PIXEL_ID,
+    meta_pixel_ids: getDefaultMetaPixelIds(),
     tiktok_pixel_id: null,
-    snap_pixel_id:
-      process.env.NEXT_PUBLIC_SNAP_PIXEL_ID ?? process.env.SNAP_PIXEL_ID ?? null,
+    snap_pixel_id: DEFAULT_SNAP_PIXEL_ID,
     capi_enabled: capiFromEnv,
     tiktok_capi_enabled: false,
   })

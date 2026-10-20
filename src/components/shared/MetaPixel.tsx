@@ -6,27 +6,37 @@ import { registerMetaPixelIds, syncMetaReadyState } from '@/lib/tracking'
 
 interface MetaPixelProps {
   pixelId?: string | null
+  pixelIds?: string[] | null
 }
 
 type FbqFn = NonNullable<Window['fbq']>
 
 /** Client fallback if the head bootstrap did not run (adblock / failed inject). */
-export default function MetaPixel({ pixelId = DEFAULT_META_PIXEL_ID }: MetaPixelProps) {
+export default function MetaPixel({ pixelId, pixelIds }: MetaPixelProps) {
   useEffect(() => {
-    const id = (pixelId ?? DEFAULT_META_PIXEL_ID).trim()
-    if (!/^\d+$/.test(id)) return
+    const ids = (pixelIds?.length ? pixelIds : [pixelId ?? DEFAULT_META_PIXEL_ID])
+      .map((id) => (id ?? '').trim())
+      .filter((id, index, all) => /^\d+$/.test(id) && all.indexOf(id) === index)
+    if (ids.length === 0) return
+
+    const appendIds = (next: string[]) => {
+      const current = window.__nasamaInitializedPixelIds ?? []
+      for (const id of next) {
+        if (!current.includes(id)) current.push(id)
+      }
+      window.__nasamaInitializedPixelIds = current
+      return current
+    }
 
     const markReady = () => {
       if (!window.fbq?.callMethod) return false
       window.__nasamaMetaReady = true
-      if (!window.__nasamaInitializedPixelIds?.includes(id)) {
-        window.fbq('init', id)
-        window.__nasamaInitializedPixelIds = [
-          ...(window.__nasamaInitializedPixelIds ?? []),
-          id,
-        ]
+      for (const id of ids) {
+        if (!window.__nasamaInitializedPixelIds?.includes(id)) {
+          window.fbq('init', id)
+        }
       }
-      registerMetaPixelIds(window.__nasamaInitializedPixelIds ?? [id])
+      registerMetaPixelIds(appendIds(ids))
       syncMetaReadyState()
       return true
     }
@@ -60,20 +70,25 @@ export default function MetaPixel({ pixelId = DEFAULT_META_PIXEL_ID }: MetaPixel
       document.head.appendChild(script)
     }
 
-    window.fbq?.('init', id)
+    for (const id of ids) {
+      if (!window.__nasamaInitializedPixelIds?.includes(id)) {
+        window.fbq?.('init', id)
+      }
+    }
     if (!window.__nasamaPageViewTracked) {
-      window.fbq?.('track', 'PageView')
+      for (const id of ids) {
+        window.fbq?.('trackSingle', id, 'PageView')
+      }
       window.__nasamaPageViewTracked = true
     }
-    window.__nasamaInitializedPixelIds = [id]
-    registerMetaPixelIds([id])
+    registerMetaPixelIds(appendIds(ids))
     syncMetaReadyState()
 
     const interval = window.setInterval(() => {
       if (markReady()) window.clearInterval(interval)
     }, 200)
     window.setTimeout(() => window.clearInterval(interval), 10000)
-  }, [pixelId])
+  }, [pixelId, pixelIds])
 
   return null
 }

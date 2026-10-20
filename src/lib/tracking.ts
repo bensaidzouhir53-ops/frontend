@@ -55,12 +55,19 @@ declare global {
       push?: (...args: unknown[]) => void
       [key: string]: unknown
     }
-    snaptr?: (
+    snaptr?: ((
       action: string,
       event?: string,
       params?: Record<string, unknown>,
-    ) => void
+    ) => void) & {
+      queue?: unknown[]
+      handleRequest?: (...args: unknown[]) => void
+    }
     TiktokAnalyticsObject?: string
+    __nasamaSnapReady?: boolean
+    __nasamaSnapInitStarted?: boolean
+    __nasamaSnapPageViewTracked?: boolean
+    __nasamaSyncSnapReady?: () => void
     /** Set by PixelScripts' inline bootstrap once it has loaded/init'd ttq — tracking.ts
      *  must not load/init it again or TikTok counts every browser event twice. */
     __nasamaTtqReady?: boolean
@@ -150,8 +157,20 @@ function fireFbqTrack(
   }
 
   const options = eventId ? { eventID: eventId } : undefined
+  const pixelIds = getMetaPixelRegistry().filter((id) => /^\d+$/.test(id))
 
-  // Standard `track` — same as PageView bootstrap; most reliable in Ads Manager.
+  // trackSingle so every initialized pixel (including ID-only extras) receives the event.
+  if (pixelIds.length > 0) {
+    for (const id of pixelIds) {
+      if (options) {
+        window.fbq('trackSingle', id, event, params, options)
+      } else {
+        window.fbq('trackSingle', id, event, params)
+      }
+    }
+    return true
+  }
+
   if (options) {
     window.fbq('track', event, params, options)
   } else {
@@ -232,6 +251,33 @@ export function buildFbcFromFbclid(fbclid: string): string {
   return `fb.1.${Date.now()}.${id}`
 }
 
+const SC_CLICK_STORAGE_KEY = 'nasama_sccid'
+
+function snapClickIdFromParams(params: URLSearchParams): string | undefined {
+  return (
+    params.get('ScCid') ||
+    params.get('sccid') ||
+    params.get('sc_click_id') ||
+    undefined
+  )
+}
+
+function persistSnapClickId(value: string | undefined): string | undefined {
+  if (value) {
+    try {
+      sessionStorage.setItem(SC_CLICK_STORAGE_KEY, value)
+    } catch {
+      // ignore storage failures
+    }
+    return value
+  }
+  try {
+    return sessionStorage.getItem(SC_CLICK_STORAGE_KEY) || undefined
+  } catch {
+    return undefined
+  }
+}
+
 function clickIdsFromUrl(url: string): Pick<
   AttributionData,
   'fbclid' | 'ttclid' | 'sc_click_id'
@@ -241,7 +287,7 @@ function clickIdsFromUrl(url: string): Pick<
     return {
       fbclid: params.get('fbclid') ?? undefined,
       ttclid: params.get('ttclid') ?? undefined,
-      sc_click_id: params.get('sc_click_id') ?? undefined,
+      sc_click_id: persistSnapClickId(snapClickIdFromParams(params)),
     }
   } catch {
     return {}
@@ -267,7 +313,7 @@ export function captureAttribution(): AttributionData {
     : {
         fbclid: params.get('fbclid') ?? undefined,
         ttclid: params.get('ttclid') ?? undefined,
-        sc_click_id: params.get('sc_click_id') ?? undefined,
+        sc_click_id: persistSnapClickId(snapClickIdFromParams(params)),
       }
 
   let fbc = getCookie('_fbc')
@@ -381,7 +427,9 @@ function loadMetaPixels(pixelIds: string[]): void {
       initMetaPixelId(id)
     }
     if (!_metaPageViewTracked && !window.__nasamaMetaReady && !window.__nasamaPageViewTracked) {
-      window.fbq?.('track', 'PageView')
+      for (const id of ids) {
+        window.fbq?.('trackSingle', id, 'PageView')
+      }
       _metaPageViewTracked = true
     } else if (window.__nasamaMetaReady || window.__nasamaPageViewTracked) {
       _metaPageViewTracked = true
@@ -407,34 +455,70 @@ function loadTikTokPixel(_pixelId: string): void {
   syncTtqReadyState()
 }
 
-function loadSnapPixel(pixelId: string): void {
-  if (_snapReady || !pixelId || typeof window === 'undefined') return
-  _snapReady = true
-
-  if (!window.snaptr) {
-    const snapQueue: unknown[][] = []
-
-    window.snaptr = function (
-      action: string,
-      event?: string,
-      params?: Record<string, unknown>,
-    ) {
-      snapQueue.push([action, event, params])
-    }
-
-    const script = document.createElement('script')
-    script.async = true
-    script.src = 'https://sc-static.net/scevent.min.js'
-    document.head.appendChild(script)
-  }
-
-  window.snaptr('init', pixelId)
-  window.snaptr('track', 'PAGE_VIEW')
-
+function flushSnapQueue(): void {
+  if (typeof window === 'undefined' || typeof window.snaptr !== 'function') return
   _snapQueue.forEach(([action, event, params]) => {
     window.snaptr?.(action, event, params)
   })
   _snapQueue.length = 0
+}
+
+/** Sync with SnapHeadScripts when it inits snaptr before tracking.ts sets _snapReady. */
+export function syncSnapReadyState(): void {
+  if (typeof window === 'undefined' || typeof window.snaptr !== 'function') return
+  if (!_snapReady) {
+    _snapReady = true
+    window.__nasamaSnapReady = true
+  }
+  flushSnapQueue()
+}
+
+if (typeof window !== 'undefined') {
+  window.__nasamaSyncSnapReady = syncSnapReadyState
+}
+
+function loadSnapPixel(pixelId: string): void {
+  if (!pixelId || typeof window === 'undefined') return
+
+  if (window.snaptr) {
+    syncSnapReadyState()
+    return
+  }
+
+  window.__nasamaSnapInitStarted = true
+  const snaptrFn = function (
+    action: string,
+    event?: string,
+    params?: Record<string, unknown>,
+  ) {
+    const fn = window.snaptr as typeof snaptrFn & {
+      handleRequest?: (...args: unknown[]) => void
+      queue: unknown[]
+    }
+    if (fn.handleRequest) {
+      fn.handleRequest(action, event, params)
+    } else {
+      fn.queue.push([action, event, params])
+    }
+  }
+  ;(snaptrFn as typeof snaptrFn & { queue: unknown[] }).queue = []
+  window.snaptr = snaptrFn as Window['snaptr']
+
+  const script = document.createElement('script')
+  script.async = true
+  script.src = 'https://sc-static.net/scevent.min.js'
+  script.onload = () => {
+    window.__nasamaSnapReady = true
+    syncSnapReadyState()
+  }
+  document.head.appendChild(script)
+
+  window.snaptr('init', pixelId)
+  if (!window.__nasamaSnapPageViewTracked) {
+    window.snaptr('track', 'PAGE_VIEW')
+    window.__nasamaSnapPageViewTracked = true
+  }
+  syncSnapReadyState()
 }
 
 // ---------------------------------------------------------------------------
@@ -452,8 +536,17 @@ interface PixelConfig {
 }
 
 function collectMetaIdsFromEnv(): string[] {
-  const id = process.env.NEXT_PUBLIC_META_PIXEL_ID
-  return isValidPixelId(id) ? [id.trim()] : []
+  const ids: string[] = []
+  for (const raw of [
+    process.env.NEXT_PUBLIC_META_PIXEL_ID,
+    process.env.NEXT_PUBLIC_META_PIXEL_ID_2,
+    process.env.NEXT_PUBLIC_META_PIXEL_ID_3,
+  ]) {
+    if (!isValidPixelId(raw)) continue
+    const trimmed = raw.trim()
+    if (!ids.includes(trimmed)) ids.push(trimmed)
+  }
+  return ids
 }
 
 function configFromEnv(): PixelConfig | null {
@@ -547,15 +640,15 @@ function applyPixelConfig(config: PixelConfig): void {
       : isValidPixelId(config.meta_pixel_id)
         ? [config.meta_pixel_id.trim()]
         : []
-  if (metaIds.length > 0 && !window.__nasamaPageViewTracked) {
+  if (metaIds.length > 0) {
     loadMetaPixels(metaIds)
-  } else if (metaIds.length > 0) {
     registerMetaPixelIds(metaIds)
-    syncMetaReadyState()
   }
 
   const tiktok = config.tiktok_pixel_id?.trim()
-  const snap = config.snap_pixel_id?.trim()
+  const snap = isValidPixelId(config.snap_pixel_id)
+    ? config.snap_pixel_id.trim()
+    : '700c360f-b027-411e-8fbd-47ff5e4e91b7'
   if (tiktok) loadTikTokPixel(tiktok)
   if (snap) loadSnapPixel(snap)
   syncMetaReadyState()
@@ -589,7 +682,9 @@ export function initPixelsFromServerConfig(config: ServerPixelConfigInput): void
   const tiktok = isValidPixelId(config.tiktok_pixel_id)
     ? config.tiktok_pixel_id.trim()
     : null
-  const snap = isValidPixelId(config.snap_pixel_id) ? config.snap_pixel_id.trim() : null
+  const snap = isValidPixelId(config.snap_pixel_id)
+    ? config.snap_pixel_id.trim()
+    : '700c360f-b027-411e-8fbd-47ff5e4e91b7'
 
   applyPixelConfig({
     enabled: true,
@@ -829,16 +924,32 @@ function trackTikTokFunnel(
   safeTtq(event, params, dedupeId, orderId)
 }
 
+function snapEventParams(
+  props: TrackingProps,
+  extra?: Record<string, unknown>,
+): Record<string, unknown> {
+  const eventId = props.event_id ?? props.order_id
+  return {
+    price: props.value,
+    currency: props.currency ?? 'SAR',
+    item_ids: props.content_ids,
+    client_dedup_id: eventId,
+    transaction_id: eventId,
+    ...extra,
+  }
+}
+
 function safeSnaptr(
   action: string,
   event?: string,
   params?: Record<string, unknown>,
 ): void {
-  if (typeof window !== 'undefined' && window.snaptr && _snapReady) {
+  syncSnapReadyState()
+  if (typeof window !== 'undefined' && typeof window.snaptr === 'function') {
     window.snaptr(action, event, params)
-  } else {
-    _snapQueue.push([action, event, params])
+    return
   }
+  _snapQueue.push([action, event, params])
 }
 
 function randomId(): string {
@@ -939,7 +1050,12 @@ export function trackPageView(): void {
     syncMetaReadyState()
   }
   // ttq.page() in TikTokHeadScripts already sent the page view — skip duplicate ViewContent.
-  safeSnaptr('track', 'PAGE_VIEW')
+  if (typeof window === 'undefined' || !window.__nasamaSnapPageViewTracked) {
+    safeSnaptr('track', 'PAGE_VIEW')
+    if (typeof window !== 'undefined') window.__nasamaSnapPageViewTracked = true
+  } else {
+    syncSnapReadyState()
+  }
 }
 
 export function trackViewContent(props: TrackingProps): void {
@@ -957,7 +1073,7 @@ export function trackViewContent(props: TrackingProps): void {
     content_id: content_ids[0],
     content_type,
   })
-  safeSnaptr('track', 'VIEW_CONTENT', { price: value, currency })
+  safeSnaptr('track', 'VIEW_CONTENT', snapEventParams(props))
   trackFirstParty('ViewContent', props)
 }
 
@@ -989,7 +1105,7 @@ export function trackAddToCart(props: TrackingProps): void {
     },
     event_id,
   )
-  safeSnaptr('track', 'ADD_CART', { price: value, currency })
+  safeSnaptr('track', 'ADD_CART', snapEventParams({ ...props, event_id }))
   trackFirstParty('AddToCart', { ...props, event_id })
 }
 
@@ -1033,7 +1149,7 @@ export function trackInitiateCheckout(props: TrackingProps): void {
     { value, currency, content_id: content_ids[0] },
     dedupeId,
   )
-  safeSnaptr('track', 'START_CHECKOUT', { price: value, currency })
+  safeSnaptr('track', 'START_CHECKOUT', snapEventParams({ ...props, event_id: dedupeId }))
   trackFirstParty('InitiateCheckout', { ...props, event_id: dedupeId })
 }
 
@@ -1073,11 +1189,17 @@ export function trackPurchaseSideEffects(props: TrackingProps): void {
     )
   }
 
-  safeSnaptr('track', 'PURCHASE', {
-    price: value,
-    currency,
-    transaction_id: order_id,
-  })
+  safeSnaptr(
+    'track',
+    'PURCHASE',
+    snapEventParams({
+      value,
+      currency,
+      content_ids,
+      order_id,
+      event_id,
+    }),
+  )
   trackFirstParty('OrderCompleted', props)
 }
 

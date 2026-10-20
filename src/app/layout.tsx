@@ -8,8 +8,10 @@ import PixelScripts from '@/components/shared/PixelScripts'
 import MetaPixel from '@/components/shared/MetaPixel'
 import MetaPixelHeadScripts from '@/components/shared/MetaPixelHeadScripts'
 import TikTokHeadScripts from '@/components/shared/TikTokHeadScripts'
+import SnapHeadScripts from '@/components/shared/SnapHeadScripts'
 import { getCanonicalMetaPixelId } from '@/lib/meta-pixel'
-import { fetchTrackingConfigFromBackend } from '@/lib/pixel-config.server'
+import { fetchTrackingConfigFromBackend, getMetaPixelIds } from '@/lib/pixel-config.server'
+import { getCanonicalSnapPixelId } from '@/lib/snap-pixel'
 import { getPublicSiteUrl } from '@/lib/site-url'
 import './globals.css'
 
@@ -74,8 +76,10 @@ export default async function RootLayout({
   children: React.ReactNode
 }) {
   const pixelConfig = await fetchTrackingConfigFromBackend()
-  const metaPixelId = getCanonicalMetaPixelId()
+  const metaPixelIds = getMetaPixelIds(pixelConfig)
+  const metaPixelId = metaPixelIds[0] ?? getCanonicalMetaPixelId()
   const tiktokPixelId = pixelConfig.tiktok_pixel_id
+  const snapPixelId = pixelConfig.snap_pixel_id ?? getCanonicalSnapPixelId()
 
   return (
     <html lang="ar" dir="rtl" className={tajawal.variable}>
@@ -87,13 +91,14 @@ export default async function RootLayout({
                 __html: `window.__nasamaCapiEnabled=${pixelConfig.capi_enabled ? 'true' : 'false'}`,
               }}
             />
-            <MetaPixelHeadScripts pixelId={metaPixelId} />
+            <MetaPixelHeadScripts pixelId={metaPixelId} pixelIds={metaPixelIds} />
           </>
         ) : null}
         {tiktokPixelId ? <TikTokHeadScripts pixelId={tiktokPixelId} /> : null}
+        {snapPixelId ? <SnapHeadScripts pixelId={snapPixelId} /> : null}
       </head>
       <body className="font-arabic bg-ivory text-charcoal antialiased">
-        <MetaPixel pixelId={metaPixelId} />
+        <MetaPixel pixelId={metaPixelId} pixelIds={metaPixelIds} />
         <PixelScripts config={pixelConfig} />
         <Header />
         <main>{children}</main>

@@ -6,6 +6,7 @@ import {
   initPixelsFromServerConfig,
   saveFirstLandingUrl,
   syncMetaReadyState,
+  syncSnapReadyState,
   syncTtqReadyState,
   trackFirstPartyPageView,
   trackPageView,
@@ -21,6 +22,7 @@ export default function PixelInit({ config }: PixelInitProps) {
     initPixelsFromServerConfig(config)
     syncMetaReadyState()
     syncTtqReadyState()
+    syncSnapReadyState()
     trackFirstPartyPageView()
 
     let pageViewSent = false
@@ -36,6 +38,7 @@ export default function PixelInit({ config }: PixelInitProps) {
     const interval = window.setInterval(() => {
       syncMetaReadyState()
       syncTtqReadyState()
+      syncSnapReadyState()
       tryTrackPageView()
     }, 100)
     const timeout = window.setTimeout(() => window.clearInterval(interval), 10000)
