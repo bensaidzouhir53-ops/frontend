@@ -21,9 +21,6 @@ export default function MetaPixelHeadScripts({
   if (resolved.length === 0) return null
 
   const initCalls = resolved.map((id) => `fbq('init','${id}');`).join('\n')
-  const pageViewCalls = resolved
-    .map((id) => `fbq('trackSingle','${id}','PageView');`)
-    .join('\n')
   const registry = resolved.map((id) => `'${id}'`).join(',')
 
   const bootstrap = `
@@ -34,7 +31,7 @@ t.src=v;t.onload=function(){window.__nasamaMetaReady=true;window.__nasamaSyncMet
 s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script',
 'https://connect.facebook.net/en_US/fbevents.js');
 ${initCalls}
-${pageViewCalls}
+fbq('track','PageView');
 window.__nasamaPageViewTracked=true;
 window.__nasamaInitializedPixelIds=[${registry}];
 `.trim()

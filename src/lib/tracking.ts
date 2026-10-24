@@ -157,20 +157,9 @@ function fireFbqTrack(
   }
 
   const options = eventId ? { eventID: eventId } : undefined
-  const pixelIds = getMetaPixelRegistry().filter((id) => /^\d+$/.test(id))
 
-  // trackSingle so every initialized pixel (including ID-only extras) receives the event.
-  if (pixelIds.length > 0) {
-    for (const id of pixelIds) {
-      if (options) {
-        window.fbq('trackSingle', id, event, params, options)
-      } else {
-        window.fbq('trackSingle', id, event, params)
-      }
-    }
-    return true
-  }
-
+  // Standard track after every fbq('init') — Events Manager Test Events and
+  // Pixel Helper attribute this to all initialized pixels, including ID-only extras.
   if (options) {
     window.fbq('track', event, params, options)
   } else {
@@ -427,9 +416,7 @@ function loadMetaPixels(pixelIds: string[]): void {
       initMetaPixelId(id)
     }
     if (!_metaPageViewTracked && !window.__nasamaMetaReady && !window.__nasamaPageViewTracked) {
-      for (const id of ids) {
-        window.fbq?.('trackSingle', id, 'PageView')
-      }
+      window.fbq?.('track', 'PageView')
       _metaPageViewTracked = true
     } else if (window.__nasamaMetaReady || window.__nasamaPageViewTracked) {
       _metaPageViewTracked = true

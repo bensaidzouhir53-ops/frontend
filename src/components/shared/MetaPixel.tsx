@@ -76,9 +76,7 @@ export default function MetaPixel({ pixelId, pixelIds }: MetaPixelProps) {
       }
     }
     if (!window.__nasamaPageViewTracked) {
-      for (const id of ids) {
-        window.fbq?.('trackSingle', id, 'PageView')
-      }
+      window.fbq?.('track', 'PageView')
       window.__nasamaPageViewTracked = true
     }
     registerMetaPixelIds(appendIds(ids))

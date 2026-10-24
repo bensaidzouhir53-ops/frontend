@@ -2,6 +2,7 @@ export const DEFAULT_META_PIXEL_ID = '576636091443534'
 export const DEFAULT_META_PIXEL_IDS = [
   '576636091443534',
   '2303667077124032',
+  '1435851508750967',
 ] as const
 
 function isMetaPixelId(value: string | null | undefined): value is string {
