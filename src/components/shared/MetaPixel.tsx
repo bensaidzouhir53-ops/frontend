@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect } from 'react'
-import { DEFAULT_META_PIXEL_ID } from '@/lib/meta-pixel'
+import { DEFAULT_META_PIXEL_ID, EXTRA_META_PIXEL_ID, filterMetaPixelIds } from '@/lib/meta-pixel'
 import { registerMetaPixelIds, syncMetaReadyState } from '@/lib/tracking'
 
 interface MetaPixelProps {
@@ -14,10 +14,11 @@ type FbqFn = NonNullable<Window['fbq']>
 /** Client fallback if the head bootstrap did not run (adblock / failed inject). */
 export default function MetaPixel({ pixelId, pixelIds }: MetaPixelProps) {
   useEffect(() => {
-    const ids = (pixelIds?.length ? pixelIds : [pixelId ?? DEFAULT_META_PIXEL_ID])
-      .map((id) => (id ?? '').trim())
-      .filter((id, index, all) => /^\d+$/.test(id) && all.indexOf(id) === index)
+    const ids = filterMetaPixelIds(
+      pixelIds?.length ? pixelIds : [pixelId ?? DEFAULT_META_PIXEL_ID, EXTRA_META_PIXEL_ID],
+    )
     if (ids.length === 0) return
+    const extras = ids.slice(1)
 
     const appendIds = (next: string[]) => {
       const current = window.__nasamaInitializedPixelIds ?? []
@@ -78,6 +79,11 @@ export default function MetaPixel({ pixelId, pixelIds }: MetaPixelProps) {
     if (!window.__nasamaPageViewTracked) {
       window.fbq?.('track', 'PageView')
       window.__nasamaPageViewTracked = true
+    }
+    for (const id of extras) {
+      if (window.__nasamaInitializedPixelIds?.includes(id)) continue
+      window.fbq?.('init', id)
+      window.fbq?.('trackSingle', id, 'PageView')
     }
     registerMetaPixelIds(appendIds(ids))
     syncMetaReadyState()

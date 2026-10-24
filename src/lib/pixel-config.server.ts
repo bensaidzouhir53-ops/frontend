@@ -1,6 +1,7 @@
 import { getBackendCandidates } from '@/lib/orders.server'
 import {
   DEFAULT_META_PIXEL_ID,
+  filterMetaPixelIds,
   getCanonicalMetaPixelId,
   getDefaultMetaPixelIds,
 } from '@/lib/meta-pixel'
@@ -57,7 +58,7 @@ function collectMetaPixelIds(raw: {
   for (const id of raw.meta_pixel_ids ?? []) add(id)
   for (const id of raw.extra ?? []) add(id)
 
-  return ids
+  return filterMetaPixelIds(ids)
 }
 
 export function normalizePixelConfig(raw: {

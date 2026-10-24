@@ -9,7 +9,7 @@ import MetaPixel from '@/components/shared/MetaPixel'
 import MetaPixelHeadScripts from '@/components/shared/MetaPixelHeadScripts'
 import TikTokHeadScripts from '@/components/shared/TikTokHeadScripts'
 import SnapHeadScripts from '@/components/shared/SnapHeadScripts'
-import { getCanonicalMetaPixelId } from '@/lib/meta-pixel'
+import { filterMetaPixelIds, getCanonicalMetaPixelId } from '@/lib/meta-pixel'
 import { fetchTrackingConfigFromBackend, getMetaPixelIds } from '@/lib/pixel-config.server'
 import { getCanonicalSnapPixelId } from '@/lib/snap-pixel'
 import { getPublicSiteUrl } from '@/lib/site-url'
@@ -76,7 +76,7 @@ export default async function RootLayout({
   children: React.ReactNode
 }) {
   const pixelConfig = await fetchTrackingConfigFromBackend()
-  const metaPixelIds = getMetaPixelIds(pixelConfig)
+  const metaPixelIds = filterMetaPixelIds(getMetaPixelIds(pixelConfig))
   const metaPixelId = metaPixelIds[0] ?? getCanonicalMetaPixelId()
   const tiktokPixelId = pixelConfig.tiktok_pixel_id
   const snapPixelId = pixelConfig.snap_pixel_id ?? getCanonicalSnapPixelId()

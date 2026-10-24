@@ -3,6 +3,8 @@
  * Track functions are safe to call before pixels have loaded — events are queued and flushed on init.
  */
 
+import { filterMetaPixelIds } from '@/lib/meta-pixel'
+
 export interface AttributionData {
   fbclid?: string
   ttclid?: string
@@ -158,12 +160,23 @@ function fireFbqTrack(
 
   const options = eventId ? { eventID: eventId } : undefined
 
-  // Standard track after every fbq('init') — Events Manager Test Events and
-  // Pixel Helper attribute this to all initialized pixels, including ID-only extras.
+  // Primary pixel stays on standard track (already working).
   if (options) {
     window.fbq('track', event, params, options)
   } else {
     window.fbq('track', event, params)
+  }
+
+  // Extra pixels get an explicit trackSingle so Events Manager sees them.
+  const extras = getMetaPixelRegistry().filter(
+    (id) => /^\d+$/.test(id) && id !== '576636091443534',
+  )
+  for (const id of extras) {
+    if (options) {
+      window.fbq('trackSingle', id, event, params, options)
+    } else {
+      window.fbq('trackSingle', id, event, params)
+    }
   }
   return true
 }
@@ -530,7 +543,7 @@ function collectMetaIdsFromEnv(): string[] {
     const trimmed = raw.trim()
     if (!ids.includes(trimmed)) ids.push(trimmed)
   }
-  return ids
+  return filterMetaPixelIds(ids)
 }
 
 function configFromEnv(): PixelConfig | null {
@@ -618,12 +631,13 @@ function applyPixelConfig(config: PixelConfig): void {
   setCapiEnabled(Boolean(config.capi_enabled))
   setTikTokCapiEnabled(Boolean(config.tiktok_capi_enabled))
 
-  const metaIds =
+  const metaIds = filterMetaPixelIds(
     config.meta_pixel_ids.length > 0
-      ? config.meta_pixel_ids.filter((id) => isValidPixelId(id))
+      ? config.meta_pixel_ids
       : isValidPixelId(config.meta_pixel_id)
         ? [config.meta_pixel_id.trim()]
-        : []
+        : [],
+  )
   if (metaIds.length > 0) {
     loadMetaPixels(metaIds)
     registerMetaPixelIds(metaIds)
