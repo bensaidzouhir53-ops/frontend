@@ -124,8 +124,29 @@ export default function UpsellModal() {
     trackPurchaseOnce({
       value: order.total,
       content_ids: contentIds,
-      event_id: order.event_id,
+      contents: [
+        ...(order.items ?? []).map((item) => ({
+          content_id: item.slug,
+          content_name: item.name_ar,
+          content_type: 'product',
+          quantity: item.qty || 1,
+          price: item.price,
+        })),
+        ...(order.upsell_item?.slug
+          ? [
+              {
+                content_id: order.upsell_item.slug,
+                content_name: order.upsell_item.name_ar,
+                content_type: 'product',
+                quantity: 1,
+                price: order.upsell_item.price,
+              },
+            ]
+          : []),
+      ],
+      event_id: order.order_id,
       order_id: order.order_id,
+      phone: order.phone,
     })
   }
 

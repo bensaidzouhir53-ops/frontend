@@ -2,7 +2,7 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import {
   BadgeCheck,
   CheckCircle2,
@@ -112,6 +112,7 @@ export default function ThankYouView({
   const [order, setOrder] = useState<StoredOrder | null>(null)
   const [copiedField, setCopiedField] = useState<string | null>(null)
   const [tick, setTick] = useState(0)
+  const tiktokPurchaseFired = useRef(false)
 
   useEffect(() => {
     try {
@@ -126,21 +127,41 @@ export default function ThankYouView({
   }, [])
 
   useEffect(() => {
+    if (tiktokPurchaseFired.current) return
     try {
       const raw = sessionStorage.getItem('nasama_order')
       if (!raw) return
       const parsed = JSON.parse(raw) as StoredOrder
       if (!parsed.order_id) return
-      const contentIds = [
-        ...(parsed.items?.map((item) => item.slug) ?? []),
-        ...(parsed.upsell_item?.slug ? [parsed.upsell_item.slug] : []),
+      const contents = [
+        ...(parsed.items ?? []).map((item) => ({
+          content_id: item.slug,
+          content_name: item.name_ar,
+          content_type: 'product',
+          quantity: item.qty || 1,
+          price: item.price,
+        })),
+        ...(parsed.upsell_item?.slug
+          ? [
+              {
+                content_id: parsed.upsell_item.slug,
+                content_name: parsed.upsell_item.name_ar,
+                content_type: 'product',
+                quantity: 1,
+                price: parsed.upsell_item.price,
+              },
+            ]
+          : []),
       ]
-      trackPurchaseOnce({
+      const fired = trackPurchaseOnce({
         value: parsed.total ?? fallbackTotal ?? 0,
-        content_ids: contentIds,
-        event_id: parsed.event_id,
+        content_ids: contents.map((item) => item.content_id),
+        contents,
+        event_id: parsed.order_id,
         order_id: parsed.order_id,
+        phone: parsed.phone,
       })
+      if (fired) tiktokPurchaseFired.current = true
     } catch {
       // Purchase may already have fired from checkout/upsell flow.
     }

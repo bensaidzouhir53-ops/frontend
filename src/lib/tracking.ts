@@ -23,6 +23,14 @@ export interface AttributionData {
   }
 }
 
+export interface TikTokContent {
+  content_id: string
+  content_name?: string
+  content_type?: string
+  quantity?: number
+  price?: number
+}
+
 export interface TrackingProps {
   value?: number
   currency?: string
@@ -30,6 +38,8 @@ export interface TrackingProps {
   content_type?: string
   event_id?: string
   order_id?: string
+  contents?: TikTokContent[]
+  phone?: string
 }
 
 // ---------------------------------------------------------------------------
@@ -49,6 +59,7 @@ declare global {
     ttq?: {
       load?: (id: string) => void
       page?: () => void
+      identify?: (payload: Record<string, string>) => void
       track?: (
         event: string,
         params?: Record<string, unknown>,
@@ -783,18 +794,72 @@ function ttqTrackKey(
   eventId?: string,
   orderId?: string,
 ): string | null {
-  if (event === 'PlaceAnOrder' && orderId) {
-    return `PlaceAnOrder:order:${orderId}`
+  if ((event === 'PlaceAnOrder' || event === 'CompletePayment') && orderId) {
+    return `TikTokPurchase:order:${orderId}`
   }
   if (eventId) return `${event}:${eventId}`
   return null
+}
+
+function tiktokContents(props: TrackingProps): TikTokContent[] {
+  if (props.contents && props.contents.length > 0) {
+    return props.contents.map((item) => ({
+      content_id: item.content_id,
+      content_name: item.content_name,
+      content_type: item.content_type ?? props.content_type ?? 'product',
+      quantity: item.quantity ?? 1,
+      price: item.price,
+    }))
+  }
+  return (props.content_ids ?? []).map((id) => ({
+    content_id: id,
+    content_type: props.content_type ?? 'product',
+    quantity: 1,
+  }))
+}
+
+function tiktokEventParams(props: TrackingProps): Record<string, unknown> {
+  const contents = tiktokContents(props)
+  const eventId = props.event_id ?? props.order_id
+  return {
+    contents,
+    content_type: props.content_type ?? 'product',
+    content_id: contents[0]?.content_id,
+    value: props.value,
+    currency: props.currency ?? 'SAR',
+    ...(props.order_id ? { order_id: String(props.order_id) } : {}),
+    ...(eventId ? { event_id: eventId } : {}),
+  }
+}
+
+function toTikTokPhone(phone?: string): string | undefined {
+  if (!phone) return undefined
+  const digits = phone.replace(/\D/g, '')
+  if (!digits) return undefined
+  if (digits.startsWith('966')) return `+${digits}`
+  if (digits.startsWith('05') && digits.length === 10) return `+966${digits.slice(1)}`
+  if (digits.startsWith('5') && digits.length === 9) return `+966${digits}`
+  return undefined
+}
+
+function identifyTikTokCustomer(props: TrackingProps): void {
+  if (typeof window === 'undefined' || typeof window.ttq?.identify !== 'function') return
+  const phone = toTikTokPhone(props.phone)
+  const payload: Record<string, string> = {}
+  if (phone) payload.phone_number = phone
+  if (props.order_id) payload.external_id = String(props.order_id)
+  if (Object.keys(payload).length === 0) return
+  window.ttq.identify(payload)
 }
 
 function hasTikTokDedupeKey(dedupeKey: string): boolean {
   if (_ttqSentKeys.has(dedupeKey)) return true
   if (typeof window === 'undefined') return false
   try {
-    return Boolean(sessionStorage.getItem(`nasama_tiktok_${dedupeKey}`))
+    return Boolean(
+      sessionStorage.getItem(`nasama_tiktok_${dedupeKey}`) ||
+        localStorage.getItem(`nasama_tiktok_${dedupeKey}`),
+    )
   } catch {
     return false
   }
@@ -805,6 +870,9 @@ function markTikTokDedupeKey(dedupeKey: string): void {
   if (typeof window === 'undefined') return
   try {
     sessionStorage.setItem(`nasama_tiktok_${dedupeKey}`, '1')
+    if (dedupeKey.startsWith('TikTokPurchase:')) {
+      localStorage.setItem(`nasama_tiktok_${dedupeKey}`, '1')
+    }
   } catch {
     // ignore storage failures
   }
@@ -816,6 +884,8 @@ function fireTtqTrack(
   eventId?: string,
   orderId?: string,
 ): void {
+  if (!isTikTokPixelReady() || typeof window.ttq?.track !== 'function') return
+
   const dedupeKey = ttqTrackKey(event, eventId, orderId)
   if (dedupeKey) {
     if (hasTikTokDedupeKey(dedupeKey)) {
@@ -827,9 +897,9 @@ function fireTtqTrack(
   }
 
   if (eventId) {
-    window.ttq?.track?.(event, params, { event_id: eventId })
+    window.ttq.track(event, params, { event_id: eventId })
   } else {
-    window.ttq?.track?.(event, params)
+    window.ttq.track(event, params)
   }
 }
 
@@ -914,12 +984,21 @@ function safeTtq(
 /** TikTok funnel events — each action counts exactly once in Ads Manager. */
 function trackTikTokFunnel(
   event: 'AddToCart' | 'InitiateCheckout' | 'PlaceAnOrder',
-  params: Record<string, unknown>,
+  props: TrackingProps,
   dedupeId: string,
   orderId?: string,
 ): void {
   if (!dedupeId) return
-  safeTtq(event, params, dedupeId, orderId)
+  if (event === 'PlaceAnOrder') {
+    if (_tiktokCapiEnabled) return
+    identifyTikTokCustomer(props)
+  }
+  safeTtq(
+    event,
+    tiktokEventParams({ ...props, event_id: dedupeId, order_id: orderId ?? props.order_id }),
+    dedupeId,
+    orderId,
+  )
 }
 
 function snapEventParams(
@@ -1057,20 +1136,8 @@ export function trackPageView(): void {
 }
 
 export function trackViewContent(props: TrackingProps): void {
-  const {
-    value,
-    currency = 'SAR',
-    content_ids = [],
-    content_type = 'product',
-  } = props
-
   safeFbq('track', 'ViewContent', metaEventParams(props))
-  safeTtq('ViewContent', {
-    value,
-    currency,
-    content_id: content_ids[0],
-    content_type,
-  })
+  safeTtq('ViewContent', tiktokEventParams(props))
   safeSnaptr('track', 'VIEW_CONTENT', snapEventParams(props))
   trackFirstParty('ViewContent', props)
 }
@@ -1093,16 +1160,7 @@ export function trackAddToCart(props: TrackingProps): void {
   // Same event_id is sent to the backend below, which forwards to Meta CAPI —
   // sharing it here lets Meta dedupe the browser + server events into one.
   safeFbq('track', 'AddToCart', metaEventParams({ ...props, event_id }), event_id)
-  trackTikTokFunnel(
-    'AddToCart',
-    {
-      value,
-      currency,
-      content_id: content_ids[0],
-      content_type,
-    },
-    event_id,
-  )
+  trackTikTokFunnel('AddToCart', { ...props, value, currency, content_ids, content_type, event_id }, event_id)
   safeSnaptr('track', 'ADD_CART', snapEventParams({ ...props, event_id }))
   trackFirstParty('AddToCart', { ...props, event_id })
 }
@@ -1144,7 +1202,7 @@ export function trackInitiateCheckout(props: TrackingProps): void {
   )
   trackTikTokFunnel(
     'InitiateCheckout',
-    { value, currency, content_id: content_ids[0] },
+    { ...props, value, currency, content_ids, event_id: dedupeId },
     dedupeId,
   )
   safeSnaptr('track', 'START_CHECKOUT', snapEventParams({ ...props, event_id: dedupeId }))
@@ -1172,17 +1230,20 @@ export function trackPurchaseSideEffects(props: TrackingProps): void {
   } = props
 
   // Browser pixel only — one PlaceAnOrder per order (no TikTok server CAPI).
+  // event_id is always order_id so Ads Manager cannot count retries as extra purchases.
   if (order_id) {
     trackTikTokFunnel(
       'PlaceAnOrder',
       {
+        ...props,
         value,
         currency,
-        content_id: content_ids[0],
+        content_ids,
         content_type,
         order_id,
+        event_id: order_id,
       },
-      event_id ?? order_id,
+      order_id,
       order_id,
     )
   }
@@ -1202,18 +1263,26 @@ export function trackPurchaseSideEffects(props: TrackingProps): void {
 }
 
 /** Fire Purchase once per order (prevents duplicate pixel events on retries/upsell). */
+const _purchaseOrdersFired = new Set<string>()
+
 export function trackPurchaseOnce(
   props: TrackingProps & { order_id: string },
 ): boolean {
   if (typeof window === 'undefined') return false
-  const key = `nasama_purchase_fired_${props.order_id}`
+  const orderId = String(props.order_id)
+  if (!orderId || _purchaseOrdersFired.has(orderId)) return false
+  const key = `nasama_purchase_fired_${orderId}`
   try {
-    if (sessionStorage.getItem(key) || localStorage.getItem(key)) return false
-    sessionStorage.setItem(key, props.event_id ?? '1')
-    localStorage.setItem(key, props.event_id ?? '1')
+    if (sessionStorage.getItem(key) || localStorage.getItem(key)) {
+      _purchaseOrdersFired.add(orderId)
+      return false
+    }
+    sessionStorage.setItem(key, orderId)
+    localStorage.setItem(key, orderId)
   } catch {
-    return false
+    if (_purchaseOrdersFired.has(orderId)) return false
   }
-  trackPurchase(props)
+  _purchaseOrdersFired.add(orderId)
+  trackPurchase({ ...props, event_id: orderId, order_id: orderId })
   return true
 }
