@@ -7,6 +7,7 @@ import { cn } from '@/lib/utils'
 interface TrustBadgesProps {
   variant?: 'row' | 'grid'
   className?: string
+  dark?: boolean
 }
 
 const BADGES = [
@@ -54,21 +55,30 @@ const BADGES = [
   },
 ]
 
-function BadgeItem({ badge }: { badge: (typeof BADGES)[number] }) {
+function BadgeItem({ badge, dark = false }: { badge: (typeof BADGES)[number]; dark?: boolean }) {
   return (
     <div className="flex items-center gap-3 whitespace-nowrap">
-      <div className={cn('flex h-12 w-12 shrink-0 items-center justify-center rounded-full', badge.bg)}>
-        <badge.icon className={cn('h-6 w-6', badge.color)} />
+      <div
+        className={cn(
+          'flex h-12 w-12 shrink-0 items-center justify-center rounded-full',
+          dark ? 'bg-gold/15 ring-1 ring-gold/40' : badge.bg,
+        )}
+      >
+        <badge.icon className={cn('h-6 w-6', dark ? 'text-gold' : badge.color)} />
       </div>
       <div className="text-right">
-        <p className="text-base font-extrabold text-charcoal">{badge.title}</p>
-        <p className="text-sm font-medium text-charcoal/60">{badge.desc}</p>
+        <p className={cn('text-base font-extrabold', dark ? 'text-white' : 'text-charcoal')}>
+          {badge.title}
+        </p>
+        <p className={cn('text-sm font-medium', dark ? 'text-white/60' : 'text-charcoal/60')}>
+          {badge.desc}
+        </p>
       </div>
     </div>
   )
 }
 
-export default function TrustBadges({ variant = 'row', className }: TrustBadgesProps) {
+export default function TrustBadges({ variant = 'row', className, dark = false }: TrustBadgesProps) {
   const marqueeRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -90,20 +100,31 @@ export default function TrustBadges({ variant = 'row', className }: TrustBadgesP
     return (
       <div
         className={cn(
-          'relative w-full overflow-hidden border-y border-sage/20 bg-white py-6',
+          'relative w-full overflow-hidden border-y py-6',
+          dark ? 'border-white/10 bg-teal-dark' : 'border-sage/20 bg-white',
           className,
         )}
         dir="rtl"
       >
-        <div className="pointer-events-none absolute bottom-0 right-0 top-0 z-10 w-16 bg-gradient-to-l from-white to-transparent" />
-        <div className="pointer-events-none absolute bottom-0 left-0 top-0 z-10 w-16 bg-gradient-to-r from-white to-transparent" />
+        <div
+          className={cn(
+            'pointer-events-none absolute bottom-0 right-0 top-0 z-10 w-16 bg-gradient-to-l to-transparent',
+            dark ? 'from-teal-dark' : 'from-white',
+          )}
+        />
+        <div
+          className={cn(
+            'pointer-events-none absolute bottom-0 left-0 top-0 z-10 w-16 bg-gradient-to-r to-transparent',
+            dark ? 'from-teal-dark' : 'from-white',
+          )}
+        />
 
         <div ref={marqueeRef} className="animate-marquee-rtl is-paused flex w-max items-center">
           {[...Array(2)].map((_, i) => (
             <div key={i} className="flex items-center gap-12 px-6">
               {BADGES.map((badge, j) => (
                 <div key={`${i}-${j}`} className="flex items-center gap-3">
-                  <BadgeItem badge={badge} />
+                  <BadgeItem badge={badge} dark={dark} />
                   {j < BADGES.length - 1 && (
                     <div className="ml-6 mr-3 h-1.5 w-1.5 rounded-full bg-sage/40" />
                   )}

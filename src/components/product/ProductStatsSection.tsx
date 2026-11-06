@@ -1,14 +1,23 @@
 import Image from 'next/image'
 import { TrendingUp } from 'lucide-react'
 import type { StatsSectionContent } from '@/lib/productPageSections'
+import { cn } from '@/lib/utils'
 
 interface ProductStatsSectionProps {
   content: StatsSectionContent
+  dark?: boolean
 }
 
-export default function ProductStatsSection({ content }: ProductStatsSectionProps) {
+export default function ProductStatsSection({ content, dark = false }: ProductStatsSectionProps) {
   return (
-    <section className="relative overflow-hidden bg-gradient-to-br from-mist via-[#E4F3EE] to-teal-light/20 py-16 md:py-24">
+    <section
+      className={cn(
+        'relative overflow-hidden py-16 md:py-24',
+        dark
+          ? 'bg-gradient-to-br from-teal-dark via-apothecary-dark to-charcoal'
+          : 'bg-gradient-to-br from-mist via-[#E4F3EE] to-teal-light/20',
+      )}
+    >
       <div
         className="pointer-events-none absolute -left-32 top-1/4 h-72 w-72 rounded-full bg-teal/10 blur-3xl"
         aria-hidden
@@ -22,16 +31,33 @@ export default function ProductStatsSection({ content }: ProductStatsSectionProp
         <div className="flex flex-col items-stretch gap-12 lg:flex-row lg:items-center lg:gap-16">
           {/* Stats — right visually in RTL */}
           <div className="order-2 w-full text-right lg:order-1 lg:w-1/2">
-            <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-teal/20 bg-white/70 px-4 py-2 text-xs font-bold tracking-wide text-teal-dark shadow-sm backdrop-blur-sm">
+            <div
+              className={cn(
+                'mb-6 inline-flex items-center gap-2 rounded-full border px-4 py-2 text-xs font-bold tracking-wide shadow-sm backdrop-blur-sm',
+                dark
+                  ? 'border-white/20 bg-white/10 text-gold'
+                  : 'border-teal/20 bg-white/70 text-teal-dark',
+              )}
+            >
               <TrendingUp className="h-4 w-4 text-gold" />
               {content.badge}
             </div>
 
-            <h2 className="text-3xl font-extrabold leading-tight tracking-tight text-teal-dark md:text-4xl lg:text-[2.5rem]">
+            <h2
+              className={cn(
+                'text-3xl font-extrabold leading-tight tracking-tight md:text-4xl lg:text-[2.5rem]',
+                dark ? 'text-white' : 'text-teal-dark',
+              )}
+            >
               {content.title}
             </h2>
             {content.subtitle && (
-              <p className="mt-3 text-base font-medium leading-relaxed text-charcoal/65 md:text-lg">
+              <p
+                className={cn(
+                  'mt-3 text-base font-medium leading-relaxed md:text-lg',
+                  dark ? 'text-white/75' : 'text-charcoal/65',
+                )}
+              >
                 {content.subtitle}
               </p>
             )}
@@ -40,10 +66,18 @@ export default function ProductStatsSection({ content }: ProductStatsSectionProp
               {content.stats.map((stat) => (
                 <div
                   key={stat.value}
-                  className="group border-b border-teal/10 pb-8 last:border-0 last:pb-0"
+                  className={cn(
+                    'group border-b pb-8 last:border-0 last:pb-0',
+                    dark ? 'border-white/10' : 'border-teal/10',
+                  )}
                 >
                   <div className="flex items-center gap-3 md:gap-4">
-                    <span className="text-5xl font-extrabold leading-none text-teal-dark md:text-6xl lg:text-7xl">
+                    <span
+                      className={cn(
+                        'text-5xl font-extrabold leading-none md:text-6xl lg:text-7xl',
+                        dark ? 'text-gold' : 'text-teal-dark',
+                      )}
+                    >
                       {stat.value}
                       {stat.suffix && (
                         <span className="text-3xl md:text-4xl">{stat.suffix}</span>
@@ -53,7 +87,12 @@ export default function ProductStatsSection({ content }: ProductStatsSectionProp
                       <TrendingUp className="h-4 w-4 text-teal" strokeWidth={2.5} />
                     </div>
                   </div>
-                  <p className="mt-3 max-w-lg text-base font-semibold leading-relaxed text-charcoal/75 md:text-lg">
+                  <p
+                    className={cn(
+                      'mt-3 max-w-lg text-base font-semibold leading-relaxed md:text-lg',
+                      dark ? 'text-white/85' : 'text-charcoal/75',
+                    )}
+                  >
                     {stat.desc}
                   </p>
                 </div>
@@ -61,7 +100,12 @@ export default function ProductStatsSection({ content }: ProductStatsSectionProp
             </div>
 
             {content.footnote && (
-              <p className="mt-8 text-xs font-medium leading-relaxed text-charcoal/45 md:text-sm">
+              <p
+                className={cn(
+                  'mt-8 text-xs font-medium leading-relaxed md:text-sm',
+                  dark ? 'text-white/50' : 'text-charcoal/45',
+                )}
+              >
                 {content.footnote}
               </p>
             )}
@@ -69,7 +113,12 @@ export default function ProductStatsSection({ content }: ProductStatsSectionProp
 
           {/* Lifestyle image — left visually in RTL */}
           <div className="order-1 w-full lg:order-2 lg:w-1/2">
-            <div className="relative mx-auto aspect-[4/5] max-w-md overflow-hidden rounded-[2rem] border border-teal/15 bg-white shadow-2xl shadow-teal-dark/10 lg:max-w-none">
+            <div
+              className={cn(
+                'relative mx-auto aspect-[4/5] max-w-md overflow-hidden rounded-[2rem] border bg-white shadow-2xl lg:max-w-none',
+                dark ? 'border-white/10' : 'border-teal/15 shadow-teal-dark/10',
+              )}
+            >
               {content.video ? (
                 <video
                   src={`${content.video}#t=0.001`}

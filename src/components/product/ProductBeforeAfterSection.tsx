@@ -7,9 +7,10 @@ import type { BeforeAfterContent } from '@/lib/productPageSections'
 
 interface ProductBeforeAfterSectionProps {
   content: BeforeAfterContent
+  dark?: boolean
 }
 
-export default function ProductBeforeAfterSection({ content }: ProductBeforeAfterSectionProps) {
+export default function ProductBeforeAfterSection({ content, dark = false }: ProductBeforeAfterSectionProps) {
   const [position, setPosition] = useState(50)
   const containerRef = useRef<HTMLDivElement>(null)
   const dragging = useRef(false)
@@ -41,15 +42,29 @@ export default function ProductBeforeAfterSection({ content }: ProductBeforeAfte
   }
 
   return (
-    <section className="relative overflow-hidden bg-gradient-to-b from-mist/40 to-ivory py-16 md:py-24">
+    <section
+      className={`relative overflow-hidden py-16 md:py-24 ${
+        dark
+          ? 'bg-gradient-to-br from-teal-dark via-apothecary-dark to-charcoal'
+          : 'bg-gradient-to-b from-mist/40 to-ivory'
+      }`}
+    >
       <div className="pointer-events-none absolute left-1/2 top-0 h-72 w-72 -translate-x-1/2 rounded-full bg-teal/10 opacity-60" />
 
       <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mb-10 text-center md:mb-14">
-          <h2 className="text-3xl font-extrabold tracking-tight text-charcoal md:text-4xl">
+          <h2
+            className={`text-3xl font-extrabold tracking-tight md:text-4xl ${
+              dark ? 'text-white' : 'text-charcoal'
+            }`}
+          >
             {content.title}
           </h2>
-          <p className="mx-auto mt-4 max-w-2xl text-base font-medium leading-relaxed text-charcoal/70 md:text-lg">
+          <p
+            className={`mx-auto mt-4 max-w-2xl text-base font-medium leading-relaxed md:text-lg ${
+              dark ? 'text-white/75' : 'text-charcoal/70'
+            }`}
+          >
             {content.subtitle}
           </p>
         </div>

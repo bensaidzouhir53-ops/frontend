@@ -41,6 +41,13 @@ export default function ProductPageContent({
 }: ProductPageContentProps) {
   const sections = getProductPageSections(product.slug)
   const isMolien = isMolienDropsProduct(product.slug)
+  const darkSectionBg = 'bg-gradient-to-br from-teal-dark via-apothecary-dark to-charcoal'
+  const sectionBg = (lightBg: string) => (isMolien ? darkSectionBg : lightBg)
+  const headingText = isMolien ? 'text-white' : 'text-charcoal'
+  const bodyText = isMolien ? 'text-white/75' : 'text-charcoal/70'
+  const sectionBadge = isMolien
+    ? 'border-white/20 bg-white/10 text-gold'
+    : 'border-teal/20 bg-teal/10 text-teal'
   const solutionIcons = [
     { icon: ShieldCheck, color: 'text-teal' },
     { icon: Zap, color: 'text-gold' },
@@ -100,26 +107,38 @@ export default function ProductPageContent({
         : []
 
   return (
-    <main dir="rtl" className="bg-ivory min-h-screen pb-24 lg:pb-0">
+    <main dir="rtl" className={`min-h-screen pb-24 lg:pb-0 ${isMolien ? 'bg-teal-dark' : 'bg-ivory'}`}>
       <ProductViewTracker
         slug={product.slug}
         value={getDefaultOffer(product.slug).price}
       />
       {/* ── Breadcrumb ── */}
-      <div className="bg-white border-b border-sage/20 py-3 sticky top-[60px] lg:top-[72px] z-40">
+      <div
+        className={`border-b py-3 sticky top-[60px] lg:top-[72px] z-40 ${
+          isMolien ? 'bg-teal-dark border-white/10' : 'bg-white border-sage/20'
+        }`}
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <nav className="flex items-center gap-2 text-xs md:text-sm text-charcoal/60 font-medium">
-            <Link href="/" className="hover:text-teal transition-colors">الرئيسية</Link>
+          <nav
+            className={`flex items-center gap-2 text-xs md:text-sm font-medium ${
+              isMolien ? 'text-white/70' : 'text-charcoal/60'
+            }`}
+          >
+            <Link href="/" className={`transition-colors ${isMolien ? 'hover:text-gold' : 'hover:text-teal'}`}>الرئيسية</Link>
             <ChevronLeft className="w-3.5 h-3.5" />
-            <Link href="/products" className="hover:text-teal transition-colors">المنتجات</Link>
+            <Link href="/products" className={`transition-colors ${isMolien ? 'hover:text-gold' : 'hover:text-teal'}`}>المنتجات</Link>
             <ChevronLeft className="w-3.5 h-3.5" />
-            <span className="text-teal font-bold line-clamp-1 max-w-[200px]">{product.nameAr}</span>
+            <span className={`font-bold line-clamp-1 max-w-[200px] ${isMolien ? 'text-gold' : 'text-teal'}`}>{product.nameAr}</span>
           </nav>
         </div>
       </div>
 
       {/* ── 1. Hero Section (The Buy Box) ── */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-ivory via-surface-rose to-mist/80 py-8 sm:py-12 lg:py-20">
+      <section
+        className={`relative overflow-hidden py-8 sm:py-12 lg:py-20 ${sectionBg(
+          'bg-gradient-to-br from-ivory via-surface-rose to-mist/80',
+        )}`}
+      >
         <div className="relative z-10 mx-auto max-w-container px-4 sm:px-6 lg:px-8">
           <div className="grid items-center gap-8 sm:gap-10 lg:grid-cols-2 lg:gap-16">
             {/* Image */}
@@ -129,7 +148,11 @@ export default function ProductPageContent({
                   className="absolute inset-0 scale-150 rounded-full bg-teal/10 blur-3xl"
                   aria-hidden="true"
                 />
-                <div className="relative aspect-[2/3] overflow-hidden rounded-3xl border border-white/40 bg-surface-rose shadow-2xl">
+                <div
+                  className={`relative aspect-[2/3] overflow-hidden rounded-3xl border bg-surface-rose shadow-2xl ${
+                    isMolien ? 'border-white/10' : 'border-white/40'
+                  }`}
+                >
                   <Image
                     src={product.image}
                     alt={product.nameAr}
@@ -158,17 +181,21 @@ export default function ProductPageContent({
 
             {/* Content */}
             <div className="order-2 w-full text-right lg:order-2">
-              <p className="mb-3 text-sm font-bold text-teal">
+              <p className={`mb-3 text-sm font-bold ${isMolien ? 'text-gold' : 'text-teal'}`}>
                 {isMolien
                   ? 'قطرات مرخّصة من هيئة الغذاء والدواء (SFDA)'
                   : 'بخاخ مرخّص من هيئة الغذاء والدواء (SFDA)'}
               </p>
 
-              <h1 className="mb-4 text-[28px] font-extrabold leading-[1.15] tracking-tight text-charcoal text-balance sm:text-4xl lg:text-5xl">
+              <h1 className={`mb-4 text-[28px] font-extrabold leading-[1.15] tracking-tight text-balance sm:text-4xl lg:text-5xl ${headingText}`}>
                 {product.nameAr}
               </h1>
 
-              <p className="mb-5 border-r-2 border-gold pr-4 text-base font-medium leading-relaxed text-charcoal/85 sm:text-lg lg:text-xl">
+              <p
+                className={`mb-5 border-r-2 border-gold pr-4 text-base font-medium leading-relaxed sm:text-lg lg:text-xl ${
+                  isMolien ? 'text-white/85' : 'text-charcoal/85'
+                }`}
+              >
                 {product.descAr}
               </p>
 
@@ -178,19 +205,23 @@ export default function ProductPageContent({
                     <Star key={i} className="h-4 w-4 fill-yellow-500 text-yellow-500 sm:h-5 sm:w-5" />
                   ))}
                 </div>
-                <span className="text-sm font-extrabold text-teal sm:text-base">4.9</span>
-                <span className="text-sm font-bold text-charcoal/60">
+                <span className={`text-sm font-extrabold sm:text-base ${isMolien ? 'text-gold' : 'text-teal'}`}>4.9</span>
+                <span className={`text-sm font-bold ${isMolien ? 'text-white/65' : 'text-charcoal/60'}`}>
                   (أكثر من 2,700 تقييم · مؤكدة)
                 </span>
                 {getMaxOfferSavings(product.slug) > 0 && (
-                  <span className="rounded-full bg-teal/10 px-2.5 py-0.5 text-xs font-extrabold text-teal-dark">
+                  <span
+                    className={`rounded-full px-2.5 py-0.5 text-xs font-extrabold ${
+                      isMolien ? 'bg-gold/15 text-gold' : 'bg-teal/10 text-teal-dark'
+                    }`}
+                  >
                     💰 وفّر حتى {getMaxOfferSavings(product.slug)} ريال سعودي
                   </span>
                 )}
               </div>
 
               <div className="overflow-hidden">
-                <OfferSelector product={product} />
+                <OfferSelector product={product} dark={isMolien} />
               </div>
             </div>
           </div>
@@ -198,7 +229,9 @@ export default function ProductPageContent({
       </section>
 
       {/* ── Dark trust bar ── */}
-      <section className="bg-charcoal text-white">
+      <section
+        className={`text-white ${isMolien ? 'border-y border-white/10 bg-teal-dark' : 'bg-charcoal'}`}
+      >
         <div className="mx-auto grid max-w-container grid-cols-2 gap-3 px-4 py-5 sm:gap-5 sm:px-6 sm:py-6 lg:grid-cols-4 lg:px-8">
           {premiumTrustBar.map((item) => {
             const Icon = item.icon
@@ -218,7 +251,7 @@ export default function ProductPageContent({
       </section>
 
       {/* ── 2. Pain Agitation Section (Text Right, Image Left) ── */}
-      <section className="overflow-hidden bg-white py-14 md:py-24">
+      <section className={`overflow-hidden py-14 md:py-24 ${sectionBg('bg-white')}`}>
         <div className="mx-auto max-w-container px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col items-center gap-12 lg:flex-row">
             <div className="order-2 w-full text-right lg:order-1 lg:w-1/2">
@@ -226,10 +259,10 @@ export default function ProductPageContent({
                 <BellRing className="h-5 w-5" />
                 {sections.painAlert}
               </div>
-              <h2 className="mb-6 text-3xl font-extrabold leading-tight tracking-tight text-charcoal md:text-4xl">
+              <h2 className={`mb-6 text-3xl font-extrabold leading-tight tracking-tight md:text-4xl ${headingText}`}>
                 {sections.painTitle}
               </h2>
-              <p className="mb-8 text-lg font-medium leading-relaxed text-charcoal/70">
+              <p className={`mb-8 text-lg font-medium leading-relaxed ${bodyText}`}>
                 {sections.painBody}
               </p>
 
@@ -307,10 +340,12 @@ export default function ProductPageContent({
         </div>
       </section>
 
-      {sections.agitation && <ProductAgitationSection content={sections.agitation} />}
+      {sections.agitation && (
+        <ProductAgitationSection content={sections.agitation} dark={isMolien} />
+      )}
 
       {/* ── 3. Solution / Epiphany (Image Right, Text Left) ── */}
-      <section className="bg-surface-rose py-14 md:py-24">
+      <section className={`py-14 md:py-24 ${sectionBg('bg-surface-rose')}`}>
         <div className="mx-auto max-w-container px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col items-center gap-12 lg:flex-row">
             <div className="order-1 w-full lg:w-1/2">
@@ -326,14 +361,14 @@ export default function ProductPageContent({
             </div>
 
             <div className="order-2 w-full text-right lg:w-1/2 lg:text-left">
-              <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-teal/20 bg-teal/10 px-5 py-2 text-sm font-bold text-teal shadow-sm lg:flex-row-reverse">
+              <div className={`mb-4 inline-flex items-center gap-2 rounded-full border px-5 py-2 text-sm font-bold shadow-sm lg:flex-row-reverse ${sectionBadge}`}>
                 <Leaf className="h-4 w-4" />
                 {sections.solutionBadge}
               </div>
-              <h2 className="mb-6 text-3xl font-extrabold leading-tight tracking-tight text-charcoal md:text-4xl">
+              <h2 className={`mb-6 text-3xl font-extrabold leading-tight tracking-tight md:text-4xl ${headingText}`}>
                 {sections.solutionTitle}
               </h2>
-              <p className="mb-8 text-lg font-medium leading-relaxed text-charcoal/70">
+              <p className={`mb-8 text-lg font-medium leading-relaxed ${bodyText}`}>
                 {sections.solutionBody}
               </p>
 
@@ -361,16 +396,20 @@ export default function ProductPageContent({
       </section>
 
       {/* ── 4. Mechanism / How it works (Text Right, Image Left) ── */}
-      <section className="py-16 md:py-24 bg-white relative overflow-hidden">
+      <section className={`py-16 md:py-24 relative overflow-hidden ${sectionBg('bg-white')}`}>
         <div className="absolute left-0 top-1/4 w-96 h-96 bg-teal-light/10 rounded-full opacity-50 -translate-x-1/2" />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="flex flex-col lg:flex-row gap-12 lg:gap-20 items-center">
             
             <div className="w-full lg:w-1/2 text-right order-2 lg:order-1">
-              <div className="inline-flex items-center gap-2 text-charcoal/50 mb-4 bg-gray-100 px-4 py-1.5 rounded-full font-bold text-sm tracking-widest uppercase">
+              <div
+                className={`inline-flex items-center gap-2 mb-4 px-4 py-1.5 rounded-full font-bold text-sm tracking-widest uppercase ${
+                  isMolien ? 'border border-white/20 bg-white/10 text-gold' : 'bg-gray-100 text-charcoal/50'
+                }`}
+              >
                 آلية العمل
               </div>
-              <h2 className="text-3xl md:text-4xl font-extrabold text-charcoal mb-10 leading-tight">
+              <h2 className={`text-3xl md:text-4xl font-extrabold mb-10 leading-tight ${headingText}`}>
                 {sections.mechanismTitle}
               </h2>
               
@@ -385,8 +424,14 @@ export default function ProductPageContent({
                       </div>
                     </div>
                     <div className="text-right pt-2">
-                      <h4 className="font-extrabold text-xl text-charcoal mb-2 group-hover:text-teal transition-colors">{item.title}</h4>
-                      <p className="text-charcoal/70 leading-relaxed font-medium">{item.desc}</p>
+                      <h4
+                        className={`font-extrabold text-xl mb-2 transition-colors ${
+                          isMolien ? 'text-white group-hover:text-gold' : 'text-charcoal group-hover:text-teal'
+                        }`}
+                      >
+                        {item.title}
+                      </h4>
+                      <p className={`leading-relaxed font-medium ${bodyText}`}>{item.desc}</p>
                     </div>
                   </div>
                 ))}
@@ -425,12 +470,12 @@ export default function ProductPageContent({
 
       {/* ── 4.1 Results / Stats (molien) ── */}
       {sections.statsSection && (
-        <ProductStatsSection content={sections.statsSection} />
+        <ProductStatsSection content={sections.statsSection} dark={isMolien} />
       )}
 
       {/* ── 4.5 Ingredients Section ── */}
       {product.detailedIngredients && product.detailedIngredients.length > 0 && (
-        <section className="relative overflow-hidden bg-surface-rose py-14 md:py-24">
+        <section className={`relative overflow-hidden py-14 md:py-24 ${sectionBg('bg-surface-rose')}`}>
           <div className="relative z-10 mx-auto max-w-container px-4 sm:px-6 lg:px-8">
             <div className="flex flex-col items-center gap-12 lg:flex-row lg:gap-16">
               <div className="order-1 w-full lg:order-2 lg:w-5/12">
@@ -447,14 +492,14 @@ export default function ProductPageContent({
               </div>
 
               <div className="order-2 w-full text-right lg:order-1 lg:w-7/12">
-                <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-teal/20 bg-teal/10 px-5 py-2 text-sm font-bold text-teal shadow-sm">
+                <div className={`mb-4 inline-flex items-center gap-2 rounded-full border px-5 py-2 text-sm font-bold shadow-sm ${sectionBadge}`}>
                   <Leaf className="h-4 w-4" />
                   مكونات طبيعية 100%
                 </div>
-                <h2 className="mb-4 text-3xl font-extrabold tracking-tight text-charcoal md:text-4xl">
+                <h2 className={`mb-4 text-3xl font-extrabold tracking-tight md:text-4xl ${headingText}`}>
                   سر التركيبة العشبية الفعالة
                 </h2>
-                <p className="mb-10 text-lg font-medium leading-relaxed text-charcoal/70">
+                <p className={`mb-10 text-lg font-medium leading-relaxed ${bodyText}`}>
                   جمعنا لك أقوى الأعشاب الطبيعية اللي تشتغل مع بعض عشان تنظف صدرك وترجع لك تنفسك الطبيعي والمريح.
                 </p>
 
@@ -496,16 +541,17 @@ export default function ProductPageContent({
           content={sections.comparisonSection}
           productTitle={product.cardTitleAr ?? product.nameAr}
           variant="after-ingredients"
+          dark
         />
       )}
 
       {/* ── 4.55 Before / After Comparison ── */}
       {sections.beforeAfterComparison && (
-        <ProductBeforeAfterSection content={sections.beforeAfterComparison} />
+        <ProductBeforeAfterSection content={sections.beforeAfterComparison} dark={isMolien} />
       )}
 
       {sections.facebookSocialProof && (
-        <ProductFacebookSocialProofSection content={sections.facebookSocialProof} />
+        <ProductFacebookSocialProofSection content={sections.facebookSocialProof} dark={isMolien} />
       )}
 
       {/* ── 4.6 Twenty-Eight Day Process ── */}
@@ -517,17 +563,17 @@ export default function ProductPageContent({
 
       {/* ── 4.75 How to Use Section ── */}
       {hasFullProductPage(product.slug) && (
-        <section className="relative overflow-hidden bg-surface-rose py-14 md:py-24">
+        <section className={`relative overflow-hidden py-14 md:py-24 ${sectionBg('bg-surface-rose')}`}>
           <div className="relative z-10 mx-auto max-w-container px-4 sm:px-6 lg:px-8">
             <div className="mb-12 text-center">
-              <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-teal/20 bg-teal/10 px-5 py-2 text-sm font-bold text-teal shadow-sm">
+              <div className={`mb-4 inline-flex items-center gap-2 rounded-full border px-5 py-2 text-sm font-bold shadow-sm ${sectionBadge}`}>
                 <CheckCircle2 className="h-4 w-4" />
                 طريقة الاستخدام
               </div>
-              <h2 className="mb-4 text-3xl font-extrabold tracking-tight text-charcoal md:text-4xl">
+              <h2 className={`mb-4 text-3xl font-extrabold tracking-tight md:text-4xl ${headingText}`}>
                 {sections.howToUseTitle}
               </h2>
-              <p className="mx-auto max-w-2xl text-lg font-medium text-charcoal/70">
+              <p className={`mx-auto max-w-2xl text-lg font-medium ${bodyText}`}>
                 {sections.howToUseSubtitle}
               </p>
             </div>
@@ -567,6 +613,7 @@ export default function ProductPageContent({
         <ProductImageReviewsSection
           content={sections.imageReviewsSection}
           reviews={imageReviewsAfterTrust}
+          dark={isMolien}
         />
       )}
 
@@ -580,10 +627,18 @@ export default function ProductPageContent({
       )}
 
       {/* ── 6. SFDA & Quality Guarantee ── */}
-      <section className="py-16 bg-white border-y border-sage/20 overflow-hidden relative">
+      <section
+        className={`py-16 overflow-hidden relative ${
+          isMolien ? darkSectionBg : 'bg-white border-y border-sage/20'
+        }`}
+      >
         <div className="absolute right-0 top-0 w-64 h-64 bg-gold/10 rounded-full opacity-40 -translate-y-1/2 translate-x-1/2" />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row gap-8 items-center bg-gradient-to-r from-teal-dark to-charcoal rounded-[2.5rem] p-8 md:p-12 shadow-2xl text-white relative z-10">
+          <div
+            className={`flex flex-col md:flex-row gap-8 items-center bg-gradient-to-r from-teal-dark to-charcoal rounded-[2.5rem] p-8 md:p-12 shadow-2xl text-white relative z-10 ${
+              isMolien ? 'border border-gold/30' : ''
+            }`}
+          >
             <div className="w-full md:w-2/3 text-right order-2 md:order-1">
               <h2 className="text-3xl font-extrabold mb-4 text-gold">
                 أمانك خط أحمر: مطابق لمواصفات هيئة الغذاء والدواء (SFDA)
@@ -621,17 +676,17 @@ export default function ProductPageContent({
 
       {/* ── 6.1 SFDA Establishment Certificate ── */}
       {sections.sfdaCertificateSection && (
-        <section className="bg-surface-rose py-14 md:py-16">
+        <section className={`py-14 md:py-16 ${sectionBg('bg-surface-rose')}`}>
           <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
             <div className="mb-8 text-center">
-              <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-teal/20 bg-teal/10 px-5 py-2 text-sm font-bold text-teal shadow-sm">
+              <div className={`mb-4 inline-flex items-center gap-2 rounded-full border px-5 py-2 text-sm font-bold shadow-sm ${sectionBadge}`}>
                 <ShieldCheck className="h-4 w-4" />
                 شهادة تسجيل SFDA
               </div>
-              <h2 className="mb-3 text-3xl font-extrabold text-charcoal md:text-4xl">
+              <h2 className={`mb-3 text-3xl font-extrabold md:text-4xl ${headingText}`}>
                 {sections.sfdaCertificateSection.title}
               </h2>
-              <p className="mx-auto max-w-2xl text-lg font-medium leading-relaxed text-charcoal/70">
+              <p className={`mx-auto max-w-2xl text-lg font-medium leading-relaxed ${bodyText}`}>
                 {sections.sfdaCertificateSection.subtitle}
               </p>
             </div>
@@ -647,10 +702,12 @@ export default function ProductPageContent({
       )}
 
       {/* ── 7. FAQ ── */}
-      <section className="border-y border-sage/20 bg-surface-rose py-14 md:py-16">
+      <section
+        className={`py-14 md:py-16 ${isMolien ? darkSectionBg : 'border-y border-sage/20 bg-surface-rose'}`}
+      >
         <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
           <div className="mb-12 text-center">
-            <h2 className="mb-4 text-3xl font-extrabold text-charcoal">أسئلة شائعة عن المنتج</h2>
+            <h2 className={`mb-4 text-3xl font-extrabold ${headingText}`}>أسئلة شائعة عن المنتج</h2>
           </div>
           <div className="rounded-3xl border border-warm-border bg-white p-4 shadow-sm sm:p-6">
             <FAQAccordion items={product.faqs} />
@@ -659,19 +716,21 @@ export default function ProductPageContent({
       </section>
 
       {/* ── 7. Trust Badges ── */}
-      <section className="py-10 bg-ivory border-b border-sage/20">
+      <section
+        className={`py-10 border-b ${isMolien ? 'bg-teal-dark border-white/10' : 'bg-ivory border-sage/20'}`}
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <TrustBadges />
+          <TrustBadges dark={isMolien} />
         </div>
       </section>
 
       {/* ── 8. Cross-sell ── */}
       {crossSellProducts.length > 0 && (
-        <section className="py-16 bg-mist/30">
+        <section className={`py-16 ${sectionBg('bg-mist/30')}`}>
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" dir="rtl">
             <div className="text-center mb-10">
-              <h2 className="text-3xl font-extrabold text-charcoal mb-3">كمل روتينك لنتائج أفضل</h2>
-              <p className="text-charcoal/60 max-w-xl mx-auto">
+              <h2 className={`text-3xl font-extrabold mb-3 ${headingText}`}>كمل روتينك لنتائج أفضل</h2>
+              <p className={`max-w-xl mx-auto ${bodyText}`}>
                 منتجات تكمّل بعضها عشان تحصل على تنفس أريح ونتيجة أوضح
               </p>
             </div>
@@ -715,11 +774,18 @@ export default function ProductPageContent({
       )}
 
       {/* ── Sticky Mobile CTA ── */}
-      <div className="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-white/95 p-3 shadow-[0_-8px_20px_rgba(0,0,0,0.06)] backdrop-blur-md lg:hidden" dir="rtl">
+      <div
+        className={`fixed inset-x-0 bottom-0 z-40 border-t p-3 shadow-[0_-8px_20px_rgba(0,0,0,0.06)] backdrop-blur-md lg:hidden ${
+          isMolien ? 'border-white/10 bg-teal-dark/95' : 'border-border bg-white/95'
+        }`}
+        dir="rtl"
+      >
         <div className="max-w-md mx-auto">
           <Link
             href="#offer"
-            className="flex min-h-[56px] w-full items-center justify-center gap-2 rounded-2xl bg-teal px-4 font-bold text-white shadow-lg transition-colors hover:bg-teal-dark active:scale-[0.98]"
+            className={`flex min-h-[56px] w-full items-center justify-center gap-2 rounded-2xl px-4 font-bold shadow-lg transition-colors active:scale-[0.98] ${
+              isMolien ? 'bg-gold text-charcoal hover:bg-gold-dark' : 'bg-teal text-white hover:bg-teal-dark'
+            }`}
           >
             <ShoppingCart className="h-5 w-5 shrink-0" />
             <span>اختر عرضك — الدفع عند الاستلام</span>

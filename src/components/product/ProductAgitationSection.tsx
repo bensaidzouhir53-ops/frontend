@@ -4,6 +4,7 @@ import type { AgitationSectionContent } from '@/lib/productPageSections'
 
 interface ProductAgitationSectionProps {
   content: AgitationSectionContent
+  dark?: boolean
 }
 
 function isGifPath(path: string): boolean {
@@ -32,19 +33,21 @@ function AnimatedGif({
   )
 }
 
-export default function ProductAgitationSection({ content }: ProductAgitationSectionProps) {
+export default function ProductAgitationSection({ content, dark = false }: ProductAgitationSectionProps) {
   const gifSrc = content.gif?.trim() ?? ''
   const videoSrc = content.gifVideo?.trim() ?? ''
   const hasGif = Boolean(gifSrc)
   const hasVideo = Boolean(videoSrc)
   const hasMedia = hasGif || hasVideo
-  const isLight = content.theme === 'light'
-  const isClinical = content.theme === 'clinical'
+  const isLight = !dark && content.theme === 'light'
+  const isClinical = !dark && content.theme === 'clinical'
   const isPlain = isLight || isClinical
 
-  const sectionClass = isPlain
-    ? 'bg-ivory'
-    : 'bg-gradient-to-b from-charcoal via-charcoal to-charcoal/95'
+  const sectionClass = dark
+    ? 'bg-gradient-to-br from-teal-dark via-apothecary-dark to-charcoal'
+    : isPlain
+      ? 'bg-ivory'
+      : 'bg-gradient-to-b from-charcoal via-charcoal to-charcoal/95'
 
   return (
     <section className={`relative overflow-hidden py-16 md:py-24 ${sectionClass}`}>

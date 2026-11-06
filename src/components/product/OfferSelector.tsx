@@ -15,6 +15,7 @@ import { cn } from '@/lib/utils'
 interface OfferSelectorProps {
   product: Product
   className?: string
+  dark?: boolean
 }
 
 type RibbonVariant = NonNullable<Offer['ribbonVariant']>
@@ -373,7 +374,7 @@ function OfferStockUrgency() {
   )
 }
 
-export default function OfferSelector({ product, className }: OfferSelectorProps) {
+export default function OfferSelector({ product, className, dark = false }: OfferSelectorProps) {
   const offers = getOffersForProduct(product.slug)
   const defaultIdx = offers.findIndex((o) => o.isDefault)
   const [selectedIdx, setSelectedIdx] = useState(defaultIdx >= 0 ? defaultIdx : 1)
@@ -419,15 +420,25 @@ export default function OfferSelector({ product, className }: OfferSelectorProps
       <button
         type="button"
         onClick={handleAddToCart}
-        className="flex min-h-[56px] w-full items-center justify-center gap-2 rounded-2xl bg-teal px-4 py-3.5 text-base font-bold text-white shadow-[0_4px_18px_rgba(15,118,110,0.28)] transition-all hover:bg-teal-dark active:scale-[0.99]"
+        className={cn(
+          'flex min-h-[56px] w-full items-center justify-center gap-2 rounded-2xl px-4 py-3.5 text-base font-bold transition-all active:scale-[0.99]',
+          dark
+            ? 'bg-gold text-charcoal shadow-[0_4px_18px_rgba(215,168,92,0.35)] hover:bg-gold-dark'
+            : 'bg-teal text-white shadow-[0_4px_18px_rgba(15,118,110,0.28)] hover:bg-teal-dark',
+        )}
       >
         <ShoppingCart className="h-5 w-5 shrink-0" />
         <span>أكمل الطلب الآن — الدفع عند الاستلام</span>
       </button>
 
-      <div className="mt-2 flex flex-wrap items-center justify-center gap-4 text-[10.5px] font-bold text-charcoal/65 sm:text-xs">
+      <div
+        className={cn(
+          'mt-2 flex flex-wrap items-center justify-center gap-4 text-[10.5px] font-bold sm:text-xs',
+          dark ? 'text-white/80' : 'text-charcoal/65',
+        )}
+      >
         <div className="flex items-center gap-1.5">
-          <ShieldCheck className="h-3.5 w-3.5 text-teal" />
+          <ShieldCheck className={cn('h-3.5 w-3.5', dark ? 'text-gold' : 'text-teal')} />
           مصرح SFDA
         </div>
         <div className="flex items-center gap-1.5">
@@ -435,7 +446,7 @@ export default function OfferSelector({ product, className }: OfferSelectorProps
           صنع في السعودية
         </div>
         <div className="flex items-center gap-1.5">
-          <Truck className="h-3.5 w-3.5 text-teal" />
+          <Truck className={cn('h-3.5 w-3.5', dark ? 'text-gold' : 'text-teal')} />
           استرجاع 30 يوم
         </div>
       </div>

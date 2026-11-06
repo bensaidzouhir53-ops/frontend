@@ -12,17 +12,24 @@ interface ProductImageReviewsSectionProps {
   content: ImageReviewsSectionContent
   reviews: ProductReview[]
   ctaHref?: string
+  dark?: boolean
 }
 
 export default function ProductImageReviewsSection({
   content,
   reviews,
   ctaHref = '#offer',
+  dark = false,
 }: ProductImageReviewsSectionProps) {
   if (reviews.length === 0) return null
 
   return (
-    <section id="reviews" className="relative overflow-hidden bg-white py-16 md:py-24">
+    <section
+      id="reviews"
+      className={`relative overflow-hidden py-16 md:py-24 ${
+        dark ? 'bg-gradient-to-br from-teal-dark via-apothecary-dark to-charcoal' : 'bg-white'
+      }`}
+    >
       <div
         className="pointer-events-none absolute -left-32 top-0 h-96 w-96 rounded-full bg-teal/5 blur-3xl"
         aria-hidden
@@ -35,12 +42,24 @@ export default function ProductImageReviewsSection({
       <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mb-12 flex flex-col items-stretch justify-between gap-6 md:flex-row md:items-end">
           <div className="text-right">
-            <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-gold/30 bg-gold/10 px-4 py-2 text-xs font-bold text-gold-dark">
+            <div
+              className={`mb-4 inline-flex items-center gap-2 rounded-full border border-gold/30 bg-gold/10 px-4 py-2 text-xs font-bold ${
+                dark ? 'text-gold' : 'text-gold-dark'
+              }`}
+            >
               <Star className="h-3.5 w-3.5 fill-gold text-gold" />
               تقييمات بصور حقيقية
             </div>
-            <h2 className="text-3xl font-extrabold text-charcoal md:text-4xl">{content.title}</h2>
-            <p className="mt-4 max-w-2xl text-base font-medium leading-relaxed text-charcoal/70 md:text-lg">
+            <h2
+              className={`text-3xl font-extrabold md:text-4xl ${dark ? 'text-white' : 'text-charcoal'}`}
+            >
+              {content.title}
+            </h2>
+            <p
+              className={`mt-4 max-w-2xl text-base font-medium leading-relaxed md:text-lg ${
+                dark ? 'text-white/75' : 'text-charcoal/70'
+              }`}
+            >
               {content.subtitle}
             </p>
           </div>
@@ -62,7 +81,11 @@ export default function ProductImageReviewsSection({
         <div className="mt-12 text-center">
           <Link
             href={ctaHref}
-            className="inline-flex items-center justify-center gap-2 rounded-2xl bg-teal px-8 py-4 text-base font-extrabold text-white shadow-lg shadow-teal/30 transition-colors hover:bg-teal-dark"
+            className={`inline-flex items-center justify-center gap-2 rounded-2xl px-8 py-4 text-base font-extrabold shadow-lg transition-colors ${
+              dark
+                ? 'bg-gold text-charcoal shadow-gold/30 hover:bg-gold-dark'
+                : 'bg-teal text-white shadow-teal/30 hover:bg-teal-dark'
+            }`}
           >
             جرب قطرة المولين — الدفع عند الاستلام
           </Link>

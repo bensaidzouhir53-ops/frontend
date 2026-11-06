@@ -6,6 +6,7 @@ interface ProductComparisonSectionProps {
   content?: ComparisonSectionContent
   productTitle: string
   variant?: 'default' | 'after-ingredients'
+  dark?: boolean
 }
 
 const DEFAULT_CONTENT: ComparisonSectionContent = {
@@ -21,6 +22,7 @@ export default function ProductComparisonSection({
   content,
   productTitle,
   variant = 'default',
+  dark = false,
 }: ProductComparisonSectionProps) {
   const copy = { ...DEFAULT_CONTENT, ...content }
   const footerHighlight =
@@ -30,20 +32,34 @@ export default function ProductComparisonSection({
   return (
     <section
       className={
-        isAfterIngredients
-          ? 'border-t border-warm-border bg-white py-14 md:py-20'
-          : 'bg-white py-14 md:py-24'
+        dark
+          ? 'bg-gradient-to-br from-teal-dark via-apothecary-dark to-charcoal py-14 md:py-20'
+          : isAfterIngredients
+            ? 'border-t border-warm-border bg-white py-14 md:py-20'
+            : 'bg-white py-14 md:py-24'
       }
     >
       <div className="mx-auto max-w-container px-4 text-center sm:px-6 lg:px-8">
-        <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-teal/20 bg-teal/10 px-5 py-2 text-sm font-bold text-teal shadow-sm">
+        <div
+          className={`mb-4 inline-flex items-center gap-2 rounded-full border px-5 py-2 text-sm font-bold shadow-sm ${
+            dark ? 'border-white/20 bg-white/10 text-gold' : 'border-teal/20 bg-teal/10 text-teal'
+          }`}
+        >
           <ShieldCheck className="h-4 w-4" />
           {copy.badge}
         </div>
-        <h2 className="mb-4 text-3xl font-extrabold tracking-tight text-charcoal md:text-4xl">
+        <h2
+          className={`mb-4 text-3xl font-extrabold tracking-tight md:text-4xl ${
+            dark ? 'text-white' : 'text-charcoal'
+          }`}
+        >
           {copy.title}
         </h2>
-        <p className="mx-auto mb-10 max-w-3xl text-lg font-medium leading-relaxed text-charcoal/70">
+        <p
+          className={`mx-auto mb-10 max-w-3xl text-lg font-medium leading-relaxed ${
+            dark ? 'text-white/75' : 'text-charcoal/70'
+          }`}
+        >
           {copy.subtitle}
         </p>
 
@@ -118,7 +134,11 @@ export default function ProductComparisonSection({
           ))}
         </div>
 
-        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-l from-teal-dark to-charcoal p-6 text-right text-white shadow-xl sm:p-8">
+        <div
+          className={`relative overflow-hidden rounded-3xl bg-gradient-to-l from-teal-dark to-charcoal p-6 text-right text-white shadow-xl sm:p-8 ${
+            dark ? 'border border-gold/30' : ''
+          }`}
+        >
           <div
             className="pointer-events-none absolute -left-8 -top-8 h-32 w-32 rounded-full border-4 border-gold/30"
             aria-hidden="true"
