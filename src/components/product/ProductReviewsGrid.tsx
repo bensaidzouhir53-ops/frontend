@@ -1,6 +1,11 @@
+'use client'
+
+import { useState } from 'react'
 import Image from 'next/image'
-import { Star, CheckCircle2 } from 'lucide-react'
+import { Star, CheckCircle2, ChevronDown } from 'lucide-react'
 import type { ProductReview } from '@/lib/productReviews'
+
+const REVIEWS_PAGE_SIZE = 3
 
 interface ProductReviewsGridProps {
   reviews: ProductReview[]
@@ -8,9 +13,14 @@ interface ProductReviewsGridProps {
 }
 
 export default function ProductReviewsGrid({ reviews, dark = false }: ProductReviewsGridProps) {
+  const [visibleCount, setVisibleCount] = useState(REVIEWS_PAGE_SIZE)
+  const visibleReviews = reviews.slice(0, visibleCount)
+  const remaining = reviews.length - visibleCount
+
   return (
+    <div>
     <div className="grid grid-cols-1 gap-6 text-right md:grid-cols-2 lg:grid-cols-3">
-      {reviews.map((review, i) => (
+      {visibleReviews.map((review, i) => (
         <div
           key={`${review.name}-${i}`}
           className={`group overflow-hidden rounded-2xl border transition-all ${
@@ -70,6 +80,25 @@ export default function ProductReviewsGrid({ reviews, dark = false }: ProductRev
           </div>
         </div>
       ))}
+    </div>
+
+    {remaining > 0 && (
+      <div className="mt-8 text-center">
+        <button
+          type="button"
+          onClick={() => setVisibleCount((count) => count + REVIEWS_PAGE_SIZE)}
+          className={`inline-flex items-center justify-center gap-2 rounded-2xl border-2 px-7 py-3 text-sm font-extrabold transition-colors md:text-base ${
+            dark
+              ? 'border-gold/60 text-gold hover:bg-gold hover:text-charcoal'
+              : 'border-teal/40 text-teal hover:bg-teal hover:text-white'
+          }`}
+        >
+          عرض المزيد من التقييمات
+          <span className="text-xs font-bold opacity-75">(+{remaining})</span>
+          <ChevronDown className="h-4 w-4" />
+        </button>
+      </div>
+    )}
     </div>
   )
 }

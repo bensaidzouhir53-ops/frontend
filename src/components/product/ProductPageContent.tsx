@@ -220,7 +220,7 @@ export default function ProductPageContent({
                       isMolien ? 'bg-gold/15 text-gold' : 'bg-teal/10 text-teal-dark'
                     }`}
                   >
-                    💰 وفّر حتى {getMaxOfferSavings(product.slug)} ريال سعودي
+                    وفّر حتى {getMaxOfferSavings(product.slug)} ريال سعودي
                   </span>
                 )}
               </div>

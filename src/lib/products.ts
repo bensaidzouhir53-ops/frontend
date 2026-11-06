@@ -4,7 +4,7 @@ export const PRODUCTS: Product[] = [
   {
     slug: 'herbal-lung-spray',
     sku: 'HBLEANSPRY3',
-    nameAr: 'صدرك مكتوم وبلغمك ما يوقف؟ انسف الكتمة فوراً مع بخاخ تنظيف الرئتين العشبي 🌿',
+    nameAr: 'صدرك مكتوم وبلغمك ما يوقف؟ انسف الكتمة فوراً مع بخاخ تنظيف الرئتين العشبي',
     nameEn: 'Herbal Lung Cleansing Spray',
     cardTitleAr: 'بخاخ تنظيف الرئة العشبي',
     shortDescAr: 'بخاخ طبيعي ينظف رئتك من آثار الدخان والغبار، ويخليك تاخذ نَفَس عميق ومريح من أول 3 أيام.',
@@ -73,7 +73,7 @@ export const PRODUCTS: Product[] = [
   {
     slug: 'molien-drops',
     sku: 'MOILZOUH',
-    nameAr: 'صدرك مكتوم وبلغمك ما يوقف؟ قطرات المولين تنظّف رئتك وتطرد بلغم السنين! 🌿',
+    nameAr: 'صدرك مكتوم وبلغمك ما يوقف؟ قطرات المولين تنظّف رئتك وتطرد بلغم السنين!',
     nameEn: 'Molien Drops — Deep Lung Cleansing',
     cardTitleAr: 'قطرات المولين لتنظيف الرئة',
     shortDescAr: 'قطرات طبيعية تنظف رئتك من آثار الشيشة والغبار، وتخليك تاخذ نَفَس عميق ومريح من أول 3 أيام.',
@@ -145,7 +145,7 @@ export const PRODUCTS: Product[] = [
   {
     slug: 'molien-drops-women',
     sku: 'MOILZOUH',
-    nameAr: 'تكحين بالمجلس؟ بلغم الصبح يفضحك؟ قطرات المولين للسيدات تنظّف صدركِ من جوّا! 🌿',
+    nameAr: 'تكحين بالمجلس؟ بلغم الصبح يفضحك؟ قطرات المولين للسيدات تنظّف صدركِ من جوّا!',
     nameEn: 'Molien Drops for Women — Deep Lung Cleansing',
     cardTitleAr: 'قطرات المولين للسيدات',
     shortDescAr:
