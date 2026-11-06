@@ -116,7 +116,7 @@ export default function ProductStatsSection({ content, dark = false }: ProductSt
             <div
               className={cn(
                 'relative mx-auto aspect-[4/5] max-w-md overflow-hidden rounded-[2rem] border bg-white shadow-2xl lg:max-w-none',
-                dark ? 'border-white/10' : 'border-teal/15 shadow-teal-dark/10',
+                dark ? 'border-gold/25 shadow-black/30' : 'border-teal/15 shadow-teal-dark/10',
               )}
             >
               {content.video ? (

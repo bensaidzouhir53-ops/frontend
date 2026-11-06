@@ -63,20 +63,24 @@ export default function ProductImageReviewsSection({
               {content.subtitle}
             </p>
           </div>
-          <div className="flex shrink-0 items-center gap-2 rounded-2xl border border-sage/30 bg-ivory px-5 py-3 text-right shadow-sm">
+          <div
+            className={`flex shrink-0 items-center gap-2 rounded-2xl border px-5 py-3 text-right shadow-sm ${
+              dark ? 'border-gold/30 bg-white/[0.06]' : 'border-sage/30 bg-ivory'
+            }`}
+          >
             <div className="flex gap-0.5">
               {Array.from({ length: 5 }).map((_, i) => (
                 <Star key={i} className="h-4 w-4 fill-gold text-gold" />
               ))}
             </div>
             <div>
-              <p className="text-sm font-extrabold text-charcoal">4.9/5</p>
-              <p className="text-xs text-charcoal/50">+2,700 تقييم</p>
+              <p className={`text-sm font-extrabold ${dark ? 'text-gold' : 'text-charcoal'}`}>4.9/5</p>
+              <p className={`text-xs ${dark ? 'text-white/60' : 'text-charcoal/50'}`}>+2,700 تقييم</p>
             </div>
           </div>
         </div>
 
-        <ProductReviewsGrid reviews={reviews} />
+        <ProductReviewsGrid reviews={reviews} dark={dark} />
 
         <div className="mt-12 text-center">
           <Link

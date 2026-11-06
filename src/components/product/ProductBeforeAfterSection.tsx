@@ -71,7 +71,9 @@ export default function ProductBeforeAfterSection({ content, dark = false }: Pro
 
         <div
           ref={containerRef}
-          className="relative mx-auto aspect-[3/4] max-w-xl cursor-ew-resize touch-none select-none overflow-hidden rounded-[2rem] border-4 border-white shadow-2xl shadow-teal/15 md:max-w-2xl md:rounded-[2.5rem]"
+          className={`relative mx-auto aspect-[3/4] max-w-xl cursor-ew-resize touch-none select-none overflow-hidden rounded-[2rem] shadow-2xl md:max-w-2xl md:rounded-[2.5rem] ${
+            dark ? 'border border-gold/30 shadow-black/40' : 'border-4 border-white shadow-teal/15'
+          }`}
           onPointerDown={onPointerDown}
           onPointerMove={onPointerMove}
           onPointerUp={stopDragging}

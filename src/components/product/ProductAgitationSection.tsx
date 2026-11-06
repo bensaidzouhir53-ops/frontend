@@ -79,7 +79,7 @@ export default function ProductAgitationSection({ content, dark = false }: Produ
               className={`relative aspect-[4/5] overflow-hidden ${
                 isPlain
                   ? 'rounded-3xl shadow-lg'
-                  : 'rounded-[2.5rem] border border-gold/30 bg-charcoal/80 shadow-2xl shadow-black/40'
+                  : 'rounded-[2rem] border border-gold/25 bg-charcoal/80 shadow-2xl shadow-black/40'
               }`}
             >
               {hasMedia ? (

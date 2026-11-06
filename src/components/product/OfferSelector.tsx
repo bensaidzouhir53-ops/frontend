@@ -86,7 +86,23 @@ const OFFER_TIER_STYLES: Record<number, OfferTierStyle> = {
   },
 }
 
-function getOfferTierStyle(qty: number): OfferTierStyle {
+const DARK_OFFER_TIER_STYLE: OfferTierStyle = {
+  price: 'text-gold',
+  priceMuted: 'text-white/85',
+  priceBg: 'bg-white/5 ring-1 ring-white/10',
+  priceBgSelected: 'bg-gold/15 ring-1 ring-gold/40',
+  currency: 'text-white/60',
+  border: 'border-white/15',
+  borderSelected: 'border-gold',
+  selectedBg: 'bg-gradient-to-l from-gold/15 via-white/5 to-gold/10',
+  savings: 'border-gold/40 bg-gold/15 text-gold',
+  radioSelected: 'border-gold bg-gold',
+  volumeBadge: 'border border-white/20 bg-white/10 text-white/85',
+  volumeBadgeSelected: 'border border-gold bg-gold text-charcoal shadow-[0_3px_12px_rgba(215,168,92,0.35)]',
+}
+
+function getOfferTierStyle(qty: number, dark = false): OfferTierStyle {
+  if (dark) return DARK_OFFER_TIER_STYLE
   return OFFER_TIER_STYLES[qty] ?? OFFER_TIER_STYLES[1]
 }
 
@@ -94,16 +110,35 @@ function formatOfferPrice(amount: number) {
   return amount.toLocaleString('en-US')
 }
 
-function OfferRadio({ selected, tier }: { selected: boolean; tier: OfferTierStyle }) {
+function OfferRadio({
+  selected,
+  tier,
+  dark = false,
+}: {
+  selected: boolean
+  tier: OfferTierStyle
+  dark?: boolean
+}) {
   return (
     <div
       className={cn(
         'mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 transition-colors sm:h-[22px] sm:w-[22px]',
-        selected ? tier.radioSelected : 'border-charcoal/20 bg-white',
+        selected
+          ? tier.radioSelected
+          : dark
+            ? 'border-white/30 bg-transparent'
+            : 'border-charcoal/20 bg-white',
       )}
       aria-hidden="true"
     >
-      {selected && <div className="h-1.5 w-1.5 rounded-full bg-white shadow-sm sm:h-2 sm:w-2" />}
+      {selected && (
+        <div
+          className={cn(
+            'h-1.5 w-1.5 rounded-full shadow-sm sm:h-2 sm:w-2',
+            dark ? 'bg-charcoal' : 'bg-white',
+          )}
+        />
+      )}
     </div>
   )
 }
@@ -138,10 +173,12 @@ function OfferBadgePill({
   text,
   selected,
   offerQty,
+  dark = false,
 }: {
   text: string
   selected: boolean
   offerQty: number
+  dark?: boolean
 }) {
   const isPackage = text.startsWith('باقة ')
   const isTrial = text === 'للتجربة بس'
@@ -151,7 +188,14 @@ function OfferBadgePill({
 
   let className = 'bg-white text-charcoal/70 border border-border/80'
 
-  if (isSpecial) {
+  if (dark) {
+    className =
+      selected && (isSpecial || isPackage || isBestTier)
+        ? 'bg-gold text-charcoal border border-gold'
+        : isShipping || isSpecial || isPackage
+          ? 'bg-gold/10 text-gold border border-gold/35'
+          : 'bg-white/10 text-white/80 border border-white/20'
+  } else if (isSpecial) {
     className = selected
       ? 'bg-offer-amber text-white border border-offer-amber'
       : 'bg-offer-amber-light text-offer-amber border border-offer-amber-border'
@@ -193,11 +237,13 @@ function OfferCard({
   selected,
   onSelect,
   productSlug,
+  dark = false,
 }: {
   offer: Offer
   selected: boolean
   onSelect: () => void
   productSlug: string
+  dark?: boolean
 }) {
   const originalPrice = getOfferOriginalPrice(productSlug, offer)
   const hasSavings = (offer.savings ?? 0) > 0 && offer.qty > 1
@@ -205,7 +251,7 @@ function OfferCard({
   const badges = getCardBadges(offer)
   const hasRibbon = Boolean(offer.ribbonBadge || offer.stageRibbonBadge)
   const title = offer.cardTitle ?? offer.qtyLabel ?? `${offer.qty} قطع`
-  const tier = getOfferTierStyle(offer.qty)
+  const tier = getOfferTierStyle(offer.qty, dark)
 
   return (
     <button
@@ -217,8 +263,19 @@ function OfferCard({
         hasRibbon ? 'pt-4 pb-3 sm:py-3.5' : 'py-3 sm:py-3.5',
         offer.isBestValue && !selected && 'ring-1 ring-gold/35',
         selected
-          ? cn('border-2 shadow-[0_4px_16px_rgba(15,118,110,0.1)]', tier.borderSelected, tier.selectedBg)
-          : cn('border bg-white hover:border-teal/25', tier.border),
+          ? cn(
+              'border-2',
+              dark
+                ? 'shadow-[0_6px_24px_rgba(215,168,92,0.2)]'
+                : 'shadow-[0_4px_16px_rgba(15,118,110,0.1)]',
+              tier.borderSelected,
+              tier.selectedBg,
+            )
+          : cn(
+              'border',
+              dark ? 'bg-white/5 hover:border-gold/40 hover:bg-white/10' : 'bg-white hover:border-teal/25',
+              tier.border,
+            ),
       )}
     >
       {hasRibbon && (
@@ -239,10 +296,17 @@ function OfferCard({
       )}
 
       <div className="flex items-start gap-2.5 sm:gap-3">
-        <OfferRadio selected={selected} tier={tier} />
+        <OfferRadio selected={selected} tier={tier} dark={dark} />
 
         <div className="min-w-0 flex-1">
-          <p className="text-[13px] font-bold leading-tight text-charcoal sm:text-[15px]">{title}</p>
+          <p
+            className={cn(
+              'text-[13px] font-bold leading-tight sm:text-[15px]',
+              dark ? 'text-white' : 'text-charcoal',
+            )}
+          >
+            {title}
+          </p>
 
           {offer.volumeLabel && (
             <div className="mt-1.5 flex flex-wrap items-center gap-2">
@@ -256,10 +320,14 @@ function OfferCard({
                 {offer.volumeLabel}
               </span>
               {offer.qty === 2 && (
-                <span className="text-[9px] font-bold text-offer-amber sm:text-[10px]">الأكثر طلباً</span>
+                <span className={cn('text-[9px] font-bold sm:text-[10px]', dark ? 'text-gold' : 'text-offer-amber')}>
+                  الأكثر طلباً
+                </span>
               )}
               {offer.qty === 3 && (
-                <span className="text-[9px] font-bold text-gold-dark sm:text-[10px]">أفضل قيمة — وفّر أكثر</span>
+                <span className={cn('text-[9px] font-bold sm:text-[10px]', dark ? 'text-gold' : 'text-gold-dark')}>
+                  أفضل قيمة — وفّر أكثر
+                </span>
               )}
             </div>
           )}
@@ -272,15 +340,23 @@ function OfferCard({
                   text={badge}
                   selected={selected}
                   offerQty={offer.qty}
+                  dark={dark}
                 />
               ))}
             </div>
           )}
 
           {selected && (offer.cardSubtitleLead || offer.cardSubtitle) && (
-            <p className="mt-1.5 text-[11px] leading-relaxed text-charcoal/55 sm:text-xs">
+            <p
+              className={cn(
+                'mt-1.5 text-[11px] leading-relaxed sm:text-xs',
+                dark ? 'text-white/65' : 'text-charcoal/55',
+              )}
+            >
               {offer.cardSubtitleLead && (
-                <span className="font-bold text-charcoal/75">{offer.cardSubtitleLead} </span>
+                <span className={cn('font-bold', dark ? 'text-white/90' : 'text-charcoal/75')}>
+                  {offer.cardSubtitleLead}{' '}
+                </span>
               )}
               {offer.cardSubtitle}
             </p>
@@ -310,7 +386,12 @@ function OfferCard({
           )}
         >
           {hasSavings && (
-            <span className="text-[10px] font-medium text-charcoal/35 line-through tabular-nums sm:text-[11px]">
+            <span
+              className={cn(
+                'text-[10px] font-medium line-through tabular-nums sm:text-[11px]',
+                dark ? 'text-white/40' : 'text-charcoal/35',
+              )}
+            >
               {formatOfferPrice(originalPrice)}
             </span>
           )}
@@ -331,22 +412,42 @@ function OfferCard({
   )
 }
 
-function FreeShippingBanner({ productSlug }: { productSlug: string }) {
+function FreeShippingBanner({ productSlug, dark = false }: { productSlug: string; dark?: boolean }) {
   const maxSavings = getMaxOfferSavings(productSlug)
   return (
     <div
       dir="rtl"
-      className="w-full rounded-2xl border border-teal/15 bg-gradient-to-l from-white via-pine-light to-offer-selected px-3.5 py-3 shadow-[0_2px_14px_rgba(15,118,110,0.07)] sm:px-4"
+      className={cn(
+        'w-full rounded-2xl border px-3.5 py-3 sm:px-4',
+        dark
+          ? 'border-gold/25 bg-gradient-to-l from-gold/10 via-white/5 to-transparent'
+          : 'border-teal/15 bg-gradient-to-l from-white via-pine-light to-offer-selected shadow-[0_2px_14px_rgba(15,118,110,0.07)]',
+      )}
     >
       <div className="flex items-center gap-3">
-        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-teal/10 ring-1 ring-teal/15">
-          <Truck className="h-5 w-5 text-teal" strokeWidth={1.75} />
+        <div
+          className={cn(
+            'flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ring-1',
+            dark ? 'bg-gold/15 ring-gold/30' : 'bg-teal/10 ring-teal/15',
+          )}
+        >
+          <Truck className={cn('h-5 w-5', dark ? 'text-gold' : 'text-teal')} strokeWidth={1.75} />
         </div>
         <div className="min-w-0 flex-1 text-start">
-          <p className="text-[13px] font-bold leading-snug text-charcoal sm:text-sm">
+          <p
+            className={cn(
+              'text-[13px] font-bold leading-snug sm:text-sm',
+              dark ? 'text-white' : 'text-charcoal',
+            )}
+          >
             شحن مجاني — 2-4 أيام داخل السعودية
           </p>
-          <p className="mt-0.5 text-[11px] font-medium leading-relaxed text-charcoal/55 sm:text-xs">
+          <p
+            className={cn(
+              'mt-0.5 text-[11px] font-medium leading-relaxed sm:text-xs',
+              dark ? 'text-white/65' : 'text-charcoal/55',
+            )}
+          >
             العبوة الأولى تعطيك النتيجة. العبوتين والثلاث تثبّتها — وفّر حتى{' '}
             {maxSavings} ريال سعودي
           </p>
@@ -356,10 +457,13 @@ function FreeShippingBanner({ productSlug }: { productSlug: string }) {
   )
 }
 
-function OfferStockUrgency() {
+function OfferStockUrgency({ dark = false }: { dark?: boolean }) {
   return (
     <div
-      className="mt-3 flex items-center justify-center gap-2 rounded-xl border border-red-200/80 bg-red-50/90 px-3 py-2.5"
+      className={cn(
+        'mt-3 flex items-center justify-center gap-2 rounded-xl border px-3 py-2.5',
+        dark ? 'border-red-400/30 bg-red-500/10' : 'border-red-200/80 bg-red-50/90',
+      )}
       role="status"
       aria-live="polite"
     >
@@ -367,7 +471,12 @@ function OfferStockUrgency() {
         <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-500 opacity-80" />
         <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-red-600" />
       </span>
-      <p className="text-[13px] font-extrabold leading-snug text-red-600 sm:text-sm">
+      <p
+        className={cn(
+          'text-[13px] font-extrabold leading-snug sm:text-sm',
+          dark ? 'text-red-300' : 'text-red-600',
+        )}
+      >
         أوشكت تخلص — الكمية على آخرها!
       </p>
     </div>
@@ -399,11 +508,18 @@ export default function OfferSelector({ product, className, dark = false }: Offe
       className={cn('flex flex-col gap-3', className)}
       dir="rtl"
     >
-      <FreeShippingBanner productSlug={product.slug} />
+      <FreeShippingBanner productSlug={product.slug} dark={dark} />
 
-      <div className="rounded-2xl border border-border/60 bg-offer-panel p-3 sm:p-4">
-        <p className="mb-2.5 text-sm font-bold text-charcoal/80">اختر العرض المناسب لك:</p>
-        <div className="space-y-2">
+      <div
+        className={cn(
+          'rounded-2xl border p-3 sm:p-4',
+          dark ? 'border-white/10 bg-black/15 backdrop-blur-sm' : 'border-border/60 bg-offer-panel',
+        )}
+      >
+        <p className={cn('mb-2.5 text-sm font-bold', dark ? 'text-gold' : 'text-charcoal/80')}>
+          اختر العرض المناسب لك:
+        </p>
+        <div className={cn(dark ? 'space-y-3' : 'space-y-2')}>
           {offers.map((offer, idx) => (
             <OfferCard
               key={offer.qty}
@@ -411,10 +527,11 @@ export default function OfferSelector({ product, className, dark = false }: Offe
               selected={idx === selectedIdx}
               onSelect={() => setSelectedIdx(idx)}
               productSlug={product.slug}
+              dark={dark}
             />
           ))}
         </div>
-        <OfferStockUrgency />
+        <OfferStockUrgency dark={dark} />
       </div>
 
       <button

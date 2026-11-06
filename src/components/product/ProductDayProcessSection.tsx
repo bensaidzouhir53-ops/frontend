@@ -64,7 +64,7 @@ export default function ProductDayProcessSection({ content }: ProductDayProcessS
 
           {/* Image card — right visually in RTL */}
           <div className="order-1 w-full lg:order-2 lg:w-1/2">
-            <div className="relative mx-auto aspect-[3/4] max-w-md overflow-hidden rounded-[2rem] border border-white/10 shadow-2xl lg:max-w-none lg:aspect-[4/5]">
+            <div className="relative mx-auto aspect-[3/4] max-w-md overflow-hidden rounded-[2rem] border border-gold/25 shadow-2xl shadow-black/30 lg:max-w-none lg:aspect-[4/5]">
               <Image
                 src={content.image}
                 alt={content.imageAlt}

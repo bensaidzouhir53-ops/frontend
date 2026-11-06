@@ -45,6 +45,9 @@ export default function ProductPageContent({
   const sectionBg = (lightBg: string) => (isMolien ? darkSectionBg : lightBg)
   const headingText = isMolien ? 'text-white' : 'text-charcoal'
   const bodyText = isMolien ? 'text-white/75' : 'text-charcoal/70'
+  const mediaFrame = (lightFrame: string) =>
+    isMolien ? 'border border-gold/25 shadow-2xl shadow-black/30' : lightFrame
+  const glassCard = 'border border-white/10 bg-white/[0.06] backdrop-blur-sm'
   const sectionBadge = isMolien
     ? 'border-white/20 bg-white/10 text-gold'
     : 'border-teal/20 bg-teal/10 text-teal'
@@ -149,9 +152,9 @@ export default function ProductPageContent({
                   aria-hidden="true"
                 />
                 <div
-                  className={`relative aspect-[2/3] overflow-hidden rounded-3xl border bg-surface-rose shadow-2xl ${
-                    isMolien ? 'border-white/10' : 'border-white/40'
-                  }`}
+                  className={`relative aspect-[2/3] overflow-hidden rounded-3xl bg-surface-rose ${mediaFrame(
+                    'border border-white/40 shadow-2xl',
+                  )}`}
                 >
                   <Image
                     src={product.image}
@@ -167,10 +170,12 @@ export default function ProductPageContent({
                   {heroStats.map((stat) => (
                     <div
                       key={stat.label}
-                      className="rounded-xl border border-warm-border/70 bg-white/95 p-2.5 text-center shadow-sm backdrop-blur sm:p-3"
+                      className={`rounded-xl p-2.5 text-center shadow-sm sm:p-3 ${
+                        isMolien ? glassCard : 'border border-warm-border/70 bg-white/95 backdrop-blur'
+                      }`}
                     >
-                      <p className="text-base font-extrabold text-teal">{stat.value}</p>
-                      <p className="line-clamp-1 text-[10px] font-medium text-charcoal/55">
+                      <p className={`text-base font-extrabold ${isMolien ? 'text-gold' : 'text-teal'}`}>{stat.value}</p>
+                      <p className={`line-clamp-1 text-[10px] font-medium ${isMolien ? 'text-white/65' : 'text-charcoal/55'}`}>
                         {stat.label}
                       </p>
                     </div>
@@ -272,22 +277,48 @@ export default function ProductPageContent({
                   return (
                     <div
                       key={i}
-                      className="overflow-hidden rounded-2xl border border-warm-border"
+                      className={`overflow-hidden rounded-2xl border ${
+                        isMolien
+                          ? 'border-gold/20 bg-white/[0.04] shadow-lg shadow-black/20 backdrop-blur-sm'
+                          : 'border-warm-border'
+                      }`}
                     >
-                      <div className="flex items-start gap-3 bg-white p-4">
-                        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-red-100">
-                          <CircleX className="h-5 w-5 text-red-500" />
+                      <div className={`flex items-start gap-3 p-4 ${isMolien ? '' : 'bg-white'}`}>
+                        <div
+                          className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl ${
+                            isMolien ? 'bg-red-500/15 ring-1 ring-red-400/30' : 'bg-red-100'
+                          }`}
+                        >
+                          <CircleX className={`h-5 w-5 ${isMolien ? 'text-red-300' : 'text-red-500'}`} />
                         </div>
-                        <p className="text-[15px] font-bold leading-relaxed text-charcoal/80">
+                        <p
+                          className={`text-[15px] font-bold leading-relaxed ${
+                            isMolien ? 'text-white/85' : 'text-charcoal/80'
+                          }`}
+                        >
                           {item.text}
                         </p>
                       </div>
                       {solution && (
-                        <div className="flex items-start gap-3 border-t border-teal/10 bg-teal/5 p-4">
-                          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-teal/15">
-                            <CircleCheckBig className="h-5 w-5 text-teal" />
+                        <div
+                          className={`flex items-start gap-3 border-t p-4 ${
+                            isMolien
+                              ? 'border-gold/20 bg-gradient-to-l from-gold/20 via-gold/10 to-transparent'
+                              : 'border-teal/10 bg-teal/5'
+                          }`}
+                        >
+                          <div
+                            className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl ${
+                              isMolien ? 'bg-gold text-charcoal shadow-md shadow-gold/30' : 'bg-teal/15'
+                            }`}
+                          >
+                            <CircleCheckBig className={`h-5 w-5 ${isMolien ? 'text-charcoal' : 'text-teal'}`} />
                           </div>
-                          <p className="text-[15px] font-bold leading-relaxed text-teal-dark">
+                          <p
+                            className={`text-[15px] font-bold leading-relaxed ${
+                              isMolien ? 'text-gold' : 'text-teal-dark'
+                            }`}
+                          >
                             {solution.title}
                           </p>
                         </div>
@@ -299,7 +330,11 @@ export default function ProductPageContent({
             </div>
 
             <div className="relative order-1 w-full lg:order-2 lg:w-1/2">
-              <div className="relative aspect-[4/5] overflow-hidden rounded-[2rem] border-8 border-white bg-gray-100 shadow-2xl lg:min-h-[420px]">
+              <div
+                className={`relative aspect-[4/5] overflow-hidden rounded-[2rem] bg-gray-100 lg:min-h-[420px] ${mediaFrame(
+                  'border-8 border-white shadow-2xl',
+                )}`}
+              >
                 {sections.painGif && isGifPath(sections.painGif) ? (
                   <img
                     key={sections.painGif}
@@ -349,7 +384,11 @@ export default function ProductPageContent({
         <div className="mx-auto max-w-container px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col items-center gap-12 lg:flex-row">
             <div className="order-1 w-full lg:w-1/2">
-              <div className="relative aspect-[4/5] overflow-hidden rounded-[2rem] border-8 border-white bg-gray-100 shadow-2xl lg:min-h-[420px]">
+              <div
+                className={`relative aspect-[4/5] overflow-hidden rounded-[2rem] bg-gray-100 lg:min-h-[420px] ${mediaFrame(
+                  'border-8 border-white shadow-2xl',
+                )}`}
+              >
                 <Image
                   src={sections.solutionImage}
                   alt={sections.solutionImageAlt}
@@ -378,13 +417,25 @@ export default function ProductPageContent({
                   return (
                     <div
                       key={i}
-                      className="group flex items-center justify-between gap-3 rounded-2xl border border-warm-border bg-white p-4 shadow-sm transition-all hover:border-teal/30 hover:shadow-md lg:flex-row-reverse"
+                      className={`group flex items-center justify-between gap-3 rounded-2xl p-4 shadow-sm transition-all lg:flex-row-reverse ${
+                        isMolien
+                          ? 'border border-gold/20 bg-gradient-to-br from-white/[0.08] to-white/[0.02] hover:border-gold/50 hover:shadow-lg hover:shadow-gold/10'
+                          : 'border border-warm-border bg-white hover:border-teal/30 hover:shadow-md'
+                      }`}
                     >
-                      <span className="w-full text-right text-sm font-bold text-charcoal transition-colors group-hover:text-teal lg:text-left">
+                      <span
+                        className={`w-full text-right text-sm font-bold transition-colors lg:text-left ${
+                          isMolien ? 'text-white group-hover:text-gold' : 'text-charcoal group-hover:text-teal'
+                        }`}
+                      >
                         {feature.title}
                       </span>
-                      <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-mist transition-transform group-hover:scale-110">
-                        <FeatureIcon className={`h-5 w-5 ${color}`} />
+                      <div
+                        className={`flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full transition-transform group-hover:scale-110 ${
+                          isMolien ? 'bg-gold/15 ring-1 ring-gold/40' : 'bg-mist'
+                        }`}
+                      >
+                        <FeatureIcon className={`h-5 w-5 ${isMolien ? 'text-gold' : color}`} />
                       </div>
                     </div>
                   )
@@ -439,7 +490,11 @@ export default function ProductPageContent({
             </div>
 
             <div className="order-1 w-full lg:order-2 lg:w-1/2">
-              <div className="relative aspect-[4/5] overflow-hidden rounded-[2rem] border-8 border-white bg-gradient-to-b from-slate-100 to-slate-200 shadow-2xl lg:min-h-[420px]">
+              <div
+                className={`relative aspect-[4/5] overflow-hidden rounded-[2rem] bg-gradient-to-b from-slate-100 to-slate-200 lg:min-h-[420px] ${mediaFrame(
+                  'border-8 border-white shadow-2xl',
+                )}`}
+              >
                 {sections.mechanismVideo ? (
                   <video
                     src={`${sections.mechanismVideo}#t=0.001`}
@@ -479,7 +534,11 @@ export default function ProductPageContent({
           <div className="relative z-10 mx-auto max-w-container px-4 sm:px-6 lg:px-8">
             <div className="flex flex-col items-center gap-12 lg:flex-row lg:gap-16">
               <div className="order-1 w-full lg:order-2 lg:w-5/12">
-                <div className="group relative aspect-[4/5] overflow-hidden rounded-[2rem] border-8 border-white bg-white shadow-2xl">
+                <div
+                  className={`group relative aspect-[4/5] overflow-hidden rounded-[2rem] bg-white ${mediaFrame(
+                    'border-8 border-white shadow-2xl',
+                  )}`}
+                >
                   <Image
                     src={sections.ingredientsMainImage}
                     alt={sections.ingredientsMainImageAlt}
@@ -507,9 +566,17 @@ export default function ProductPageContent({
                   {product.detailedIngredients.map((ingredient, idx) => (
                     <div
                       key={idx}
-                      className="group flex gap-4 rounded-2xl border border-warm-border bg-white p-4 shadow-sm"
+                      className={`group flex gap-4 rounded-2xl p-4 shadow-sm transition-all ${
+                        isMolien
+                          ? 'border border-gold/20 bg-gradient-to-br from-white/[0.08] to-white/[0.02] hover:-translate-y-0.5 hover:border-gold/50 hover:shadow-lg hover:shadow-gold/10'
+                          : 'border border-warm-border bg-white'
+                      }`}
                     >
-                      <div className="relative h-14 w-14 flex-shrink-0 overflow-hidden rounded-xl border border-warm-border bg-surface-rose">
+                      <div
+                        className={`relative h-14 w-14 flex-shrink-0 overflow-hidden rounded-xl ${
+                          isMolien ? 'ring-2 ring-gold/40' : 'border border-warm-border bg-surface-rose'
+                        }`}
+                      >
                         <Image
                           src={ingredient.image}
                           alt={ingredient.name}
@@ -519,10 +586,14 @@ export default function ProductPageContent({
                         />
                       </div>
                       <div>
-                        <h3 className="mb-1.5 text-lg font-extrabold text-charcoal transition-colors group-hover:text-teal">
+                        <h3
+                          className={`mb-1.5 text-lg font-extrabold transition-colors ${
+                            isMolien ? 'text-gold' : 'text-charcoal group-hover:text-teal'
+                          }`}
+                        >
                           {ingredient.name}
                         </h3>
-                        <p className="text-sm font-medium leading-relaxed text-charcoal/70">
+                        <p className={`text-sm font-medium leading-relaxed ${isMolien ? 'text-white/75' : 'text-charcoal/70'}`}>
                           {ingredient.desc}
                         </p>
                       </div>
@@ -584,7 +655,7 @@ export default function ProductPageContent({
               }`}
             >
               {sections.howToUseSteps.map((item) => (
-                <HowToUseStep key={item.step} {...item} variant="nama" />
+                <HowToUseStep key={item.step} {...item} variant="nama" dark={isMolien} />
               ))}
             </div>
 
@@ -592,10 +663,14 @@ export default function ProductPageContent({
               {howToUseStats.map((stat) => (
                 <div
                   key={stat.label}
-                  className="rounded-2xl border border-warm-border bg-white p-4 text-center shadow-sm"
+                  className={`rounded-2xl p-4 text-center shadow-sm ${
+                    isMolien
+                      ? 'border border-gold/25 bg-gradient-to-b from-gold/10 to-white/[0.03]'
+                      : 'border border-warm-border bg-white'
+                  }`}
                 >
-                  <p className="text-2xl font-extrabold text-teal">{stat.value}</p>
-                  <p className="text-xs font-medium text-charcoal/55">{stat.label}</p>
+                  <p className={`text-2xl font-extrabold ${isMolien ? 'text-gold' : 'text-teal'}`}>{stat.value}</p>
+                  <p className={`text-xs font-medium ${isMolien ? 'text-white/65' : 'text-charcoal/55'}`}>{stat.label}</p>
                 </div>
               ))}
             </div>
@@ -690,7 +765,11 @@ export default function ProductPageContent({
                 {sections.sfdaCertificateSection.subtitle}
               </p>
             </div>
-            <div className="overflow-hidden rounded-[2rem] border border-warm-border bg-white p-4 shadow-xl md:p-6">
+            <div
+              className={`overflow-hidden rounded-[2rem] bg-white p-4 shadow-xl md:p-6 ${
+                isMolien ? 'border-2 border-gold/40 shadow-black/30' : 'border border-warm-border'
+              }`}
+            >
               <img
                 src={sections.sfdaCertificateSection.image}
                 alt={sections.sfdaCertificateSection.imageAlt}
@@ -709,8 +788,12 @@ export default function ProductPageContent({
           <div className="mb-12 text-center">
             <h2 className={`mb-4 text-3xl font-extrabold ${headingText}`}>أسئلة شائعة عن المنتج</h2>
           </div>
-          <div className="rounded-3xl border border-warm-border bg-white p-4 shadow-sm sm:p-6">
-            <FAQAccordion items={product.faqs} />
+          <div
+            className={`rounded-3xl p-4 shadow-sm sm:p-6 ${
+              isMolien ? 'border border-gold/20 bg-white/[0.04]' : 'border border-warm-border bg-white'
+            }`}
+          >
+            <FAQAccordion items={product.faqs} dark={isMolien} />
           </div>
         </div>
       </section>
@@ -742,9 +825,13 @@ export default function ProductPageContent({
                 <Link
                   key={p.slug}
                   href={`/products/${p.slug}`}
-                    className="group flex flex-col bg-white rounded-3xl overflow-hidden border border-sage/20 hover:border-teal/30 hover:shadow-xl transition-all shadow-sm"
+                    className={`group flex flex-col rounded-3xl overflow-hidden transition-all shadow-sm ${
+                      isMolien
+                        ? 'border border-gold/20 bg-white/[0.06] hover:border-gold/50 hover:shadow-xl hover:shadow-gold/10'
+                        : 'bg-white border border-sage/20 hover:border-teal/30 hover:shadow-xl'
+                    }`}
                   >
-                    <div className="relative aspect-square bg-mist border-b border-sage/10">
+                    <div className={`relative aspect-square bg-mist border-b ${isMolien ? 'border-gold/20' : 'border-sage/10'}`}>
                       <Image
                         src={p.image}
                         alt={p.nameAr}
@@ -754,13 +841,23 @@ export default function ProductPageContent({
                       />
                   </div>
                     <div className="flex flex-col flex-1 p-4 md:p-5 text-center">
-                      <h3 className="font-extrabold text-charcoal text-sm md:text-base group-hover:text-teal transition-colors line-clamp-3 mb-3 min-h-[3.5rem] md:min-h-[4rem]">
+                      <h3
+                        className={`font-extrabold text-sm md:text-base transition-colors line-clamp-3 mb-3 min-h-[3.5rem] md:min-h-[4rem] ${
+                          isMolien ? 'text-white group-hover:text-gold' : 'text-charcoal group-hover:text-teal'
+                        }`}
+                      >
                       {p.nameAr}
                     </h3>
-                      <p className="text-teal font-extrabold text-sm md:text-base mb-4">
+                      <p className={`font-extrabold text-sm md:text-base mb-4 ${isMolien ? 'text-gold' : 'text-teal'}`}>
                         من {offer.price} ريال
                       </p>
-                      <span className="mt-auto inline-flex items-center justify-center gap-1 rounded-xl bg-teal/10 group-hover:bg-teal group-hover:text-white text-teal font-extrabold text-sm py-2.5 px-4 transition-colors">
+                      <span
+                        className={`mt-auto inline-flex items-center justify-center gap-1 rounded-xl font-extrabold text-sm py-2.5 px-4 transition-colors ${
+                          isMolien
+                            ? 'bg-gold/15 text-gold group-hover:bg-gold group-hover:text-charcoal'
+                            : 'bg-teal/10 text-teal group-hover:bg-teal group-hover:text-white'
+                        }`}
+                      >
                         عرض المنتج
                         <ArrowLeft className="w-3.5 h-3.5" />
                       </span>

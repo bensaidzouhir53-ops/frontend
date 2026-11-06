@@ -45,7 +45,7 @@ export default function ProductResultsSection({ content }: ProductResultsSection
         <div className="flex flex-col items-stretch gap-12 lg:flex-row lg:gap-16">
           {/* GIF — left visually in RTL; native img keeps animation */}
           <div className="order-1 w-full lg:w-1/2">
-            <div className="relative mx-auto aspect-[3/4] max-w-md overflow-hidden rounded-[2rem] border border-white/10 shadow-2xl lg:max-w-none lg:aspect-[4/5]">
+            <div className="relative mx-auto aspect-[3/4] max-w-md overflow-hidden rounded-[2rem] border border-gold/25 shadow-2xl shadow-black/30 lg:max-w-none lg:aspect-[4/5]">
               {hasMedia ? (
                 <>
                   {/* Prefer the MP4 (far smaller than an animated GIF) when available. */}

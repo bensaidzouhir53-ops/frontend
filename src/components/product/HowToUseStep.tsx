@@ -8,6 +8,7 @@ type HowToUseStepProps = {
   image: string
   video?: string
   variant?: 'default' | 'nama'
+  dark?: boolean
 }
 
 export default function HowToUseStep({
@@ -17,6 +18,7 @@ export default function HowToUseStep({
   image,
   video,
   variant = 'default',
+  dark = false,
 }: HowToUseStepProps) {
   const isNama = variant === 'nama'
 
@@ -24,9 +26,11 @@ export default function HowToUseStep({
     <article
       className={cn(
         'group overflow-hidden text-center transition-all duration-300',
-        isNama
-          ? 'rounded-3xl border border-warm-border bg-white shadow-sm hover:-translate-y-1 hover:shadow-md'
-          : 'rounded-[2rem] border border-sage/20 bg-white shadow-card hover:border-teal/30 hover:shadow-card-hover',
+        dark
+          ? 'rounded-3xl border border-gold/20 bg-gradient-to-b from-white/[0.08] to-white/[0.02] shadow-lg shadow-black/20 hover:-translate-y-1 hover:border-gold/50'
+          : isNama
+            ? 'rounded-3xl border border-warm-border bg-white shadow-sm hover:-translate-y-1 hover:shadow-md'
+            : 'rounded-[2rem] border border-sage/20 bg-white shadow-card hover:border-teal/30 hover:shadow-card-hover',
       )}
     >
       <div
@@ -62,9 +66,11 @@ export default function HowToUseStep({
         <div
           className={cn(
             'absolute right-3 top-3 flex items-center justify-center font-extrabold text-white shadow-lg',
-            isNama
-              ? 'h-11 w-11 rounded-2xl bg-teal text-gold ring-2 ring-gold/30 ring-offset-2'
-              : 'h-9 w-9 rounded-full bg-gold text-sm',
+            dark
+              ? 'h-11 w-11 rounded-2xl bg-gold !text-charcoal shadow-gold/40'
+              : isNama
+                ? 'h-11 w-11 rounded-2xl bg-teal text-gold ring-2 ring-gold/30 ring-offset-2'
+                : 'h-9 w-9 rounded-full bg-gold text-sm',
           )}
         >
           {step}
@@ -72,10 +78,22 @@ export default function HowToUseStep({
       </div>
 
       <div className="p-5 text-right sm:p-6">
-        <h3 className="mb-2 text-lg font-extrabold text-charcoal transition-colors group-hover:text-teal sm:text-xl">
+        <h3
+          className={cn(
+            'mb-2 text-lg font-extrabold transition-colors sm:text-xl',
+            dark ? 'text-gold' : 'text-charcoal group-hover:text-teal',
+          )}
+        >
           {title}
         </h3>
-        <p className="text-sm font-medium leading-relaxed text-charcoal/70 sm:text-base">{desc}</p>
+        <p
+          className={cn(
+            'text-sm font-medium leading-relaxed sm:text-base',
+            dark ? 'text-white/75' : 'text-charcoal/70',
+          )}
+        >
+          {desc}
+        </p>
       </div>
     </article>
   )

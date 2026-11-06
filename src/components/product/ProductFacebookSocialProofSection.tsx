@@ -12,13 +12,17 @@ interface ProductFacebookSocialProofSectionProps {
 function SocialProofCard({
   item,
   featured = false,
+  dark = false,
 }: {
   item: FacebookSocialProofSectionContent['items'][number]
   featured?: boolean
+  dark?: boolean
 }) {
   return (
     <article
-      className={`overflow-hidden rounded-2xl border border-sage/25 bg-white shadow-md shadow-charcoal/5 md:rounded-[1.5rem] md:transition md:hover:-translate-y-0.5 md:hover:shadow-lg ${
+      className={`overflow-hidden rounded-2xl border bg-white md:rounded-[1.5rem] md:transition md:hover:-translate-y-0.5 md:hover:shadow-lg ${
+        dark ? 'border-gold/30 shadow-lg shadow-black/30' : 'border-sage/25 shadow-md shadow-charcoal/5'
+      } ${
         featured ? 'md:col-span-2 lg:col-span-2' : ''
       }`}
     >
@@ -102,10 +106,16 @@ export default function ProductFacebookSocialProofSection({
           {content.stats.map((stat) => (
             <div
               key={stat.label}
-              className="rounded-xl border border-sage/20 bg-white px-2 py-3 text-center shadow-sm md:rounded-2xl md:px-4 md:py-5"
+              className={`rounded-xl border px-2 py-3 text-center shadow-sm md:rounded-2xl md:px-4 md:py-5 ${
+                dark ? 'border-gold/25 bg-gradient-to-b from-gold/10 to-white/[0.03]' : 'border-sage/20 bg-white'
+              }`}
             >
-              <p className="text-lg font-extrabold text-teal md:text-2xl">{stat.value}</p>
-              <p className="mt-0.5 text-[10px] font-bold leading-snug text-charcoal/60 md:mt-1 md:text-xs">
+              <p className={`text-lg font-extrabold md:text-2xl ${dark ? 'text-gold' : 'text-teal'}`}>{stat.value}</p>
+              <p
+                className={`mt-0.5 text-[10px] font-bold leading-snug md:mt-1 md:text-xs ${
+                  dark ? 'text-white/65' : 'text-charcoal/60'
+                }`}
+              >
                 {stat.label}
               </p>
             </div>
@@ -117,7 +127,7 @@ export default function ProductFacebookSocialProofSection({
           <div className="flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
             {content.items.map((item) => (
               <div key={item.image} className="w-[78vw] max-w-[300px] shrink-0 snap-center">
-                <SocialProofCard item={item} />
+                <SocialProofCard item={item} dark={dark} />
               </div>
             ))}
           </div>
@@ -133,7 +143,7 @@ export default function ProductFacebookSocialProofSection({
         {/* Desktop: grid */}
         <div className="hidden gap-4 md:grid md:grid-cols-2 lg:grid-cols-3 lg:gap-5">
           {content.items.map((item, index) => (
-            <SocialProofCard key={item.image} item={item} featured={index === 0} />
+            <SocialProofCard key={item.image} item={item} featured={index === 0} dark={dark} />
           ))}
         </div>
 
