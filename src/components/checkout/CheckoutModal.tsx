@@ -199,9 +199,9 @@ export default function CheckoutModal() {
   return (
     <Dialog.Root open={isCheckoutOpen} onOpenChange={(open) => !open && handleClose()}>
       <Dialog.Portal>
-        <Dialog.Overlay className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm animate-fade-in" />
+        <Dialog.Overlay className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm animate-fade-in" />
         <Dialog.Content
-          className="fixed inset-x-0 bottom-0 z-50 mx-auto w-full max-w-md max-h-[92dvh] overflow-y-auto rounded-t-3xl bg-ivory shadow-2xl outline-none sm:inset-x-auto sm:bottom-auto sm:left-1/2 sm:top-1/2 sm:max-h-[95dvh] sm:-translate-x-1/2 sm:-translate-y-1/2 sm:rounded-3xl"
+          className="fixed inset-x-0 bottom-0 z-50 mx-auto w-full max-w-md max-h-[92dvh] overflow-y-auto rounded-t-3xl border border-gold/25 bg-gradient-to-br from-teal-dark via-apothecary-dark to-charcoal shadow-2xl shadow-black/50 outline-none sm:inset-x-auto sm:bottom-auto sm:left-1/2 sm:top-1/2 sm:max-h-[95dvh] sm:-translate-x-1/2 sm:-translate-y-1/2 sm:rounded-3xl"
           dir="rtl"
           aria-describedby="checkout-description"
         >
@@ -211,14 +211,19 @@ export default function CheckoutModal() {
           </Dialog.Description>
 
           {/* Header */}
-          <div className="flex items-center justify-between border-b border-sage/30 bg-white px-5 py-4 rounded-t-3xl">
-            <div className="flex items-center gap-2">
-              <Shield className="h-5 w-5 text-teal" />
-              <h2 className="text-base font-bold text-charcoal">إتمام الطلب</h2>
+          <div className="relative flex items-center justify-between border-b border-white/10 px-5 py-4">
+            <div className="flex items-center gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gold text-charcoal shadow-lg shadow-gold/30">
+                <Shield className="h-5 w-5" />
+              </div>
+              <div>
+                <h2 className="text-lg font-extrabold text-white">إتمام الطلب</h2>
+                <p className="text-[11px] font-medium text-white/55">خطوة وحدة وطلبك يوصلك</p>
+              </div>
             </div>
             <Dialog.Close asChild>
               <button
-                className="flex h-8 w-8 items-center justify-center rounded-full text-charcoal/50 transition-colors hover:bg-mist hover:text-charcoal"
+                className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-white/70 transition-colors hover:bg-white/20 hover:text-white"
                 aria-label="إغلاق"
                 disabled={isSubmitting}
               >
@@ -228,33 +233,35 @@ export default function CheckoutModal() {
           </div>
 
           <div className="px-5 py-5">
-            {/* Social proof */}
-            <div className="mb-4 flex items-center gap-2 rounded-xl bg-teal/5 border border-teal/15 px-3 py-2.5">
-              <Users className="h-4 w-4 shrink-0 text-teal" />
-              <p className="text-xs font-medium text-charcoal/80">
-                انضم لأكثر من{' '}
-                <span className="font-bold text-teal">2,400 عميل سعودي راضٍ</span>
-              </p>
-            </div>
+            <div className="mb-5 grid grid-cols-2 gap-2">
+              {/* Social proof */}
+              <div className="flex items-center gap-2 rounded-xl border border-white/10 bg-white/[0.06] px-3 py-2.5">
+                <Users className="h-4 w-4 shrink-0 text-gold" />
+                <p className="text-[11px] font-medium leading-snug text-white/75">
+                  انضم لأكثر من{' '}
+                  <span className="font-bold text-gold">2,400 عميل راضٍ</span>
+                </p>
+              </div>
 
-            {/* Scarcity */}
-            <div className="mb-5 flex items-center gap-2 rounded-xl bg-gold/10 px-3 py-2.5">
-              <Clock className="h-4 w-4 shrink-0 text-gold" />
-              <p className="text-xs font-medium text-gold">
-                الكمية محدودة — الطلب مرتفع هذا الأسبوع
-              </p>
+              {/* Scarcity */}
+              <div className="flex items-center gap-2 rounded-xl border border-red-400/25 bg-red-500/10 px-3 py-2.5">
+                <Clock className="h-4 w-4 shrink-0 text-red-300" />
+                <p className="text-[11px] font-medium leading-snug text-red-200">
+                  الكمية محدودة — الطلب مرتفع هذا الأسبوع
+                </p>
+              </div>
             </div>
 
             {/* Order summary */}
-            <div className="mb-5 rounded-2xl bg-white p-4 shadow-sm">
-              <p className="mb-3 text-sm font-bold text-charcoal">ملخص طلبك:</p>
+            <div className="mb-5 rounded-2xl border border-gold/25 bg-white/[0.05] p-4 backdrop-blur-sm">
+              <p className="mb-3 text-sm font-extrabold text-gold">ملخص طلبك</p>
               {items.map((item) => (
                 <div
                   key={item.product.slug}
                   className="flex items-center justify-between py-2 text-sm"
                 >
                   <div className="flex items-center gap-3 flex-1 min-w-0">
-                    <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-lg bg-mist">
+                    <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-xl ring-2 ring-gold/40">
                       <Image
                         src={item.product.image}
                         alt={item.product.nameAr}
@@ -263,21 +270,21 @@ export default function CheckoutModal() {
                         className="object-cover"
                       />
                     </div>
-                    <span className="line-clamp-2 flex-1 text-charcoal/80 font-semibold leading-snug">
+                    <span className="line-clamp-2 flex-1 font-semibold leading-snug text-white/90">
                       {item.product.nameAr}
-                      <span className="mr-1 text-xs text-charcoal/50 font-normal">
+                      <span className="mr-1.5 rounded-full bg-gold/15 px-1.5 py-0.5 text-[11px] font-bold text-gold">
                         ×{item.qty}
                       </span>
                     </span>
                   </div>
-                  <span className="mr-3 font-bold text-charcoal shrink-0">{item.price} ريال</span>
+                  <span className="mr-3 shrink-0 font-extrabold text-white">{item.price} ريال</span>
                 </div>
               ))}
-              <div className="mt-3 flex items-center justify-between border-t border-sage/30 pt-3">
-                <span className="text-sm font-medium text-charcoal/70">الإجمالي</span>
-                <span className="text-xl font-extrabold text-teal">{cartTotal} ريال</span>
+              <div className="mt-3 flex items-center justify-between border-t border-white/10 pt-3">
+                <span className="text-sm font-medium text-white/65">الإجمالي</span>
+                <span className="text-2xl font-extrabold text-gold">{cartTotal} ريال</span>
               </div>
-              <p className="mt-1.5 text-center text-xs text-charcoal/50">
+              <p className="mt-2 text-center text-xs text-white/50">
                 الدفع عند الاستلام — لا حاجة لبطاقة ائتمان
               </p>
             </div>
@@ -288,9 +295,9 @@ export default function CheckoutModal() {
               <div>
                 <label
                   htmlFor="checkout-name"
-                  className="mb-1.5 block text-sm font-semibold text-charcoal"
+                  className="mb-1.5 block text-sm font-bold text-white"
                 >
-                  الاسم الكريم <span className="text-red-500">*</span>
+                  الاسم الكريم <span className="text-gold">*</span>
                 </label>
                 <input
                   id="checkout-name"
@@ -298,15 +305,15 @@ export default function CheckoutModal() {
                   autoComplete="name"
                   placeholder="أدخل اسمك"
                   className={cn(
-                    'w-full rounded-xl border-2 bg-white px-4 py-3 text-base text-charcoal placeholder-charcoal/30 outline-none transition-colors',
+                    'w-full rounded-xl border-2 bg-white/[0.07] px-4 py-3.5 text-base text-white placeholder-white/35 outline-none transition-colors focus:bg-white/10',
                     errors.name
                       ? 'border-red-400 focus:border-red-400'
-                      : 'border-sage/40 focus:border-teal',
+                      : 'border-white/15 focus:border-gold',
                   )}
                   {...register('name')}
                 />
                 {errors.name && (
-                  <p className="mt-1.5 flex items-center gap-1 text-xs text-red-500">
+                  <p className="mt-1.5 flex items-center gap-1 text-xs text-red-300">
                     <AlertCircle className="h-3.5 w-3.5 shrink-0" />
                     {errors.name.message}
                   </p>
@@ -317,9 +324,9 @@ export default function CheckoutModal() {
               <div>
                 <label
                   htmlFor="checkout-phone"
-                  className="mb-1.5 block text-sm font-semibold text-charcoal"
+                  className="mb-1.5 block text-sm font-bold text-white"
                 >
-                  رقم الجوال <span className="text-red-500">*</span>
+                  رقم الجوال <span className="text-gold">*</span>
                 </label>
                 <input
                   id="checkout-phone"
@@ -331,18 +338,18 @@ export default function CheckoutModal() {
                   maxLength={13}
                   required
                   className={cn(
-                    'w-full rounded-xl border-2 bg-white px-4 py-3 text-base text-charcoal placeholder-charcoal/30 outline-none transition-colors ltr text-right',
+                    'w-full rounded-xl border-2 bg-white/[0.07] px-4 py-3.5 text-base text-white placeholder-white/35 outline-none transition-colors focus:bg-white/10 ltr text-right',
                     errors.phone
                       ? 'border-red-400 focus:border-red-400'
-                      : 'border-sage/40 focus:border-teal',
+                      : 'border-white/15 focus:border-gold',
                   )}
                   {...register('phone')}
                 />
-                <p className="mt-1 text-[11px] text-charcoal/45">
+                <p className="mt-1 text-[11px] text-white/45">
                   10 أرقام — يبدأ بـ 05 أو +966
                 </p>
                 {errors.phone && (
-                  <p className="mt-1.5 flex items-center gap-1 text-xs text-red-500">
+                  <p className="mt-1.5 flex items-center gap-1 text-xs text-red-300">
                     <AlertCircle className="h-3.5 w-3.5 shrink-0" />
                     {errors.phone.message}
                   </p>
@@ -351,9 +358,9 @@ export default function CheckoutModal() {
 
               {/* Server error */}
               {serverError && (
-                <div className="flex items-start gap-2 rounded-xl bg-red-50 px-3 py-3">
-                  <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-red-500" />
-                  <p className="text-sm text-red-600">{serverError}</p>
+                <div className="flex items-start gap-2 rounded-xl border border-red-400/30 bg-red-500/10 px-3 py-3">
+                  <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-red-300" />
+                  <p className="text-sm text-red-200">{serverError}</p>
                 </div>
               )}
 
@@ -362,10 +369,10 @@ export default function CheckoutModal() {
                 type="submit"
                 disabled={isSubmitting}
                 className={cn(
-                  'flex w-full items-center justify-center gap-2 rounded-2xl py-4 text-base font-extrabold text-white shadow-lg transition-all',
+                  'mt-1 flex w-full items-center justify-center gap-2 rounded-2xl py-4 text-base font-extrabold shadow-lg transition-all',
                   !isSubmitting
-                    ? 'bg-teal shadow-teal/30 hover:bg-teal-dark active:scale-[0.98]'
-                    : 'cursor-not-allowed bg-charcoal/30 shadow-none',
+                    ? 'bg-gold text-charcoal shadow-gold/30 hover:bg-[#E9C47F] active:scale-[0.98]'
+                    : 'cursor-not-allowed bg-white/20 text-white/70 shadow-none',
                 )}
               >
                 {isSubmitting ? (
@@ -381,9 +388,9 @@ export default function CheckoutModal() {
                 )}
               </button>
 
-              <p className="text-center text-xs text-charcoal/40">
-                بالضغط على "تأكيد الطلب" أنت توافق على{' '}
-                <a href="/terms" className="underline hover:text-teal">
+              <p className="text-center text-xs text-white/45">
+                بالضغط على &quot;تأكيد الطلب&quot; أنت توافق على{' '}
+                <a href="/terms" className="underline hover:text-gold">
                   الشروط والأحكام
                 </a>
               </p>
