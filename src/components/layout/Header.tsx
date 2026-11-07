@@ -2,9 +2,11 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import { ShoppingCart, Menu, X } from 'lucide-react'
 import { useCartStore } from '@/store/cartStore'
 import LungLogo from '@/components/brand/LungLogo'
+import { cn } from '@/lib/utils'
 
 const NAV_LINKS = [
   { href: '/', label: 'الرئيسية' },
@@ -13,56 +15,71 @@ const NAV_LINKS = [
   { href: '/contact', label: 'تواصل معنا' },
 ]
 
+function isActiveLink(pathname: string, href: string) {
+  return href === '/' ? pathname === '/' : pathname.startsWith(href)
+}
+
 export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false)
+  const pathname = usePathname() ?? '/'
   const { itemCount, openCart } = useCartStore()
   const count = itemCount()
 
   return (
     <header
-      className="sticky top-0 z-30 w-full border-b border-sage/30 bg-ivory"
+      className="sticky top-0 z-30 w-full border-b border-gold/20 bg-gradient-to-l from-teal-dark via-apothecary-dark to-charcoal shadow-lg shadow-black/20"
       dir="rtl"
     >
       <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
         {/* Logo */}
-        <Link href="/" className="group flex items-center gap-3 text-teal">
-          <div className="relative h-11 w-11 overflow-hidden rounded-full shadow-md ring-1 ring-gold/40 transition-all duration-300 group-hover:ring-gold/70 group-hover:shadow-lg group-hover:shadow-gold/20">
+        <Link href="/" className="group flex items-center gap-3">
+          <div className="relative h-11 w-11 overflow-hidden rounded-full bg-white shadow-md ring-2 ring-gold/60 transition-all duration-300 group-hover:ring-gold group-hover:shadow-lg group-hover:shadow-gold/30">
             <LungLogo className="h-full w-full scale-110" priority />
           </div>
           <div className="flex flex-col leading-none">
-            <span className="text-xl font-bold tracking-tight text-apothecary">
+            <span className="text-xl font-extrabold tracking-tight text-white">
               نَفَس
             </span>
-            <span className="mt-0.5 max-w-[9.5rem] text-[9px] font-semibold leading-snug text-teal/80">
+            <span className="mt-1 max-w-[9.5rem] text-[10px] font-bold leading-snug text-gold">
               الكنز الأخضر
             </span>
           </div>
         </Link>
 
         {/* Desktop nav */}
-        <nav className="hidden gap-6 md:flex" aria-label="التنقل الرئيسي">
-          {NAV_LINKS.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className="text-sm font-medium text-charcoal/80 transition-colors hover:text-teal"
-            >
-              {link.label}
-            </Link>
-          ))}
+        <nav className="hidden items-center gap-1 md:flex" aria-label="التنقل الرئيسي">
+          {NAV_LINKS.map((link) => {
+            const active = isActiveLink(pathname, link.href)
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                aria-current={active ? 'page' : undefined}
+                className={cn(
+                  'relative rounded-full px-4 py-2 text-sm font-bold transition-colors',
+                  active ? 'text-gold' : 'text-white/75 hover:bg-white/10 hover:text-white',
+                )}
+              >
+                {link.label}
+                {active && (
+                  <span className="absolute inset-x-4 -bottom-0.5 h-0.5 rounded-full bg-gold" />
+                )}
+              </Link>
+            )
+          })}
         </nav>
 
         {/* Actions */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2.5">
           {/* Cart button */}
           <button
             onClick={openCart}
-            className="relative flex h-10 w-10 items-center justify-center rounded-full bg-mist text-teal transition-colors hover:bg-teal hover:text-white"
+            className="relative flex h-10 w-10 items-center justify-center rounded-full bg-gold text-charcoal shadow-md shadow-gold/30 transition-colors hover:bg-[#E9C47F]"
             aria-label={`سلة التسوق (${count} منتجات)`}
           >
             <ShoppingCart className="h-5 w-5" />
             {count > 0 && (
-              <span className="absolute -left-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-gold text-[10px] font-bold text-white ltr">
+              <span className="absolute -left-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-white px-1 text-[10px] font-extrabold text-teal-dark ring-2 ring-teal-dark ltr">
                 {count}
               </span>
             )}
@@ -71,7 +88,7 @@ export default function Header() {
           {/* Mobile menu toggle */}
           <button
             onClick={() => setMobileOpen((v) => !v)}
-            className="flex h-10 w-10 items-center justify-center rounded-full bg-mist text-charcoal transition-colors hover:bg-teal hover:text-white md:hidden"
+            className="flex h-10 w-10 items-center justify-center rounded-full border border-white/15 bg-white/10 text-white transition-colors hover:border-gold/50 hover:text-gold md:hidden"
             aria-label="القائمة"
             aria-expanded={mobileOpen}
           >
@@ -83,34 +100,44 @@ export default function Header() {
       {/* Mobile nav drawer */}
       {mobileOpen && (
         <nav
-          className="border-t border-sage/30 bg-ivory px-4 py-4 md:hidden"
+          className="border-t border-white/10 bg-gradient-to-b from-teal-dark to-charcoal px-4 py-4 md:hidden"
           aria-label="التنقل للجوال"
         >
           <ul className="flex flex-col gap-1">
-            {NAV_LINKS.map((link) => (
-              <li key={link.href}>
-                <Link
-                  href={link.href}
-                  className="block rounded-lg px-3 py-2.5 text-base font-medium text-charcoal/80 transition-colors hover:bg-mist hover:text-teal"
-                  onClick={() => setMobileOpen(false)}
-                >
-                  {link.label}
-                </Link>
-              </li>
-            ))}
+            {NAV_LINKS.map((link) => {
+              const active = isActiveLink(pathname, link.href)
+              return (
+                <li key={link.href}>
+                  <Link
+                    href={link.href}
+                    aria-current={active ? 'page' : undefined}
+                    className={cn(
+                      'flex items-center gap-3 rounded-xl px-4 py-3 text-base font-bold transition-colors',
+                      active
+                        ? 'border border-gold/30 bg-gold/10 text-gold'
+                        : 'text-white/80 hover:bg-white/10 hover:text-white',
+                    )}
+                    onClick={() => setMobileOpen(false)}
+                  >
+                    <span className={cn('h-1.5 w-1.5 rounded-full', active ? 'bg-gold' : 'bg-white/25')} />
+                    {link.label}
+                  </Link>
+                </li>
+              )
+            })}
           </ul>
-          <div className="mt-4 border-t border-sage/30 pt-4">
+          <div className="mt-4 border-t border-white/10 pt-4">
             <button
               onClick={() => {
                 openCart()
                 setMobileOpen(false)
               }}
-              className="flex w-full items-center justify-center gap-2 rounded-xl bg-teal py-3 font-semibold text-white"
+              className="flex w-full items-center justify-center gap-2 rounded-2xl bg-gold py-3.5 font-extrabold text-charcoal shadow-lg shadow-gold/20"
             >
               <ShoppingCart className="h-4 w-4" />
               <span>سلة التسوق</span>
               {count > 0 && (
-                <span className="rounded-full bg-gold px-2 py-0.5 text-xs font-bold">
+                <span className="rounded-full bg-teal-dark px-2 py-0.5 text-xs font-bold text-gold">
                   {count}
                 </span>
               )}
