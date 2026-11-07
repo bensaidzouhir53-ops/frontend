@@ -34,7 +34,7 @@ export default function Header() {
         {/* Logo */}
         <Link href="/" className="group flex items-center gap-3">
           <div className="relative h-12 w-12 transition-transform duration-300 group-hover:scale-105">
-            <LungLogo className="h-full w-full scale-[1.35] drop-shadow-[0_2px_8px_rgba(215,168,92,0.35)]" priority />
+            <LungLogo className="h-full w-full drop-shadow-[0_2px_8px_rgba(0,0,0,0.35)]" priority />
           </div>
           <div className="flex flex-col leading-none">
             <span className="text-xl font-extrabold tracking-tight text-white">
