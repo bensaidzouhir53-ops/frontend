@@ -561,16 +561,19 @@ export default function AdminDashboardPage() {
 
   if (!credentials) {
     return (
-      <section className="min-h-screen bg-charcoal px-4 py-16 text-white" dir="ltr">
+      <section
+        className="min-h-screen bg-gradient-to-br from-teal-dark via-apothecary-dark to-charcoal px-4 py-16 text-white"
+        dir="ltr"
+      >
         <div className="mx-auto flex max-w-md flex-col items-center">
-          <div className="mb-8 flex h-16 w-16 items-center justify-center rounded-3xl bg-teal shadow-lg shadow-teal/30">
+          <div className="mb-8 flex h-16 w-16 items-center justify-center rounded-3xl bg-gold text-charcoal shadow-lg shadow-gold/30">
             <Lock className="h-8 w-8" />
           </div>
           <form
             onSubmit={handleLogin}
-            className="w-full rounded-[2rem] border border-white/10 bg-white p-8 text-charcoal shadow-2xl"
+            className="w-full rounded-[2rem] border border-gold/25 bg-white/[0.05] p-8 text-white shadow-2xl shadow-black/40 backdrop-blur-sm"
           >
-            <p className="mb-2 text-sm font-bold uppercase tracking-[0.2em] text-teal">
+            <p className="mb-2 text-sm font-bold uppercase tracking-[0.2em] text-gold">
               Nafaas Admin
             </p>
             <h1 className="mb-6 text-3xl font-extrabold">Dashboard login</h1>
@@ -579,7 +582,7 @@ export default function AdminDashboardPage() {
               <input
                 value={username}
                 onChange={(event) => setUsername(event.target.value)}
-                className="w-full rounded-2xl border border-sage/40 px-4 py-3 outline-none focus:border-teal"
+                className="w-full rounded-2xl border border-white/15 px-4 py-3 outline-none bg-white/[0.07] text-white placeholder-white/35 focus:border-gold"
                 autoComplete="username"
                 required
               />
@@ -589,7 +592,7 @@ export default function AdminDashboardPage() {
               <input
                 value={password}
                 onChange={(event) => setPassword(event.target.value)}
-                className="w-full rounded-2xl border border-sage/40 px-4 py-3 outline-none focus:border-teal"
+                className="w-full rounded-2xl border border-white/15 px-4 py-3 outline-none bg-white/[0.07] text-white placeholder-white/35 focus:border-gold"
                 type="password"
                 autoComplete="current-password"
                 required
@@ -597,19 +600,19 @@ export default function AdminDashboardPage() {
             </label>
             <button
               disabled={loggingIn}
-              className="w-full rounded-2xl bg-teal px-5 py-4 font-extrabold text-white shadow-lg shadow-teal/20 hover:bg-teal-dark disabled:cursor-not-allowed disabled:opacity-60"
+              className="w-full rounded-2xl bg-gold px-5 py-4 font-extrabold text-charcoal shadow-lg shadow-gold/30 hover:bg-[#E9C47F] disabled:cursor-not-allowed disabled:opacity-60"
             >
               {loggingIn ? 'Signing in…' : 'Open dashboard'}
             </button>
             {loginError && (
-              <p className="mt-4 rounded-xl bg-red-50 px-3 py-3 text-center text-sm font-bold text-red-600">
+              <p className="mt-4 rounded-xl border border-red-400/30 bg-red-500/10 px-3 py-3 text-center text-sm font-bold text-red-300">
                 {loginError}
               </p>
             )}
-            <p className="mt-4 text-center text-xs font-bold leading-relaxed text-charcoal/50">
-              Username: <span className="text-charcoal">admin</span>
+            <p className="mt-4 text-center text-xs font-bold leading-relaxed text-white/50">
+              Username: <span className="text-white">admin</span>
               <br />
-              Password: <span className="text-charcoal">Nafaas@Admin2026</span> (include the @ symbol)
+              Password: <span className="text-white">Nafaas@Admin2026</span> (include the @ symbol)
             </p>
           </form>
         </div>
@@ -618,16 +621,19 @@ export default function AdminDashboardPage() {
   }
 
   return (
-    <section className="min-h-screen bg-[#f4f7f5] px-4 py-8 text-charcoal" dir="ltr">
+    <section
+      className="min-h-screen bg-gradient-to-br from-teal-dark via-apothecary-dark to-charcoal bg-fixed px-4 py-8 text-white"
+      dir="ltr"
+    >
       <div className="mx-auto max-w-7xl">
-        <div className="mb-6 flex flex-col gap-4 rounded-[2rem] bg-charcoal p-6 text-white shadow-xl md:flex-row md:items-center md:justify-between">
+        <div className="mb-6 flex flex-col gap-4 rounded-[2rem] border border-gold/25 bg-black/20 p-6 text-white shadow-2xl shadow-black/30 backdrop-blur-sm md:flex-row md:items-center md:justify-between">
           <div>
-            <p className="text-sm font-bold uppercase tracking-[0.25em] text-sage">
+            <p className="text-sm font-bold uppercase tracking-[0.25em] text-gold">
               Nafaas command center
             </p>
             <h1 className="mt-2 text-3xl font-extrabold md:text-4xl">Admin dashboard</h1>
             <p className="mt-2 flex items-center gap-2 text-sm text-white/60">
-              <ShieldCheck className="h-4 w-4 text-sage" />
+              <ShieldCheck className="h-4 w-4 text-gold" />
               Metrics count storefront traffic (clicks, cart, checkout) and confirmed orders.
             </p>
           </div>
@@ -673,7 +679,7 @@ export default function AdminDashboardPage() {
             </div>
             <button
               onClick={() => void loadDashboard(0)}
-              className="flex items-center gap-2 rounded-xl bg-teal px-4 py-2.5 font-bold hover:bg-teal-dark disabled:opacity-50"
+              className="flex items-center gap-2 rounded-xl bg-gold px-4 py-2.5 font-extrabold text-charcoal shadow-lg shadow-gold/20 hover:bg-[#E9C47F] disabled:opacity-50"
               disabled={loading}
             >
               <RefreshCw className={cn('h-4 w-4', loading && 'animate-spin')} />
@@ -703,21 +709,21 @@ export default function AdminDashboardPage() {
           </div>
         </div>
 
-        <div className="mb-6 rounded-[1.5rem] border-2 border-teal/30 bg-white p-5 shadow-card">
+        <div className="mb-6 rounded-[1.5rem] border border-gold/20 bg-white/[0.05] p-5 shadow-lg shadow-black/20 backdrop-blur-sm">
           <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
             <div className="flex items-start gap-4">
               <span className="relative mt-1 flex h-4 w-4 shrink-0">
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-teal opacity-60" />
-                <span className="relative inline-flex h-4 w-4 rounded-full bg-teal" />
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-gold opacity-60" />
+                <span className="relative inline-flex h-4 w-4 rounded-full bg-gold" />
               </span>
               <div>
-                <p className="text-lg font-extrabold text-charcoal">Order notifications</p>
-                <p className="mt-1 text-sm font-bold text-charcoal/60">
+                <p className="text-lg font-extrabold text-white">Order notifications</p>
+                <p className="mt-1 text-sm font-bold text-white/60">
                   {soundEnabled
                     ? 'Active — classic cash register cha-ching when a new order arrives.'
                     : 'Muted — turn sound on to hear new orders.'}
                 </p>
-                <p className="mt-1 text-xs font-bold text-charcoal/40">
+                <p className="mt-1 text-xs font-bold text-white/45">
                   {lastOrderCheck
                     ? `Last checked ${lastOrderCheck.toLocaleTimeString('en-GB')}`
                     : 'Checking for new orders…'}
@@ -727,7 +733,7 @@ export default function AdminDashboardPage() {
             <div className="flex flex-wrap gap-2">
               <button
                 onClick={testOrderSound}
-                className="flex items-center gap-2 rounded-xl bg-teal px-4 py-2.5 text-sm font-extrabold text-white hover:bg-teal-dark"
+                className="flex items-center gap-2 rounded-xl bg-gold px-4 py-2.5 text-sm font-extrabold text-charcoal hover:bg-[#E9C47F]"
               >
                 <Volume2 className="h-4 w-4" />
                 Test sound
@@ -737,8 +743,8 @@ export default function AdminDashboardPage() {
                 className={cn(
                   'flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-extrabold',
                   soundEnabled
-                    ? 'bg-gold/15 text-gold-dark hover:bg-gold/25'
-                    : 'bg-mist text-charcoal/70 hover:bg-sage/20',
+                    ? 'bg-gold/15 text-gold hover:bg-gold/25'
+                    : 'bg-white/[0.06] text-white/70 hover:bg-white/15',
                 )}
               >
                 {soundEnabled ? <Bell className="h-4 w-4" /> : <BellOff className="h-4 w-4" />}
@@ -749,7 +755,7 @@ export default function AdminDashboardPage() {
         </div>
 
         {error && (
-          <div className="mb-6 flex items-center justify-between rounded-2xl border border-red-200 bg-red-50 px-4 py-3 font-bold text-red-700">
+          <div className="mb-6 flex items-center justify-between rounded-2xl border border-red-400/30 bg-red-500/10 px-4 py-3 font-bold text-red-300">
             <span>{error}</span>
             <button onClick={() => setError(null)}>
               <X className="h-4 w-4" />
@@ -758,19 +764,19 @@ export default function AdminDashboardPage() {
         )}
 
         {newOrderAlert && (
-          <div className="mb-6 flex flex-col gap-3 rounded-2xl border border-gold/40 bg-gradient-to-r from-gold/15 to-teal/10 px-5 py-4 shadow-lg sm:flex-row sm:items-center sm:justify-between">
+          <div className="mb-6 flex flex-col gap-3 rounded-2xl border border-gold/50 bg-gradient-to-r from-gold/20 to-white/[0.04] px-5 py-4 shadow-lg shadow-gold/10 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-start gap-3">
-              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-gold/20 text-gold-dark">
+              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-gold/20 text-gold">
                 <Volume2 className="h-5 w-5" />
               </span>
               <div>
-                <p className="text-sm font-extrabold uppercase tracking-[0.15em] text-gold-dark">
+                <p className="text-sm font-extrabold uppercase tracking-[0.15em] text-gold">
                   New order received
                 </p>
-                <p className="mt-1 text-lg font-extrabold text-charcoal">
+                <p className="mt-1 text-lg font-extrabold text-white">
                   {newOrderAlert.order_number} · {newOrderAlert.customer_name}
                 </p>
-                <p className="text-sm font-bold text-charcoal/60">
+                <p className="text-sm font-bold text-white/60">
                   {formatSar(newOrderAlert.total)} · {newOrderAlert.phone}
                 </p>
               </div>
@@ -778,13 +784,13 @@ export default function AdminDashboardPage() {
             <div className="flex gap-2">
               <button
                 onClick={() => void loadOrder(newOrderAlert.id)}
-                className="rounded-xl bg-teal px-4 py-2.5 text-sm font-extrabold text-white hover:bg-teal-dark"
+                className="rounded-xl bg-gold px-4 py-2.5 text-sm font-extrabold text-charcoal hover:bg-[#E9C47F]"
               >
                 View order
               </button>
               <button
                 onClick={() => setNewOrderAlert(null)}
-                className="rounded-xl bg-white px-4 py-2.5 text-sm font-extrabold text-charcoal hover:bg-mist"
+                className="rounded-xl border border-white/15 bg-white/10 px-4 py-2.5 text-sm font-extrabold text-white hover:bg-white/20"
               >
                 Dismiss
               </button>
@@ -800,13 +806,18 @@ export default function AdminDashboardPage() {
               className={cn(
                 'rounded-2xl px-5 py-3 font-extrabold capitalize',
                 activeTab === tab
-                  ? 'bg-teal text-white shadow-lg shadow-teal/20'
-                  : 'bg-white text-charcoal/70',
+                  ? 'bg-gold text-charcoal shadow-lg shadow-gold/25'
+                  : 'border border-white/10 bg-white/[0.06] text-white/70 hover:bg-white/10 hover:text-white',
               )}
             >
               {tab}
               {tab === 'orders' && ordersTotal > 0 && (
-                <span className="ms-2 rounded-full bg-white/20 px-2 py-0.5 text-xs">
+                <span
+                  className={cn(
+                    'ms-2 rounded-full px-2 py-0.5 text-xs',
+                    activeTab === tab ? 'bg-charcoal/15' : 'bg-gold/20 text-gold',
+                  )}
+                >
                   {formatNumber(ordersTotal)}
                 </span>
               )}
@@ -877,9 +888,9 @@ export default function AdminDashboardPage() {
                           {formatSar(item.revenue)} · {item.orders} orders · {item.clicks} clicks
                         </span>
                       </div>
-                      <div className="h-3 overflow-hidden rounded-full bg-mist">
+                      <div className="h-3 overflow-hidden rounded-full bg-white/[0.06]">
                         <div
-                          className="h-full rounded-full bg-teal"
+                          className="h-full rounded-full bg-gradient-to-r from-gold-dark to-gold"
                           style={{
                             width: `${Math.max((item.revenue / maxDailyRevenue) * 100, 4)}%`,
                           }}
@@ -903,15 +914,15 @@ export default function AdminDashboardPage() {
                           <span>
                             {formatNumber(item.value)}
                             {index > 0 && drop > 0 && (
-                              <span className="ms-2 text-xs font-bold text-charcoal/40">
+                              <span className="ms-2 text-xs font-bold text-white/45">
                                 -{drop}%
                               </span>
                             )}
                           </span>
                         </div>
-                        <div className="h-4 overflow-hidden rounded-full bg-mist">
+                        <div className="h-4 overflow-hidden rounded-full bg-white/[0.06]">
                           <div
-                            className="h-full rounded-full bg-gradient-to-r from-teal to-gold"
+                            className="h-full rounded-full bg-gradient-to-r from-teal-light to-gold"
                             style={{
                               width: `${Math.max((item.value / maxFunnel) * 100, 3)}%`,
                             }}
@@ -931,7 +942,7 @@ export default function AdminDashboardPage() {
                     <div key={item.hour} className="flex flex-1 flex-col items-center gap-1">
                       <div className="flex h-40 w-full items-end justify-center gap-0.5">
                         <div
-                          className="w-2 rounded-t bg-teal"
+                          className="w-2 rounded-t bg-teal-light"
                           style={{
                             height: `${(item.clicks / maxHourlyClicks) * 100}%`,
                           }}
@@ -945,7 +956,7 @@ export default function AdminDashboardPage() {
                           title={`${item.orders} orders`}
                         />
                       </div>
-                      <span className="text-[10px] font-bold text-charcoal/40">
+                      <span className="text-[10px] font-bold text-white/45">
                         {item.hour.toString().padStart(2, '0')}
                       </span>
                     </div>
@@ -953,7 +964,7 @@ export default function AdminDashboardPage() {
                 </div>
                 <div className="mt-3 flex gap-4 text-xs font-bold">
                   <span className="flex items-center gap-2">
-                    <span className="h-2 w-2 rounded bg-teal" /> Clicks
+                    <span className="h-2 w-2 rounded bg-teal-light" /> Clicks
                   </span>
                   <span className="flex items-center gap-2">
                     <span className="h-2 w-2 rounded bg-gold" /> Orders
@@ -968,10 +979,10 @@ export default function AdminDashboardPage() {
                     return (
                       <div
                         key={statusName}
-                        className="flex items-center justify-between gap-3 rounded-2xl bg-mist/70 px-4 py-3"
+                        className="flex items-center justify-between gap-3 rounded-2xl bg-white/[0.06] px-4 py-3"
                       >
                         <div className="flex items-center gap-3">
-                          <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-white text-teal">
+                          <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-gold/15 text-gold ring-1 ring-gold/30">
                             <Icon className="h-5 w-5" />
                           </span>
                           <span className="font-extrabold capitalize">{statusName}</span>
@@ -992,7 +1003,7 @@ export default function AdminDashboardPage() {
                   render={(item) => (
                     <>
                       <span className="font-extrabold">{item.source}</span>
-                      <span className="text-right text-xs font-bold text-charcoal/70">
+                      <span className="text-right text-xs font-bold text-white/70">
                         {formatSar(item.revenue)} · {item.orders} ord · {item.clicks} clicks
                       </span>
                     </>
@@ -1005,7 +1016,7 @@ export default function AdminDashboardPage() {
                   render={(item) => (
                     <>
                       <span className="font-extrabold">{item.campaign}</span>
-                      <span className="text-right text-xs font-bold text-charcoal/70">
+                      <span className="text-right text-xs font-bold text-white/70">
                         {formatSar(item.revenue)} · {item.orders} ord
                       </span>
                     </>
@@ -1018,7 +1029,7 @@ export default function AdminDashboardPage() {
                   render={(item) => (
                     <>
                       <span className="font-extrabold">{item.product_slug}</span>
-                      <span className="text-right text-xs font-bold text-charcoal/70">
+                      <span className="text-right text-xs font-bold text-white/70">
                         {item.quantity} units · {item.orders} ord
                       </span>
                     </>
@@ -1035,11 +1046,11 @@ export default function AdminDashboardPage() {
                       <button
                         key={order.id}
                         onClick={() => void loadOrder(order.id)}
-                        className="flex w-full items-center justify-between gap-3 rounded-2xl bg-mist/60 px-4 py-3 text-left hover:bg-mist"
+                        className="flex w-full items-center justify-between gap-3 rounded-2xl bg-white/[0.06] px-4 py-3 text-left hover:bg-white/10"
                       >
                         <div>
                           <p className="font-extrabold">{order.order_number}</p>
-                          <p className="text-xs text-charcoal/60">
+                          <p className="text-xs text-white/60">
                             {order.customer_name} · {order.phone}
                           </p>
                         </div>
@@ -1060,7 +1071,7 @@ export default function AdminDashboardPage() {
           <Panel title="Orders">
             <div className="mb-5 flex flex-col gap-3 md:flex-row">
               <div className="relative flex-1">
-                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-charcoal/40" />
+                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-white/45" />
                 <input
                   value={search}
                   onChange={(event) => setSearch(event.target.value)}
@@ -1068,13 +1079,13 @@ export default function AdminDashboardPage() {
                     if (event.key === 'Enter') void loadDashboard(0)
                   }}
                   placeholder="Search order #, customer, or phone"
-                  className="w-full rounded-2xl border border-sage/30 py-3 pl-10 pr-4 outline-none focus:border-teal"
+                  className="w-full rounded-2xl border border-white/15 py-3 pl-10 pr-4 outline-none bg-white/[0.07] text-white placeholder-white/35 focus:border-gold"
                 />
               </div>
               <select
                 value={statusFilter}
                 onChange={(event) => setStatusFilter(event.target.value)}
-                className="rounded-2xl border border-sage/30 px-4 py-3 outline-none focus:border-teal"
+                className="rounded-2xl border border-white/15 px-4 py-3 outline-none bg-white/[0.07] text-white placeholder-white/35 focus:border-gold [color-scheme:dark] [&>option]:bg-teal-dark"
               >
                 <option value="">All statuses</option>
                 {statusOptions.map((option) => (
@@ -1085,22 +1096,22 @@ export default function AdminDashboardPage() {
               </select>
               <button
                 onClick={() => void loadDashboard(0)}
-                className="rounded-2xl bg-charcoal px-5 py-3 font-extrabold text-white"
+                className="rounded-2xl bg-gold px-5 py-3 font-extrabold text-charcoal hover:bg-[#E9C47F]"
               >
                 Apply
               </button>
               <button
                 onClick={exportCsv}
-                className="flex items-center gap-2 rounded-2xl border border-teal bg-white px-5 py-3 font-extrabold text-teal hover:bg-teal/5"
+                className="flex items-center gap-2 rounded-2xl border border-gold/50 px-5 py-3 font-extrabold text-gold hover:bg-gold/10"
               >
                 <Download className="h-4 w-4" />
                 Export CSV
               </button>
             </div>
 
-            <div className="overflow-x-auto rounded-2xl border border-sage/20">
+            <div className="overflow-x-auto rounded-2xl border border-white/10">
               <div className="min-w-[860px]">
-                <div className="grid grid-cols-[1.1fr_1.2fr_0.9fr_0.8fr_0.9fr_0.6fr] bg-mist px-4 py-3 text-sm font-extrabold text-charcoal/70">
+                <div className="grid grid-cols-[1.1fr_1.2fr_0.9fr_0.8fr_0.9fr_0.6fr] bg-white/[0.06] px-4 py-3 text-sm font-extrabold text-white/70">
                   <span>Order</span>
                   <span>Customer</span>
                   <span>Status</span>
@@ -1109,26 +1120,26 @@ export default function AdminDashboardPage() {
                   <span></span>
                 </div>
                 {orders.length === 0 && (
-                  <p className="px-4 py-8 text-center font-bold text-charcoal/40">
+                  <p className="px-4 py-8 text-center font-bold text-white/45">
                     No orders match this filter.
                   </p>
                 )}
                 {orders.map((order) => (
                   <div
                     key={order.id}
-                    className="grid grid-cols-[1.1fr_1.2fr_0.9fr_0.8fr_0.9fr_0.6fr] items-center border-t border-sage/20 px-4 py-3 text-sm"
+                    className="grid grid-cols-[1.1fr_1.2fr_0.9fr_0.8fr_0.9fr_0.6fr] items-center border-t border-white/10 px-4 py-3 text-sm"
                   >
                     <div>
                       <p className="font-extrabold">{order.order_number}</p>
-                      <p className="text-xs text-charcoal/50">
+                      <p className="text-xs text-white/50">
                         {order.items_count} items
                         {order.has_upsell && (
-                          <span className="ms-2 rounded-full bg-gold/15 px-2 py-0.5 text-[10px] font-extrabold text-gold-dark">
+                          <span className="ms-2 rounded-full bg-gold/15 px-2 py-0.5 text-[10px] font-extrabold text-gold">
                             UPSELL
                           </span>
                         )}
                         {order.has_notes && (
-                          <span className="ms-1 rounded-full bg-teal/15 px-2 py-0.5 text-[10px] font-extrabold text-teal">
+                          <span className="ms-1 rounded-full bg-teal-light/20 px-2 py-0.5 text-[10px] font-extrabold text-teal-light">
                             NOTE
                           </span>
                         )}
@@ -1136,11 +1147,11 @@ export default function AdminDashboardPage() {
                     </div>
                     <div>
                       <p className="font-bold">{order.customer_name}</p>
-                      <p className="text-xs text-charcoal/50">{order.phone}</p>
+                      <p className="text-xs text-white/50">{order.phone}</p>
                     </div>
                     <StatusPill status={order.status} />
                     <span className="font-extrabold">{formatSar(order.total)}</span>
-                    <span className="text-xs text-charcoal/60">
+                    <span className="text-xs text-white/60">
                       {new Date(order.created_at).toLocaleString('en-GB', {
                         day: '2-digit',
                         month: 'short',
@@ -1150,7 +1161,7 @@ export default function AdminDashboardPage() {
                     </span>
                     <button
                       onClick={() => void loadOrder(order.id)}
-                      className="flex w-fit items-center gap-1 rounded-xl bg-teal/10 px-3 py-2 font-bold text-teal hover:bg-teal hover:text-white"
+                      className="flex w-fit items-center gap-1 rounded-xl bg-gold/15 px-3 py-2 font-bold text-gold hover:bg-gold hover:text-charcoal"
                     >
                       <Eye className="h-4 w-4" />
                       View
@@ -1163,12 +1174,12 @@ export default function AdminDashboardPage() {
             {ordersHasMore && (
               <button
                 onClick={() => void loadDashboard(orders.length)}
-                className="mt-5 rounded-2xl bg-mist px-5 py-3 font-extrabold text-charcoal"
+                className="mt-5 rounded-2xl bg-white/[0.06] px-5 py-3 font-extrabold text-white"
               >
                 Load more
               </button>
             )}
-            <p className="mt-3 text-xs font-bold text-charcoal/40">
+            <p className="mt-3 text-xs font-bold text-white/45">
               Showing {orders.length} of {formatNumber(ordersTotal)} orders in range.
             </p>
           </Panel>
@@ -1185,7 +1196,7 @@ export default function AdminDashboardPage() {
       )}
 
       {toast && (
-        <div className="fixed bottom-6 left-1/2 z-[90] -translate-x-1/2 rounded-2xl bg-charcoal px-5 py-3 text-sm font-bold text-white shadow-2xl">
+        <div className="fixed bottom-6 left-1/2 z-[90] -translate-x-1/2 rounded-2xl bg-gold px-5 py-3 text-sm font-extrabold text-charcoal shadow-2xl shadow-black/40">
           {toast}
         </div>
       )}
@@ -1208,33 +1219,36 @@ function KpiCard({
 }) {
   const toneClasses =
     tone === 'positive'
-      ? 'bg-green-100 text-green-700'
+      ? 'bg-green-500/15 text-green-300 ring-1 ring-green-400/30'
       : tone === 'negative'
-        ? 'bg-red-100 text-red-700'
-        : 'bg-teal/10 text-teal'
+        ? 'bg-red-500/15 text-red-300 ring-1 ring-red-400/30'
+        : 'bg-gold/15 text-gold ring-1 ring-gold/30'
   return (
-    <div className="rounded-[1.5rem] border border-sage/20 bg-white p-5 shadow-card">
+    <div className="rounded-[1.5rem] border border-gold/20 bg-gradient-to-br from-white/[0.08] to-white/[0.02] p-5 shadow-lg shadow-black/20 backdrop-blur-sm transition-colors hover:border-gold/40">
       <div className={cn('mb-4 flex h-11 w-11 items-center justify-center rounded-2xl', toneClasses)}>
         <Icon className="h-5 w-5" />
       </div>
-      <p className="text-sm font-bold text-charcoal/50">{label}</p>
-      <p className="mt-1 text-3xl font-extrabold">{value}</p>
-      {hint && <p className="mt-1 text-xs font-bold text-charcoal/40">{hint}</p>}
+      <p className="text-sm font-bold text-white/55">{label}</p>
+      <p className="mt-1 text-3xl font-extrabold text-white">{value}</p>
+      {hint && <p className="mt-1 text-xs font-bold text-white/45">{hint}</p>}
     </div>
   )
 }
 
 function Panel({ title, children }: { title: string; children: ReactNode }) {
   return (
-    <div className="rounded-[1.5rem] border border-sage/20 bg-white p-5 shadow-card">
-      <h2 className="mb-4 text-xl font-extrabold">{title}</h2>
+    <div className="rounded-[1.5rem] border border-gold/20 bg-white/[0.05] p-5 shadow-lg shadow-black/20 backdrop-blur-sm">
+      <h2 className="mb-4 flex items-center gap-2 text-xl font-extrabold text-white">
+        <span className="h-5 w-1 rounded-full bg-gold" />
+        {title}
+      </h2>
       {children}
     </div>
   )
 }
 
 function EmptyState() {
-  return <p className="rounded-2xl bg-mist p-4 text-sm font-bold text-charcoal/50">No data yet.</p>
+  return <p className="rounded-2xl bg-white/[0.06] p-4 text-sm font-bold text-white/50">No data yet.</p>
 }
 
 function MetricList<T>({ items, render }: { items: T[]; render: (item: T) => ReactNode }) {
@@ -1244,7 +1258,7 @@ function MetricList<T>({ items, render }: { items: T[]; render: (item: T) => Rea
       {items.map((item, index) => (
         <div
           key={index}
-          className="flex items-center justify-between gap-4 rounded-2xl bg-mist/60 px-4 py-3 text-sm"
+          className="flex items-center justify-between gap-4 rounded-2xl bg-white/[0.06] px-4 py-3 text-sm"
         >
           {render(item)}
         </div>
@@ -1257,16 +1271,16 @@ function StatusPill({ status }: { status: string }) {
   const Icon = statusIcons[status] || Clock
   const color =
     status === 'delivered'
-      ? 'bg-green-100 text-green-700'
+      ? 'bg-green-500/15 text-green-300 ring-1 ring-green-400/30'
       : status === 'cancelled' || status === 'returned'
-        ? 'bg-red-100 text-red-700'
+        ? 'bg-red-500/15 text-red-300 ring-1 ring-red-400/30'
         : status === 'test'
-          ? 'bg-purple-100 text-purple-700'
+          ? 'bg-purple-500/15 text-purple-300 ring-1 ring-purple-400/30'
           : status === 'shipped'
-          ? 'bg-blue-100 text-blue-700'
+          ? 'bg-sky-500/15 text-sky-300 ring-1 ring-sky-400/30'
           : status === 'confirmed'
-            ? 'bg-teal/15 text-teal'
-            : 'bg-gold/15 text-gold-dark'
+            ? 'bg-teal-light/20 text-teal-light ring-1 ring-teal-light/40'
+            : 'bg-gold/15 text-gold ring-1 ring-gold/30'
   return (
     <span
       className={cn(
@@ -1302,30 +1316,30 @@ function OrderPreview({
   const itemsTotal = order.items.reduce((sum, item) => sum + (item.price || 0) * item.quantity, 0)
 
   return (
-    <div className="fixed inset-0 z-[80] bg-black/60 p-4 backdrop-blur-sm" dir="ltr">
-      <div className="mx-auto max-h-[95vh] max-w-5xl overflow-y-auto rounded-[2rem] bg-[#f6faf8] shadow-2xl">
-        <div className="sticky top-0 z-10 flex flex-col gap-3 border-b border-sage/20 bg-white p-6 md:flex-row md:items-start md:justify-between">
+    <div className="fixed inset-0 z-[80] bg-black/70 p-4 backdrop-blur-sm" dir="ltr">
+      <div className="mx-auto max-h-[95vh] max-w-5xl overflow-y-auto rounded-[2rem] border border-gold/25 bg-gradient-to-br from-teal-dark via-apothecary-dark to-charcoal text-white shadow-2xl shadow-black/50">
+        <div className="sticky top-0 z-10 flex flex-col gap-3 border-b border-gold/20 bg-teal-dark/95 p-6 backdrop-blur-md md:flex-row md:items-start md:justify-between">
           <div>
-            <p className="text-sm font-bold uppercase tracking-[0.2em] text-teal">
+            <p className="text-sm font-bold uppercase tracking-[0.2em] text-gold">
               Order preview
             </p>
             <div className="mt-1 flex flex-wrap items-center gap-3">
-              <h2 className="text-3xl font-extrabold">{order.order_number}</h2>
+              <h2 className="text-3xl font-extrabold text-white">{order.order_number}</h2>
               <StatusPill status={order.status} />
               {order.has_upsell && (
-                <span className="rounded-full bg-gold/15 px-3 py-1 text-xs font-extrabold text-gold-dark">
+                <span className="rounded-full bg-gold/15 px-3 py-1 text-xs font-extrabold text-gold">
                   UPSELL ACCEPTED
                 </span>
               )}
             </div>
-            <p className="mt-1 text-xs font-bold text-charcoal/50">
+            <p className="mt-1 text-xs font-bold text-white/50">
               Created {new Date(order.created_at).toLocaleString('en-GB')}
             </p>
           </div>
           <div className="flex flex-wrap items-center gap-2">
             <a
               href={`tel:${order.phone_e164}`}
-              className="flex items-center gap-2 rounded-2xl bg-teal px-4 py-2.5 font-extrabold text-white shadow-lg shadow-teal/20 hover:bg-teal-dark"
+              className="flex items-center gap-2 rounded-2xl bg-gold px-4 py-2.5 font-extrabold text-charcoal shadow-lg shadow-gold/25 hover:bg-[#E9C47F]"
             >
               <Phone className="h-4 w-4" />
               Call
@@ -1341,7 +1355,7 @@ function OrderPreview({
             </a>
             <button
               onClick={onClose}
-              className="flex h-10 w-10 items-center justify-center rounded-full bg-mist text-charcoal hover:bg-sage/30"
+              className="flex h-10 w-10 items-center justify-center rounded-full border border-white/15 bg-white/10 text-white hover:bg-white/20"
             >
               <X className="h-5 w-5" />
             </button>
@@ -1374,11 +1388,11 @@ function OrderPreview({
                 {order.items.map((item, index) => (
                   <div
                     key={`${item.product_slug}-${index}`}
-                    className="flex items-center justify-between rounded-2xl bg-mist px-4 py-3"
+                    className="flex items-center justify-between rounded-2xl bg-white/[0.06] px-4 py-3"
                   >
                     <div>
                       <p className="font-extrabold">{item.product_slug}</p>
-                      <p className="text-xs text-charcoal/60">Qty {item.quantity}</p>
+                      <p className="text-xs text-white/60">Qty {item.quantity}</p>
                     </div>
                     {item.price !== undefined && (
                       <span className="font-extrabold">
@@ -1390,21 +1404,21 @@ function OrderPreview({
                 {order.upsell_item && (
                   <div className="flex items-center justify-between rounded-2xl border border-gold/40 bg-gold/10 px-4 py-3">
                     <div>
-                      <p className="flex items-center gap-2 font-extrabold text-gold-dark">
+                      <p className="flex items-center gap-2 font-extrabold text-gold">
                         <Sparkles className="h-4 w-4" />
                         {order.upsell_item.product_slug}
                       </p>
-                      <p className="text-xs text-gold-dark/80">
+                      <p className="text-xs text-gold/80">
                         Upsell qty {order.upsell_item.quantity}
                       </p>
                     </div>
-                    <span className="font-extrabold text-gold-dark">
+                    <span className="font-extrabold text-gold">
                       {formatSar(order.upsell_item.price * order.upsell_item.quantity)}
                     </span>
                   </div>
                 )}
                 {itemsTotal > 0 && (
-                  <div className="flex justify-between border-t border-sage/30 pt-3 text-sm font-bold text-charcoal/60">
+                  <div className="flex justify-between border-t border-white/15 pt-3 text-sm font-bold text-white/60">
                     <span>Items subtotal</span>
                     <span>{formatSar(itemsTotal)}</span>
                   </div>
@@ -1435,12 +1449,12 @@ function OrderPreview({
                 onChange={(event) => setNotes(event.target.value)}
                 rows={4}
                 placeholder="Call notes, address details, delivery instructions..."
-                className="w-full rounded-2xl border border-sage/30 px-4 py-3 text-sm outline-none focus:border-teal"
+                className="w-full rounded-2xl border border-white/15 px-4 py-3 text-sm outline-none bg-white/[0.07] text-white placeholder-white/35 focus:border-gold"
               />
               <div className="mt-3 flex justify-end">
                 <button
                   onClick={() => onPatch({ admin_notes: notes })}
-                  className="rounded-2xl bg-teal px-5 py-2.5 font-extrabold text-white hover:bg-teal-dark"
+                  className="rounded-2xl bg-gold px-5 py-2.5 font-extrabold text-charcoal hover:bg-[#E9C47F]"
                 >
                   Save note
                 </button>
@@ -1462,8 +1476,8 @@ function OrderPreview({
                         className={cn(
                           'flex items-center justify-center gap-2 rounded-2xl px-3 py-3 text-sm font-extrabold capitalize',
                           active
-                            ? 'bg-teal text-white shadow-lg shadow-teal/20'
-                            : 'bg-mist text-charcoal/70 hover:bg-mist',
+                            ? 'bg-gold text-charcoal shadow-lg shadow-gold/25'
+                            : 'border border-white/10 bg-white/[0.06] text-white/70 hover:border-gold/40 hover:bg-white/10',
                         )}
                       >
                         <Icon className="h-4 w-4" />
@@ -1474,7 +1488,7 @@ function OrderPreview({
                 </div>
                 {(order.status === 'cancelled' || order.status === 'returned') && (
                   <div>
-                    <label className="text-xs font-bold uppercase tracking-wider text-charcoal/50">
+                    <label className="text-xs font-bold uppercase tracking-wider text-white/50">
                       Cancel / return reason
                     </label>
                     <input
@@ -1482,11 +1496,11 @@ function OrderPreview({
                       onChange={(event) => setCancelReason(event.target.value)}
                       onBlur={() => onPatch({ cancel_reason: cancelReason })}
                       placeholder="Wrong number, refused, no answer..."
-                      className="mt-1 w-full rounded-2xl border border-sage/30 px-4 py-2.5 text-sm outline-none focus:border-teal"
+                      className="mt-1 w-full rounded-2xl border border-white/15 px-4 py-2.5 text-sm outline-none bg-white/[0.07] text-white placeholder-white/35 focus:border-gold"
                     />
                   </div>
                 )}
-                <div className="grid gap-2 text-xs font-bold text-charcoal/60">
+                <div className="grid gap-2 text-xs font-bold text-white/60">
                   {order.confirmed_at && (
                     <span>Confirmed: {new Date(order.confirmed_at).toLocaleString('en-GB')}</span>
                   )}
@@ -1507,9 +1521,9 @@ function OrderPreview({
                   <SummaryRow label="Upsell" value={formatSar(order.upsell_total)} />
                 )}
                 <SummaryRow label="Shipping" value="Free" muted />
-                <div className="my-2 h-px bg-sage/30" />
-                <div className="rounded-2xl bg-charcoal p-4 text-white">
-                  <p className="text-sm font-bold text-white/60">Total to collect</p>
+                <div className="my-2 h-px bg-white/10" />
+                <div className="rounded-2xl bg-gradient-to-l from-gold to-[#E9C47F] p-4 text-charcoal shadow-lg shadow-gold/20">
+                  <p className="text-sm font-bold text-charcoal/70">Total to collect</p>
                   <p className="text-3xl font-extrabold">{formatSar(order.total)}</p>
                 </div>
               </div>
@@ -1546,11 +1560,11 @@ function Info({
   fullWidth?: boolean
 }) {
   return (
-    <div className={cn('rounded-2xl bg-white p-3 shadow-sm', fullWidth && 'md:col-span-2')}>
-      <p className="text-[10px] font-extrabold uppercase tracking-[0.15em] text-charcoal/40">
+    <div className={cn('rounded-2xl border border-white/10 bg-white/[0.06] p-3', fullWidth && 'md:col-span-2')}>
+      <p className="text-[10px] font-extrabold uppercase tracking-[0.15em] text-white/45">
         {label}
       </p>
-      <p className="mt-1 break-words font-bold text-charcoal">{value}</p>
+      <p className="mt-1 break-words font-bold text-white">{value}</p>
     </div>
   )
 }
@@ -1565,16 +1579,16 @@ function CopyInfo({
   onCopy: () => void
 }) {
   return (
-    <div className="flex items-center justify-between gap-3 rounded-2xl bg-white p-3 shadow-sm">
+    <div className="flex items-center justify-between gap-3 rounded-2xl border border-white/10 bg-white/[0.06] p-3">
       <div>
-        <p className="text-[10px] font-extrabold uppercase tracking-[0.15em] text-charcoal/40">
+        <p className="text-[10px] font-extrabold uppercase tracking-[0.15em] text-white/45">
           {label}
         </p>
-        <p className="mt-1 break-words font-bold text-charcoal">{value}</p>
+        <p className="mt-1 break-words font-bold text-white">{value}</p>
       </div>
       <button
         onClick={onCopy}
-        className="flex h-9 w-9 items-center justify-center rounded-xl bg-teal/10 text-teal hover:bg-teal hover:text-white"
+        className="flex h-9 w-9 items-center justify-center rounded-xl bg-gold/15 text-gold hover:bg-gold hover:text-charcoal"
         title="Copy"
       >
         <Copy className="h-4 w-4" />
@@ -1594,7 +1608,7 @@ function SummaryRow({
 }) {
   return (
     <div className="flex justify-between">
-      <span className={cn('font-bold', muted ? 'text-charcoal/40' : 'text-charcoal/70')}>
+      <span className={cn('font-bold', muted ? 'text-white/45' : 'text-white/70')}>
         {label}
       </span>
       <span className="font-extrabold">{value}</span>
