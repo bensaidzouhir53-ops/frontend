@@ -4,11 +4,12 @@ import Link from 'next/link'
 import { 
   ShieldCheck, Star, CheckCircle2, ChevronLeft, ArrowLeft, 
   Leaf, Zap, Wind, HeartPulse,
-  BellRing, Truck, HeartHandshake, CircleCheckBig, CircleX, ShoppingCart
+  BellRing, Truck, HeartHandshake, CircleCheckBig, CircleX
 } from 'lucide-react'
 import type { Product } from '@/types'
 import { getDefaultOffer, getMaxOfferSavings, isMolienDropsProduct } from '@/lib/products'
 import OfferSelector from '@/components/product/OfferSelector'
+import StickyOrderBar from '@/components/product/StickyOrderBar'
 import ProductDayProcessSection from '@/components/product/ProductDayProcessSection'
 import ProductResultsSection from '@/components/product/ProductResultsSection'
 import ProductBeforeAfterSection from '@/components/product/ProductBeforeAfterSection'
@@ -870,25 +871,7 @@ export default function ProductPageContent({
         </section>
       )}
 
-      {/* ── Sticky Mobile CTA ── */}
-      <div
-        className={`fixed inset-x-0 bottom-0 z-40 border-t p-3 shadow-[0_-8px_20px_rgba(0,0,0,0.06)] backdrop-blur-md lg:hidden ${
-          isMolien ? 'border-white/10 bg-teal-dark/95' : 'border-border bg-white/95'
-        }`}
-        dir="rtl"
-      >
-        <div className="max-w-md mx-auto">
-          <Link
-            href="#offer"
-            className={`flex min-h-[56px] w-full items-center justify-center gap-2 rounded-2xl px-4 font-bold shadow-lg transition-colors active:scale-[0.98] ${
-              isMolien ? 'bg-gold text-charcoal hover:bg-gold-dark' : 'bg-teal text-white hover:bg-teal-dark'
-            }`}
-          >
-            <ShoppingCart className="h-5 w-5 shrink-0" />
-            <span>اختر عرضك — الدفع عند الاستلام</span>
-          </Link>
-        </div>
-      </div>
+      <StickyOrderBar dark={isMolien} />
     </main>
   )
 }

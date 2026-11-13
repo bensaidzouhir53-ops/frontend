@@ -3,8 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { ShoppingCart, Menu, X } from 'lucide-react'
-import { useCartStore } from '@/store/cartStore'
+import { Menu, X } from 'lucide-react'
 import LungLogo from '@/components/brand/LungLogo'
 import { cn } from '@/lib/utils'
 
@@ -22,8 +21,6 @@ function isActiveLink(pathname: string, href: string) {
 export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false)
   const pathname = usePathname() ?? '/'
-  const { itemCount, openCart } = useCartStore()
-  const count = itemCount()
 
   return (
     <header
@@ -69,22 +66,7 @@ export default function Header() {
           })}
         </nav>
 
-        {/* Actions */}
         <div className="flex items-center gap-2.5">
-          {/* Cart button */}
-          <button
-            onClick={openCart}
-            className="relative flex h-10 w-10 items-center justify-center rounded-full bg-gold text-charcoal shadow-md shadow-gold/30 transition-colors hover:bg-[#E9C47F]"
-            aria-label={`سلة التسوق (${count} منتجات)`}
-          >
-            <ShoppingCart className="h-5 w-5" />
-            {count > 0 && (
-              <span className="absolute -left-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-white px-1 text-[10px] font-extrabold text-teal-dark ring-2 ring-teal-dark ltr">
-                {count}
-              </span>
-            )}
-          </button>
-
           {/* Mobile menu toggle */}
           <button
             onClick={() => setMobileOpen((v) => !v)}
@@ -126,23 +108,6 @@ export default function Header() {
               )
             })}
           </ul>
-          <div className="mt-4 border-t border-white/10 pt-4">
-            <button
-              onClick={() => {
-                openCart()
-                setMobileOpen(false)
-              }}
-              className="flex w-full items-center justify-center gap-2 rounded-2xl bg-gold py-3.5 font-extrabold text-charcoal shadow-lg shadow-gold/20"
-            >
-              <ShoppingCart className="h-4 w-4" />
-              <span>سلة التسوق</span>
-              {count > 0 && (
-                <span className="rounded-full bg-teal-dark px-2 py-0.5 text-xs font-bold text-gold">
-                  {count}
-                </span>
-              )}
-            </button>
-          </div>
         </nav>
       )}
     </header>

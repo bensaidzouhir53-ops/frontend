@@ -2,7 +2,6 @@ import type { Metadata } from 'next'
 import { Tajawal } from 'next/font/google'
 import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
-import ClientLazyModals from '@/components/layout/ClientLazyModals'
 import PixelInit from '@/components/shared/PixelInit'
 import PixelScripts from '@/components/shared/PixelScripts'
 import MetaPixel from '@/components/shared/MetaPixel'
@@ -103,7 +102,6 @@ export default async function RootLayout({
         <Header />
         <main>{children}</main>
         <Footer />
-        <ClientLazyModals />
         <PixelInit config={pixelConfig} />
       </body>
     </html>

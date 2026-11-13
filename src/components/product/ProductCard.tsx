@@ -1,12 +1,8 @@
-'use client'
-
 import Image from 'next/image'
 import Link from 'next/link'
-import { ShoppingCart, Star, Eye } from 'lucide-react'
+import { Star, Eye } from 'lucide-react'
 import type { Product } from '@/types'
 import { getDefaultOffer, getOfferOriginalPrice } from '@/lib/products'
-import { useCartStore } from '@/store/cartStore'
-import { trackAddToCart, generateEventId } from '@/lib/tracking'
 import { cn } from '@/lib/utils'
 
 interface ProductCardProps {
@@ -16,17 +12,6 @@ interface ProductCardProps {
 
 export default function ProductCard({ product, className }: ProductCardProps) {
   const defaultOffer = getDefaultOffer(product.slug)
-  const { addItem, openCart } = useCartStore()
-
-  const handleAddToCart = () => {
-    addItem(product, defaultOffer.qty, defaultOffer.price)
-    openCart()
-    trackAddToCart({
-      value: defaultOffer.price,
-      content_ids: [product.slug],
-      event_id: generateEventId(),
-    })
-  }
 
   return (
     <article
@@ -105,14 +90,13 @@ export default function ProductCard({ product, className }: ProductCardProps) {
             <Eye className="h-3.5 w-3.5" />
             عرض
           </Link>
-          <button
-            onClick={handleAddToCart}
+          <Link
+            href={`/products/${product.slug}#quick-order`}
             className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-teal py-2.5 text-sm font-bold text-white transition-colors hover:bg-teal-dark active:scale-[0.98]"
-            aria-label={`أضف ${product.nameAr} للسلة`}
+            aria-label={`اطلب ${product.nameAr}`}
           >
-            <ShoppingCart className="h-4 w-4" />
             اطلب الآن
-          </button>
+          </Link>
         </div>
       </div>
     </article>

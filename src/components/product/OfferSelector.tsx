@@ -1,15 +1,14 @@
 'use client'
 
 import { useState } from 'react'
-import { ShoppingCart, ShieldCheck, Truck } from 'lucide-react'
+import { ShieldCheck, Truck } from 'lucide-react'
 import type { Product, Offer } from '@/types'
 import {
   getOffersForProduct,
   getOfferOriginalPrice,
   getMaxOfferSavings,
 } from '@/lib/products'
-import { useCartStore } from '@/store/cartStore'
-import { trackAddToCart, generateEventId } from '@/lib/tracking'
+import QuickOrderForm from '@/components/product/QuickOrderForm'
 import { cn } from '@/lib/utils'
 
 interface OfferSelectorProps {
@@ -487,19 +486,8 @@ export default function OfferSelector({ product, className, dark = false }: Offe
   const offers = getOffersForProduct(product.slug)
   const defaultIdx = offers.findIndex((o) => o.isDefault)
   const [selectedIdx, setSelectedIdx] = useState(defaultIdx >= 0 ? defaultIdx : 1)
-  const { addItem, openCart } = useCartStore()
 
   const selected = offers[selectedIdx] ?? offers[1]
-
-  const handleAddToCart = () => {
-    addItem(product, selected.qty, selected.price)
-    openCart()
-    trackAddToCart({
-      value: selected.price,
-      content_ids: [product.slug],
-      event_id: generateEventId(),
-    })
-  }
 
   return (
     <div
@@ -534,19 +522,7 @@ export default function OfferSelector({ product, className, dark = false }: Offe
         <OfferStockUrgency dark={dark} />
       </div>
 
-      <button
-        type="button"
-        onClick={handleAddToCart}
-        className={cn(
-          'flex min-h-[56px] w-full items-center justify-center gap-2 rounded-2xl px-4 py-3.5 text-base font-bold transition-all active:scale-[0.99]',
-          dark
-            ? 'bg-gold text-charcoal shadow-[0_4px_18px_rgba(215,168,92,0.35)] hover:bg-gold-dark'
-            : 'bg-teal text-white shadow-[0_4px_18px_rgba(15,118,110,0.28)] hover:bg-teal-dark',
-        )}
-      >
-        <ShoppingCart className="h-5 w-5 shrink-0" />
-        <span>أكمل الطلب الآن — الدفع عند الاستلام</span>
-      </button>
+      <QuickOrderForm product={product} offer={selected} dark={dark} />
 
       <div
         className={cn(

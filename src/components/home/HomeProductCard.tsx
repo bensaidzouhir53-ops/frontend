@@ -1,12 +1,8 @@
-'use client'
-
 import Image from 'next/image'
 import Link from 'next/link'
-import { ArrowLeft, Check, ShoppingCart, Star, Truck } from 'lucide-react'
+import { ArrowLeft, Check, Star, Truck } from 'lucide-react'
 import type { Product } from '@/types'
 import { getDefaultOffer, getOfferOriginalPrice } from '@/lib/products'
-import { useCartStore } from '@/store/cartStore'
-import { trackAddToCart, generateEventId } from '@/lib/tracking'
 import { cn } from '@/lib/utils'
 
 interface HomeProductCardProps {
@@ -16,21 +12,10 @@ interface HomeProductCardProps {
 
 export default function HomeProductCard({ product, className }: HomeProductCardProps) {
   const defaultOffer = getDefaultOffer(product.slug)
-  const { addItem, openCart } = useCartStore()
 
   const displayTitle = product.cardTitleAr ?? product.nameAr
   const qtyLabels: Record<number, string> = { 1: 'قطعة واحدة', 2: 'قطعتان', 3: '3 قطع' }
   const qtyLabel = defaultOffer.qtyLabel ?? qtyLabels[defaultOffer.qty] ?? `${defaultOffer.qty} قطع`
-
-  const handleAddToCart = () => {
-    addItem(product, defaultOffer.qty, defaultOffer.price)
-    openCart()
-    trackAddToCart({
-      value: defaultOffer.price,
-      content_ids: [product.slug],
-      event_id: generateEventId(),
-    })
-  }
 
   return (
     <article
@@ -148,14 +133,13 @@ export default function HomeProductCard({ product, className }: HomeProductCardP
 
         {/* CTAs */}
         <div className="mt-4 flex flex-col gap-2.5 sm:flex-row">
-          <button
-            onClick={handleAddToCart}
+          <Link
+            href={`/products/${product.slug}#quick-order`}
             className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-teal px-4 py-3.5 text-sm font-extrabold text-white shadow-lg shadow-teal/25 transition-all hover:bg-teal-dark active:scale-[0.98]"
             aria-label={`اطلب ${displayTitle}`}
           >
-            <ShoppingCart className="h-4 w-4" />
             اطلب الآن — {defaultOffer.price} ريال
-          </button>
+          </Link>
           <Link
             href={`/products/${product.slug}`}
             className="flex flex-1 items-center justify-center gap-2 rounded-xl border-2 border-teal/20 bg-white px-4 py-3.5 text-sm font-bold text-teal transition-colors hover:border-teal hover:bg-teal/5"
