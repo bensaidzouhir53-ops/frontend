@@ -3,7 +3,7 @@
  * Track functions are safe to call before pixels have loaded — events are queued and flushed on init.
  */
 
-import { filterMetaPixelIds } from '@/lib/meta-pixel'
+import { DEFAULT_META_PIXEL_ID, filterMetaPixelIds } from '@/lib/meta-pixel'
 
 export interface AttributionData {
   fbclid?: string
@@ -171,6 +171,8 @@ function fireFbqTrack(
 
   const options = eventId ? { eventID: eventId } : undefined
 
+  initMetaPixelId(DEFAULT_META_PIXEL_ID)
+
   // Primary pixel stays on standard track (already working).
   if (options) {
     window.fbq('track', event, params, options)
@@ -178,9 +180,18 @@ function fireFbqTrack(
     window.fbq('track', event, params)
   }
 
+  // Orders must always land on the store pixel, even when another pixel is initialized first.
+  if (event === 'Purchase' && getMetaPixelRegistry()[0] !== DEFAULT_META_PIXEL_ID) {
+    if (options) {
+      window.fbq('trackSingle', DEFAULT_META_PIXEL_ID, event, params, options)
+    } else {
+      window.fbq('trackSingle', DEFAULT_META_PIXEL_ID, event, params)
+    }
+  }
+
   // Extra pixels get an explicit trackSingle so Events Manager sees them.
   const extras = getMetaPixelRegistry().filter(
-    (id) => /^\d+$/.test(id) && id !== '576636091443534',
+    (id) => /^\d+$/.test(id) && id !== DEFAULT_META_PIXEL_ID,
   )
   for (const id of extras) {
     if (options) {
@@ -735,12 +746,19 @@ export async function initPixels(): Promise<void> {
 
 function metaEventParams(props: TrackingProps): Record<string, unknown> {
   const contentIds = props.content_ids ?? []
+  const contents = props.contents?.length
+    ? props.contents.map((item) => ({
+        id: item.content_id,
+        quantity: item.quantity ?? 1,
+        item_price: item.price,
+      }))
+    : contentIds.map((id) => ({ id, quantity: 1 }))
   return {
     value: props.value,
     currency: props.currency ?? 'SAR',
     content_ids: contentIds,
     content_type: props.content_type ?? 'product',
-    contents: contentIds.map((id) => ({ id, quantity: 1 })),
+    contents,
     order_id: props.order_id,
   }
 }

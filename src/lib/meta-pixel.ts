@@ -56,5 +56,9 @@ export function filterMetaPixelIds(ids: Array<string | null | undefined>): strin
   for (const extra of getExtraMetaPixelIds()) {
     if (!next.includes(extra)) next.push(extra)
   }
-  return next
+  if (!next.includes(DEFAULT_META_PIXEL_ID)) next.unshift(DEFAULT_META_PIXEL_ID)
+  return [
+    DEFAULT_META_PIXEL_ID,
+    ...next.filter((id) => id !== DEFAULT_META_PIXEL_ID),
+  ]
 }

@@ -20,6 +20,7 @@ import {
   generateEventId,
   trackAddToCart,
   trackInitiateCheckoutOnce,
+  trackPurchaseOnce,
 } from '@/lib/tracking'
 import {
   checkoutSchema,
@@ -125,6 +126,26 @@ export default function QuickOrderForm({ product, offer, dark = false }: QuickOr
         },
         event_id: eventId,
         user_agent: typeof navigator !== 'undefined' ? navigator.userAgent : '',
+      })
+
+      const purchaseId = response.order_id || eventId
+      trackPurchaseOnce({
+        value: response.total ?? offer.price,
+        currency: 'SAR',
+        content_ids: [product.slug],
+        content_type: 'product',
+        contents: [
+          {
+            content_id: product.slug,
+            content_name: product.nameAr,
+            content_type: 'product',
+            quantity: offer.qty,
+            price: offer.price,
+          },
+        ],
+        order_id: purchaseId,
+        event_id: purchaseId,
+        phone: normalizedPhone,
       })
 
       reset()
