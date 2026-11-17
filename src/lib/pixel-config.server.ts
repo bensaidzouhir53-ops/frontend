@@ -219,7 +219,7 @@ export async function fetchTrackingConfigFromBackend(): Promise<ServerPixelConfi
         // Cache the pixel config so we don't block every page render on a
         // backend round-trip. Pixel IDs rarely change; refresh every 5 min.
         next: { revalidate: 300 },
-        signal: AbortSignal.timeout(5_000),
+        signal: AbortSignal.timeout(1_500),
       })
       if (response.ok) {
         backendRaw = (await response.json()) as PixelConfigInput

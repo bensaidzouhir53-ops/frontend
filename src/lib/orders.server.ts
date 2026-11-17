@@ -132,8 +132,7 @@ function isRetryableBackendFailure(status: number, body: unknown): boolean {
   return false
 }
 
-const DEFAULT_INTERNAL_BACKEND =
-  process.env.NODE_ENV === 'production' ? 'http://nasamashop_backend:8000' : null
+const DEFAULT_INTERNAL_BACKEND = null
 
 function isInternalBackendUrl(url: string): boolean {
   try {

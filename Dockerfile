@@ -34,7 +34,6 @@ ENV NODE_ENV=production
 ENV NEXT_PUBLIC_SITE_URL=https://nafaas.shop
 ENV NEXT_PUBLIC_API_URL=https://api.nafaas.shop
 ENV BACKEND_URL=https://api.nafaas.shop
-ENV BACKEND_INTERNAL_URL=http://nasamashop_backend:8000
 ARG NEXT_PUBLIC_META_PIXEL_ID=576636091443534
 ARG NEXT_PUBLIC_META_PIXEL_ID_2=1435851508750967
 ARG NEXT_PUBLIC_SNAP_PIXEL_ID=700c360f-b027-411e-8fbd-47ff5e4e91b7
@@ -49,8 +48,9 @@ COPY --from=builder /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 USER nextjs
-EXPOSE 3000 8000
-ENV PORT=3000
+# Easypanel routes to this port. The server also accepts 3000 if the panel
+# was still pointed at the old container port.
+EXPOSE 8000
 # Docker sets HOSTNAME to the container id. Next standalone binds to that name,
 # so the Easypanel proxy cannot connect and Cloudflare reports a host error.
 CMD ["sh", "-c", "exec env HOSTNAME=0.0.0.0 node server.js"]
