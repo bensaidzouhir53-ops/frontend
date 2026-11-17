@@ -4,7 +4,7 @@
   "scripts": {
     "dev": "next dev",
     "dev:clean": "node scripts/dev-clean.js && next dev",
-    "build": "next build",
+    "build": "next build && node scripts/bind-all-interfaces.js",
     "start": "next start",
     "lint": "next lint",
     "typecheck": "tsc --noEmit"
