@@ -49,7 +49,7 @@ COPY --from=builder /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 USER nextjs
-EXPOSE 3000
+EXPOSE 3000 8000
 ENV PORT=3000
 # Docker sets HOSTNAME to the container id. Next standalone binds to that name,
 # so the Easypanel proxy cannot connect and Cloudflare reports a host error.
