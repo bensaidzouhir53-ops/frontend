@@ -201,14 +201,25 @@ function isProductionBuild(): boolean {
   return process.env.NEXT_PHASE === 'phase-production-build'
 }
 
-/** Fetch pixel IDs from backend first, then merge env fallbacks (never skip backend). */
+/** Pixel IDs for the storefront. Prefer env in production so a dead API cannot 502 the site. */
 export async function fetchTrackingConfigFromBackend(): Promise<ServerPixelConfig> {
   const envFallback = getEnvPixelFallback()
 
   // Backend is unreachable during Docker/CI builds — env vars are baked in via build args.
-  if (isProductionBuild()) {
+  // In production runtime, also serve from env first: if api.nafaas.shop / internal Docker
+  // DNS hangs, awaiting fetch here makes Traefik return Cloudflare 502 for every page.
+  if (isProductionBuild() || process.env.NODE_ENV === 'production') {
     const built = envFallback.enabled ? envFallback : EMPTY
-    return applyCanonicalMetaPixel(built)
+    return applyCanonicalMetaPixel(
+      built.enabled
+        ? {
+            ...built,
+            capi_enabled:
+              process.env.NEXT_PUBLIC_CAPI_ENABLED === 'true' || built.capi_enabled,
+            tiktok_capi_enabled: false,
+          }
+        : EMPTY,
+    )
   }
 
   let backendRaw: PixelConfigInput | null = null

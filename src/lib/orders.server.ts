@@ -157,16 +157,20 @@ function sortBackendCandidates(urls: string[], preferInternal: boolean): string[
   })
 }
 
-/** Server-side backend URLs — internal Docker network first in production. */
+/** Server-side backend URLs. Prefer the public API in production so dead Docker DNS cannot hang pages. */
 export function getBackendCandidates(): string[] {
-  const preferInternal = process.env.NODE_ENV === 'production'
+  const preferInternal = false
   const urls = [
-    process.env.BACKEND_INTERNAL_URL,
-    DEFAULT_INTERNAL_BACKEND,
     process.env.BACKEND_URL,
     process.env.NEXT_PUBLIC_API_URL,
     process.env.NODE_ENV === 'development' ? 'http://localhost:8000' : null,
     getDefaultProductionApiUrl(),
+    // Only use an explicit internal URL when it looks reachable (has a real hostname).
+    process.env.BACKEND_INTERNAL_URL &&
+    !process.env.BACKEND_INTERNAL_URL.includes('_')
+      ? process.env.BACKEND_INTERNAL_URL
+      : null,
+    DEFAULT_INTERNAL_BACKEND,
   ]
     .filter((value): value is string => Boolean(value && value.trim()))
     .map((value) => value.trim().replace(/\/$/, ''))
