@@ -34,6 +34,7 @@ ENV NODE_ENV=production
 ENV NEXT_PUBLIC_SITE_URL=https://nafaas.shop
 ENV NEXT_PUBLIC_API_URL=https://api.nafaas.shop
 ENV BACKEND_URL=https://api.nafaas.shop
+ENV BACKEND_INTERNAL_URL=http://nasamashop_backend:8000
 ARG NEXT_PUBLIC_META_PIXEL_ID=576636091443534
 ARG NEXT_PUBLIC_META_PIXEL_ID_2=1435851508750967
 ARG NEXT_PUBLIC_SNAP_PIXEL_ID=700c360f-b027-411e-8fbd-47ff5e4e91b7
@@ -48,8 +49,6 @@ COPY --from=builder /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 USER nextjs
-# Easypanel routes to 8000. Also accept 3000 for older panel settings.
-EXPOSE 8000 3000
-ENV PORT=8000
-# Docker sets HOSTNAME to the container id; force all-interfaces bind instead.
-CMD ["sh", "-c", "exec env HOSTNAME=0.0.0.0 node server.js"]
+EXPOSE 3000
+ENV PORT=3000
+CMD ["node", "server.js"]
