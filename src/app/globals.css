@@ -85,6 +85,13 @@ body {
   outline-offset: 2px;
 }
 
+/* Keep mobile browsers from zooming the quick-order fields on focus. */
+#quick-order input,
+#quick-order textarea,
+#quick-order select {
+  font-size: 16px;
+}
+
 /* Image optimization */
 img {
   max-width: 100%;

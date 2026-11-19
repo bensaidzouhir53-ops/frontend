@@ -534,11 +534,20 @@ export default function AdminDashboardPage() {
         return
       }
 
+      if (response.status === 503) {
+        setLoginError(
+          typeof body?.detail?.message === 'string'
+            ? body.detail.message
+            : 'Admin credentials are not configured on the backend. Set ADMIN_USERNAME and ADMIN_PASSWORD in Easypanel, then restart backend.',
+        )
+        return
+      }
+
       if (!response.ok) {
         setLoginError(
           typeof body?.detail?.message === 'string'
             ? body.detail.message
-            : 'Could not sign in. Redeploy backend with ADMIN_USERNAME and ADMIN_PASSWORD.',
+            : `Could not sign in (HTTP ${response.status}). Check backend is running and ADMIN_USERNAME / ADMIN_PASSWORD are set.`,
         )
         return
       }
@@ -609,11 +618,6 @@ export default function AdminDashboardPage() {
                 {loginError}
               </p>
             )}
-            <p className="mt-4 text-center text-xs font-bold leading-relaxed text-white/50">
-              Username: <span className="text-white">admin</span>
-              <br />
-              Password: <span className="text-white">Nafaas@Admin2026</span> (include the @ symbol)
-            </p>
           </form>
         </div>
       </section>
