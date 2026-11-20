@@ -2,8 +2,8 @@ import type { Metadata } from 'next'
 import ThankYouView from './ThankYouView'
 
 export const metadata: Metadata = {
-  title: 'تم استلام طلبك بنجاح | نفس',
-  description: 'شكراً لطلبك من نفس. سيتم التواصل معك خلال 10 دقائق لتأكيد التوصيل.',
+  title: 'تم طلبك — بنتصل خلال 10 دقايق | نَفَس',
+  description: 'طلبك وصل. بنتصل فيك خلال 10 دقايق من 9 الصبح لين 9 الليل عشان نأكد العنوان، والشحن من 2 إلى 4 أيام عمل.',
   robots: { index: false, follow: false },
 }
 
